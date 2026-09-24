@@ -9,7 +9,7 @@
   "keepAlive": false,
   "attach": "",
   "autoCommit": true,
-  "logHarnessActivity": true,
+  "logHarnessActivity": false,
   "executionMode": "auto",
   "selectedTaskIds": []
 }

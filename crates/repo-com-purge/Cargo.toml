@@ -1,0 +1,24 @@
+[package]
+# The package name is the stable nextest binary ID selected by PRIV-RET-2.
+name = "purge_contract"
+autotests = false
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "Hashed, TTY-confirmed, repository-scoped local purge for repo-com"
+
+[lib]
+name = "repo_com_purge"
+path = "src/lib.rs"
+
+[dependencies]
+repo-com-audit = { package = "audit_contract", path = "../repo-com-audit" }
+repo-com-foundation = { package = "foundation_contract", path = "../repo-com-foundation" }
+repo-com-retention = { package = "retention_contract", path = "../repo-com-retention" }
+repo-com-state = { package = "state_contract", path = "../repo-com-state" }
+rusqlite.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sha2 = "=0.10.9"

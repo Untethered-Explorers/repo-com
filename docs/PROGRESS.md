@@ -1,9 +1,9 @@
 # Project Progress
 
 ## Current State
-**Phase**: PRIVACY-AND-LIFECYCLE-OPERATIONS-1
+**Phase**: PRIVACY-AND-LIFECYCLE-OPERATIONS-2
 **Status**: In Progress
-**Last Updated**: 2026-09-24T15:50:02.071Z
+**Last Updated**: 2026-09-24T17:24:30.665Z
 **Run ID**: 7acb4fd7-13bc-4f05-aa63-f810395058df
 **Harness**: opencode
 **Execution Mode**: auto
@@ -47,6 +47,8 @@
   - Files: crates/repo-com-reply/Cargo.toml, crates/repo-com-reply/src/lib.rs, crates/repo-com-reply/src/target.rs, crates/repo-com-reply/src/draft.rs, crates/repo-com-reply/src/link.rs, crates/repo-com-reply/tests/reply_contract.rs, Cargo.lock
 - [x] Phase PRIVACY-AND-LIFECYCLE-OPERATIONS-1, Task PRIV-RET-1: Enforce content and metadata retention (@privacy-engineer)
   - Files: crates/repo-com-retention/Cargo.toml, crates/repo-com-retention/src/lib.rs, crates/repo-com-retention/src/policy.rs, crates/repo-com-retention/src/sweep.rs, crates/repo-com-retention/tests/retention_contract.rs, Cargo.lock
+- [x] Phase PRIVACY-AND-LIFECYCLE-OPERATIONS-2, Task PRIV-RET-2: Implement hashed dry-run and confirmed purge (@security-engineer)
+  - Files: crates/repo-com-purge/Cargo.toml, crates/repo-com-purge/src/lib.rs, crates/repo-com-purge/src/plan.rs, crates/repo-com-purge/src/execute.rs, crates/repo-com-purge/tests/purge_contract.rs, Cargo.lock
 
 ## Current Task
 - None currently running
