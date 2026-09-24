@@ -1,0 +1,26 @@
+[package]
+# The package name is the stable nextest binary ID selected by DISC-CLIENT-1.
+name = "discord_client_contract"
+autotests = false
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "Read-only Discord REST v10 setup validation for repo-com"
+
+[lib]
+name = "repo_com_discord_client"
+path = "src/lib.rs"
+
+[dependencies]
+repo-com-config = { package = "config_contract", path = "../repo-com-config" }
+repo-com-foundation = { package = "foundation_contract", path = "../repo-com-foundation" }
+reqwest = { version = "=0.13.5", default-features = false, features = ["json", "rustls"] }
+serde.workspace = true
+serde_json.workspace = true
+zeroize = "=1.9.0"
+
+[dev-dependencies]
+tokio = { version = "=1.53.1", features = ["macros", "rt-multi-thread"] }
+wiremock = "=0.6.5"

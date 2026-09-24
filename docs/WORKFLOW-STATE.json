@@ -1,12 +1,12 @@
 {
   "runId": "7acb4fd7-13bc-4f05-aa63-f810395058df",
   "startedAt": "2026-09-24T08:46:22.421Z",
-  "lastUpdatedAt": "2026-09-24T13:02:06.107Z",
+  "lastUpdatedAt": "2026-09-24T13:17:07.854Z",
   "manifestPath": "/home/mcfuzzysquirrel/Projects/repo-com/docs/EXECUTION-MANIFEST.json",
   "manifestVersion": "1.0",
   "harness": "opencode",
   "status": "running",
-  "currentPhase": "DRAFT-AND-APPROVAL-WORKFLOW-1",
+  "currentPhase": "DISCORD-DELIVERY-AND-RECONCILIATION-1",
   "tasks": {
     "PLAT-1": {
       "taskId": "PLAT-1",
@@ -2514,10 +2514,38 @@
     },
     "DISC-CLIENT-1": {
       "taskId": "DISC-CLIENT-1",
-      "status": "pending",
+      "status": "complete",
       "ownerAgent": "discord-engineer",
-      "attempt": 0,
-      "outputFiles": []
+      "attempt": 1,
+      "outputFiles": [
+        "crates/repo-com-discord-client/Cargo.toml",
+        "crates/repo-com-discord-client/src/lib.rs",
+        "crates/repo-com-discord-client/src/auth.rs",
+        "crates/repo-com-discord-client/src/client.rs",
+        "crates/repo-com-discord-client/src/setup.rs",
+        "crates/repo-com-discord-client/tests/discord_client_contract.rs",
+        "Cargo.lock"
+      ],
+      "startedAt": "2026-09-24T13:02:06.156Z",
+      "attemptHistory": [
+        {
+          "attempt": 1,
+          "outcome": "passed",
+          "resultPath": "docs/artifacts/DISC-CLIENT-1.2026-09-24T13-17-07-850Z.attempt-1.result.json"
+        }
+      ],
+      "completedAt": "2026-09-24T13:17:07.854Z",
+      "agentOutput": "## Result\n\nImplemented `DISC-CLIENT-1` with:\n\n- Environment-only, zeroizing bot-token ownership from `REPO_COM_DISCORD_TOKEN`.\n- Strict Discord `Bot` authorization and fixed REST API v10 routes.\n- Read-only checks for bot identity, workspace membership, channel visibility and permissions, and role/user mention access.\n- Typed, redacted errors and structured manual remediation.\n- Token-free WireMock contracts covering success, identity, missing workspace/channel, all required permissions, mention failures, authentication rotation, Bearer rejection, and endpoint pinning.\n\nObserved fixture traffic used only `GET` requests to:\n\n- `/api/v10/users/@me`\n- `/api/v10/users/@me/guilds/{guild_id}/member`\n- `/api/v10/guilds/{guild_id}`\n- `/api/v10/channels/{channel_id}`\n- `/api/v10/guilds/{guild_id}/members/{user_id}`\n\nNo real Discord token, workspace, setup request, or remote mutation was used.\n\n## Validation\n\n- `cargo fmt --all -- --check` — passed\n- `cargo clippy --workspace --all-targets --all-features -- -D warnings` — passed\n- `cargo nextest run --no-tests fail -E 'binary_id(discord_client_contract)'` — **16 passed, 0 failed, 1 ignored subprocess fixture**\n\n## Files created or changed\n\nCreated:\n\n- `crates/repo-com-discord-client/Cargo.toml`\n- `crates/repo-com-discord-client/src/lib.rs`\n- `crates/repo-com-discord-client/src/auth.rs`\n- `crates/repo-com-discord-client/src/client.rs`\n- `crates/repo-com-discord-client/src/setup.rs`\n- `crates/repo-com-discord-client/tests/discord_client_contract.rs`\n\nChanged:\n\n- `Cargo.lock`\n\nNo documentation update was required because the implementation realizes the already-documented canonical contract. `docs/artifacts/DISC-CLIENT-1.md` and existing workflow-artifact changes were not modified.\n\nNo separate runtime `forge-result` value was emitted by the shell harness; the observed result is:\n\n```forge-result\n{\"summary\":\"Implemented DISC-CLIENT-1 with zeroizing environment-only bot authentication, read-only REST v10 setup diagnostics, and 16 passing token-free WireMock contract tests.\",\"unresolved\":[]}\n```\n",
+      "artifactId": "work-disc-client-1-001",
+      "inputArtifactIds": [
+        "work-plat-1-001",
+        "work-repo-cfg-1-001",
+        "work-draft-model-1-001",
+        "work-draft-content-1-001",
+        "work-draft-secret-1-001",
+        "work-draft-approval-1-001",
+        "work-draft-elig-1-001"
+      ]
     },
     "DISC-MSG-1": {
       "taskId": "DISC-MSG-1",
