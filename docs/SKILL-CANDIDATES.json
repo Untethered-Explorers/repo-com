@@ -1,0 +1,144 @@
+{
+  "version": 1,
+  "candidates": [
+    {
+      "name": "implement-rust-contract-crate",
+      "description": "Implement one focused repo-com Rust 2024 library crate with its named contract test, workspace integration, and exact fail-on-zero-tests validation.",
+      "consumers": [
+        "rust-foundation-engineer",
+        "configuration-engineer",
+        "persistence-engineer",
+        "policy-engineer",
+        "audit-engineer",
+        "messaging-engineer",
+        "security-engineer",
+        "approval-engineer",
+        "discord-engineer",
+        "delivery-engineer",
+        "privacy-engineer",
+        "operations-engineer",
+        "cli-ux-engineer",
+        "cli-engineer",
+        "technical-writer",
+        "quality-engineer",
+        "release-engineer"
+      ],
+      "action": "create",
+      "reason": "All 31 implementation tasks use the same focused-crate, contract-test binary, workspace dependency, and exact nextest-selection pattern; a wrong test ID or empty selection is a repeated fragile failure mode."
+    },
+    {
+      "name": "model-repository-scoped-state",
+      "description": "Implement or change a local repo-com state transaction with repository isolation, state-and-audit atomicity, rollback, and explicit no-remote side effects.",
+      "consumers": [
+        "persistence-engineer",
+        "delivery-engineer",
+        "privacy-engineer",
+        "security-engineer"
+      ],
+      "action": "create",
+      "reason": "The base schema, delivery claim, retention sweep, and confirmed purge all repeat transaction, uniqueness, rollback, cursor/count, and repository-isolation rules whose boundaries are easy to blur."
+    },
+    {
+      "name": "discord-v10-wiremock-testing",
+      "description": "Build token-free Discord REST v10 wiremock contracts for authentication, permissions, messages, dynamic rate limits, bounded reads, and safe error classification.",
+      "consumers": [
+        "discord-engineer",
+        "delivery-engineer"
+      ],
+      "action": "create",
+      "reason": "Client setup, message creation, inbound pagination, and delivery recovery all depend on exact v10 paths, Bot auth, server-directed limits, and proven-not-sent versus ambiguous outcomes."
+    },
+    {
+      "name": "guard-exact-tty-confirmation",
+      "description": "Add an interactive operator confirmation bound to exact repository, object, revision or plan, scope, and hashes while failing closed in non-TTY mode.",
+      "consumers": [
+        "policy-engineer",
+        "approval-engineer",
+        "security-engineer",
+        "cli-ux-engineer",
+        "cli-engineer"
+      ],
+      "action": "create",
+      "reason": "Policy activation, draft approval, secret override, and purge repeat the fragile exact-preview, hash-binding, 80-column, keyboard, audit, and automation-rejection sequence."
+    },
+    {
+      "name": "render-accessible-terminal-flow",
+      "description": "Render and test a repo-com terminal flow as complete linear labeled output at 80 columns with no color dependency and a non-interactive fail-closed path.",
+      "consumers": [
+        "cli-ux-engineer",
+        "cli-engineer"
+      ],
+      "action": "create",
+      "reason": "Outbound and operations presentation plus both handler families repeat wrapping, NO_COLOR, text-state, keyboard, snapshot, and stream-separation rules across many outcomes."
+    },
+    {
+      "name": "reconcile-unknown-discord-delivery",
+      "description": "Recover an ambiguous Discord send using exact nonce and content reconciliation before any explicitly authorized new attempt, with conservative absence evidence.",
+      "consumers": [
+        "delivery-engineer",
+        "quality-engineer"
+      ],
+      "action": "create",
+      "reason": "Unknown outcomes are the highest-risk duplicate boundary and require a fixed read-only, five-minute, three-read, multi-match, edited-message, and deleted-message procedure reused by recovery and end-to-end proof."
+    },
+    {
+      "name": "validate-cross-platform-release-gates",
+      "description": "Validate the repo-com Linux, macOS, and Windows build, patched SQLite, secret, advisory, license, workflow, checksum, SBOM, and release-plan gates without publishing.",
+      "consumers": [
+        "release-engineer",
+        "quality-engineer"
+      ],
+      "action": "create",
+      "reason": "CI and packaging tasks share pinned tooling, static SQLite 3.53.4 minimum, token-free evidence, matrix expectations, generated-artifact secret scans, and drift checks that are easy to satisfy partially."
+    },
+    {
+      "name": "validate-canonical-product-documentation",
+      "description": "Keep repo-com operator, setup, security, threat-model, command, protocol, accessibility, and residual-risk documentation aligned with implemented contracts and free of prohibited claims.",
+      "consumers": [
+        "technical-writer",
+        "cli-engineer",
+        "cli-ux-engineer",
+        "operations-engineer"
+      ],
+      "action": "create",
+      "reason": "Five documents must stay synchronized with two handler crates, two renderer crates, lifecycle facts, and canonical requirements; missing topics and unsupported security or human claims are fragile release risks."
+    },
+    {
+      "name": "separate-automated-and-human-evidence",
+      "description": "Keep generated tests, performance samples, documentation, and release artifacts distinct from human UX, security, live Discord, and final sign-off records.",
+      "consumers": [
+        "cli-ux-engineer",
+        "technical-writer",
+        "quality-engineer",
+        "release-engineer"
+      ],
+      "action": "create",
+      "reason": "Four human-review tasks depend on implementation evidence while forbidding agents from inventing scores or attestations; a reusable evidence-boundary process reduces claim and file-ownership leakage."
+    },
+    {
+      "name": "run-rust-task-checks",
+      "description": "Run the routine cargo fmt, clippy, and named cargo-nextest checks declared by each repo-com implementation task.",
+      "consumers": [
+        "rust-foundation-engineer",
+        "configuration-engineer",
+        "persistence-engineer",
+        "policy-engineer",
+        "audit-engineer",
+        "messaging-engineer",
+        "security-engineer",
+        "approval-engineer",
+        "discord-engineer",
+        "delivery-engineer",
+        "privacy-engineer",
+        "operations-engineer",
+        "cli-ux-engineer",
+        "cli-engineer",
+        "technical-writer",
+        "quality-engineer",
+        "release-engineer"
+      ],
+      "action": "omit",
+      "reason": "The commands repeat but are deterministic, already explicit in every forge-task contract, and include task-specific binary or actionlint filters; wrapping them in another skill would duplicate authoritative commands and add drift."
+    }
+  ]
+}

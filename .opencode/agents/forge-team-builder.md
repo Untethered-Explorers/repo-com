@@ -25,6 +25,14 @@ Run **`forge-build-agent-team`** against canonical vision and features, for init
 
 ---
 
+## Responsibilities
+
+- Generate or extend only the non-template implementation specialists required by the canonical `forge-task` owner assignments
+- Persist the version-1 `docs/SKILL-CANDIDATES.json` handoff for the independent project-skills stage
+- Leave skill packages, execution manifests, engine state, progress files, human-review evidence, and build execution to their owning stages
+
+---
+
 ## Collaboration
 
 - **forge-build-prd**, **forge-decompose-prd**, **forge-build-feature-prd** skills - Upstream authoring skills that produce the inputs I consume.
