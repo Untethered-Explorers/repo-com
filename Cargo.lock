@@ -271,6 +271,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "cli_operations_contract"
+version = "0.1.0"
+dependencies = [
+ "audit_query_contract",
+ "config_contract",
+ "foundation_contract",
+ "lifecycle_contract",
+ "policy_contract",
+ "purge_contract",
+ "serde",
+ "serde_json",
+ "state_contract",
+ "terminal_operations_contract",
+]
+
+[[package]]
 name = "cmake"
 version = "0.1.58"
 source = "registry+https://github.com/rust-lang/crates.io-index"

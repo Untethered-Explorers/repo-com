@@ -1,7 +1,7 @@
 {
   "runId": "7acb4fd7-13bc-4f05-aa63-f810395058df",
   "startedAt": "2026-09-24T08:46:22.421Z",
-  "lastUpdatedAt": "2026-09-24T19:56:07.130Z",
+  "lastUpdatedAt": "2026-09-24T20:18:40.343Z",
   "manifestPath": "/home/mcfuzzysquirrel/Projects/repo-com/docs/EXECUTION-MANIFEST.json",
   "manifestVersion": "1.0",
   "harness": "opencode",
@@ -2926,10 +2926,47 @@
     },
     "REL-OPS-CMD-1": {
       "taskId": "REL-OPS-CMD-1",
-      "status": "pending",
+      "status": "complete",
       "ownerAgent": "cli-engineer",
-      "attempt": 0,
-      "outputFiles": []
+      "attempt": 2,
+      "outputFiles": [
+        "crates/repo-com-cli-operations/Cargo.toml",
+        "crates/repo-com-cli-operations/src/lib.rs",
+        "crates/repo-com-cli-operations/src/input.rs",
+        "crates/repo-com-cli-operations/src/handlers/config.rs",
+        "crates/repo-com-cli-operations/src/handlers/policy.rs",
+        "crates/repo-com-cli-operations/src/handlers/state.rs",
+        "crates/repo-com-cli-operations/src/handlers/audit.rs",
+        "crates/repo-com-cli-operations/src/handlers/purge.rs",
+        "crates/repo-com-cli-operations/tests/cli_operations_contract.rs",
+        "Cargo.lock",
+        "crates/repo-com-cli-operations/src/handlers/mod.rs"
+      ],
+      "startedAt": "2026-09-24T20:16:07.040Z",
+      "attemptHistory": [
+        {
+          "attempt": 1,
+          "outcome": "failed",
+          "reason": "Missing fenced forge-result JSON report.",
+          "resultPath": "docs/artifacts/REL-OPS-CMD-1.2026-09-24T20-16-02-032Z.attempt-1.result.json"
+        },
+        {
+          "attempt": 2,
+          "outcome": "passed",
+          "resultPath": "docs/artifacts/REL-OPS-CMD-1.2026-09-24T20-18-40-337Z.attempt-2.result.json"
+        }
+      ],
+      "completedAt": "2026-09-24T20:18:40.343Z",
+      "agentOutput": "Implemented and verified `REL-OPS-CMD-1` operator/lifecycle handlers.\n\n- Strict protocol-version-1 input parsing with unknown-field rejection.\n- Explicit repository/object identifiers and bounded pagination.\n- Config, policy, state verification, lifecycle, audit, purge-plan, and confirmed-purge handlers.\n- Exact TTY-bound activation and purge confirmations through the operations UI.\n- Stable error mapping and separated machine stdout/stderr streams.\n- Non-TTY activation and purge fail closed as `operator-action-required`.\n- No messaging commands or final executable added.\n\nValidation observed:\n\n- `cargo fmt --all -- --check` — exit 0\n- `cargo clippy --workspace --all-targets --all-features -- -D warnings` — exit 0\n- `cargo nextest run --no-tests fail -E 'binary_id(cli_operations_contract)'` — 10 passed, 0 failed\n- Contract coverage observed `usage-schema` → exit 2, `operator-action-required` → exit 3, and `policy-blocked` → exit 4.\n- No final `repo-com` binary or `--version` output was run; `REL-APP-1` owns that scope.\n\nFiles created or changed for this task:\n\n- `Cargo.lock`\n- `crates/repo-com-cli-operations/Cargo.toml`\n- `crates/repo-com-cli-operations/src/lib.rs`\n- `crates/repo-com-cli-operations/src/input.rs`\n- `crates/repo-com-cli-operations/src/handlers/mod.rs`\n- `crates/repo-com-cli-operations/src/handlers/config.rs`\n- `crates/repo-com-cli-operations/src/handlers/policy.rs`\n- `crates/repo-com-cli-operations/src/handlers/state.rs`\n- `crates/repo-com-cli-operations/src/handlers/audit.rs`\n- `crates/repo-com-cli-operations/src/handlers/purge.rs`\n- `crates/repo-com-cli-operations/tests/cli_operations_contract.rs`\n\nThe execution artifact and other `docs/artifacts/` files were not modified.\n\n```forge-result\n{\"summary\":\"Implemented and verified the REL-OPS-CMD-1 operator and lifecycle command handlers; all required checks passed.\",\"unresolved\":[],\"tests\":[\"cargo fmt --all -- --check: exit 0\",\"cargo clippy --workspace --all-targets --all-features -- -D warnings: exit 0\",\"cargo nextest run --no-tests fail -E 'binary_id(cli_operations_contract)': exit 0, 10 passed\"],\"decisions\":[\"Preserved domain-owned authorization, transaction, and read-only behavior.\",\"Kept operations handlers separate from messaging handlers and the final executable.\",\"Failed closed for activation and purge confirmation in non-TTY automation.\"],\"validationLimitations\":[\"No final repo-com binary or --version output was run; that scope belongs to REL-APP-1.\"]}\n```\n",
+      "artifactId": "work-rel-ops-cmd-1-001",
+      "inputArtifactIds": [
+        "work-plat-1-001",
+        "work-repo-cfg-1-001",
+        "work-repo-policy-1-001",
+        "work-priv-life-1-001",
+        "work-rel-ui-ops-1-001",
+        "work-priv-ret-2-001"
+      ]
     },
     "REL-MSG-CMD-1": {
       "taskId": "REL-MSG-CMD-1",
