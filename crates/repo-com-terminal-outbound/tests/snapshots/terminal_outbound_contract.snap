@@ -1,0 +1,2661 @@
+===== preview =====
+Outbound preview
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: 5555555555555555555555555555555555555555555555555555555555555555
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 2000 seconds
+Created: Unix 1000 seconds
+Preview hash: 4444444444444444444444444444444444444444444444444444444444444444
+Exact text:
+  Build failed on main.
+  Please investigate the exact revision before sending any response.
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Metadata
+Repository label: widgets
+Branch: main
+Commit: 0123456789abcdef0123456789abcdef01234567
+Event type: build_failed
+Severity: high
+Reply reference: (none)
+Approval
+Approval state: valid
+Approval ID: approval-1
+Approval hash: 3333333333333333333333333333333333333333333333333333333333333333
+Approval preview hash: 444444444444444444444444444444444444444444444444444444444
+                       4444444
+Approval revision hash: 55555555555555555555555555555555555555555555555555555555
+                        55555555
+Approval exact text hash: 666666666666666666666666666666666666666666666666666666
+                          6666666666
+Approval metadata hash: 77777777777777777777777777777777777777777777777777777777
+                        77777777
+Approval config hash: 8888888888888888888888888888888888888888888888888888888888
+                      888888
+Approval destination hash: 99999999999999999999999999999999999999999999999999999
+                           99999999999
+Approval policy basis hash: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                            aaaaaaaaaaaa
+Approval safety hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      bbbbbb
+Approval draft expiry: Unix 2000 seconds
+Approval expiry: Unix 1900 seconds
+Approval override hash: (none)
+Approval actor: operator
+Approval reason: (none)
+Policy
+Policy state: active
+Policy tuple: build_failed/release/high
+Policy config hash: 111111111111111111111111111111111111111111111111111111111111
+                    1111
+Policy tuple hash: 2222222222222222222222222222222222222222222222222222222222222
+                   222
+Policy activation ID: activation-1
+Policy recorded config hash: 111111111111111111111111111111111111111111111111111
+                             1111111111111
+Policy recorded tuple hash: 2222222222222222222222222222222222222222222222222222
+                            222222222222
+Policy current config hash: 1111111111111111111111111111111111111111111111111111
+                            111111111111
+Policy current tuple hash: 22222222222222222222222222222222222222222222222222222
+                           22222222222
+Policy activated at: 2026-01-01T00:00:00Z
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: one current exact activation
+Policy activations
+Policy activation 1: activation-1 (build_failed/release/high), active=true
+Policy activation 1 recorded config hash: 11111111111111111111111111111111111111
+                                          11111111111111111111111111
+Policy activation 1 recorded tuple hash: 222222222222222222222222222222222222222
+                                         2222222222222222222222222
+Policy activation 1 current config hash: 111111111111111111111111111111111111111
+                                         1111111111111111111111111
+Policy activation 1 current tuple hash: 2222222222222222222222222222222222222222
+                                        222222222222222222222222
+Policy activation 1 stale reason: (none)
+Safety
+Safety state: clear
+Safety scan hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                  bb
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Outcome: preview-ready
+Provenance: local decision
+Next action: Review the exact preview, then use a current approval or activated 
+             policy; no send occurred.
+
+===== policy-active =====
+Policy status
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: (not supplied)
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: (none)
+Policy
+Policy state: active
+Policy tuple: build_failed/release/high
+Policy config hash: 111111111111111111111111111111111111111111111111111111111111
+                    1111
+Policy tuple hash: 2222222222222222222222222222222222222222222222222222222222222
+                   222
+Policy activation ID: activation-1
+Policy recorded config hash: 111111111111111111111111111111111111111111111111111
+                             1111111111111
+Policy recorded tuple hash: 2222222222222222222222222222222222222222222222222222
+                            222222222222
+Policy current config hash: 1111111111111111111111111111111111111111111111111111
+                            111111111111
+Policy current tuple hash: 22222222222222222222222222222222222222222222222222222
+                           22222222222
+Policy activated at: 2026-01-01T00:00:00Z
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: one current exact activation
+Policy activations
+Policy activation 1: activation-1 (build_failed/release/high), active=true
+Policy activation 1 recorded config hash: 11111111111111111111111111111111111111
+                                          11111111111111111111111111
+Policy activation 1 recorded tuple hash: 222222222222222222222222222222222222222
+                                         2222222222222222222222222
+Policy activation 1 current config hash: 111111111111111111111111111111111111111
+                                         1111111111111111111111111
+Policy activation 1 current tuple hash: 2222222222222222222222222222222222222222
+                                        222222222222222222222222
+Policy activation 1 stale reason: (none)
+Approval
+Approval state: missing
+Approval ID: (none)
+Approval hash: (none)
+Approval preview hash: (none)
+Approval revision hash: (none)
+Approval exact text hash: (none)
+Approval metadata hash: (none)
+Approval config hash: (none)
+Approval destination hash: (none)
+Approval policy basis hash: (none)
+Approval safety hash: (none)
+Approval draft expiry: (none)
+Approval expiry: (none)
+Approval override hash: (none)
+Approval actor: (none)
+Approval reason: (none)
+Safety
+Safety state: clear
+Safety scan hash: (none)
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Outcome: active
+Provenance: local decision
+Next action: Carry the exact policy basis into the current send decision; do not
+              widen the tuple.
+
+===== policy-stale =====
+Policy status
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: (not supplied)
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: (none)
+Policy
+Policy state: stale
+Policy tuple: build_failed/release/high
+Policy config hash: 111111111111111111111111111111111111111111111111111111111111
+                    1111
+Policy tuple hash: 2222222222222222222222222222222222222222222222222222222222222
+                   222
+Policy activation ID: activation-1
+Policy recorded config hash: fffffffffffffffffffffffffffffffffffffffffffffffffff
+                             fffffffffffff
+Policy recorded tuple hash: 2222222222222222222222222222222222222222222222222222
+                            222222222222
+Policy current config hash: 1111111111111111111111111111111111111111111111111111
+                            111111111111
+Policy current tuple hash: 22222222222222222222222222222222222222222222222222222
+                           22222222222
+Policy activated at: 2026-01-01T00:00:00Z
+Policy deactivated at: (none)
+Policy stale reason: ConfigHashChanged
+Policy basis: one current exact activation
+Policy activations
+Policy activation 1: activation-1 (build_failed/release/high), active=true
+Policy activation 1 recorded config hash: 11111111111111111111111111111111111111
+                                          11111111111111111111111111
+Policy activation 1 recorded tuple hash: 222222222222222222222222222222222222222
+                                         2222222222222222222222222
+Policy activation 1 current config hash: 111111111111111111111111111111111111111
+                                         1111111111111111111111111
+Policy activation 1 current tuple hash: 2222222222222222222222222222222222222222
+                                        222222222222222222222222
+Policy activation 1 stale reason: (none)
+Approval
+Approval state: missing
+Approval ID: (none)
+Approval hash: (none)
+Approval preview hash: (none)
+Approval revision hash: (none)
+Approval exact text hash: (none)
+Approval metadata hash: (none)
+Approval config hash: (none)
+Approval destination hash: (none)
+Approval policy basis hash: (none)
+Approval safety hash: (none)
+Approval draft expiry: (none)
+Approval expiry: (none)
+Approval override hash: (none)
+Approval actor: (none)
+Approval reason: (none)
+Safety
+Safety state: clear
+Safety scan hash: (none)
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Outcome: stale
+Provenance: local decision
+Next action: Reactivate only the exact current configuration and tuple through t
+             he operator boundary.
+
+===== policy-not-activated =====
+Policy status
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: (not supplied)
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: (none)
+Policy
+Policy state: not-activated
+Policy tuple: build_failed/release/high
+Policy config hash: 111111111111111111111111111111111111111111111111111111111111
+                    1111
+Policy tuple hash: 2222222222222222222222222222222222222222222222222222222222222
+                   222
+Policy activation ID: activation-1
+Policy recorded config hash: 111111111111111111111111111111111111111111111111111
+                             1111111111111
+Policy recorded tuple hash: 2222222222222222222222222222222222222222222222222222
+                            222222222222
+Policy current config hash: 1111111111111111111111111111111111111111111111111111
+                            111111111111
+Policy current tuple hash: 22222222222222222222222222222222222222222222222222222
+                           22222222222
+Policy activated at: 2026-01-01T00:00:00Z
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: one current exact activation
+Policy activations
+Policy activation 1: activation-1 (build_failed/release/high), active=true
+Policy activation 1 recorded config hash: 11111111111111111111111111111111111111
+                                          11111111111111111111111111
+Policy activation 1 recorded tuple hash: 222222222222222222222222222222222222222
+                                         2222222222222222222222222
+Policy activation 1 current config hash: 111111111111111111111111111111111111111
+                                         1111111111111111111111111
+Policy activation 1 current tuple hash: 2222222222222222222222222222222222222222
+                                        222222222222222222222222
+Policy activation 1 stale reason: (none)
+Approval
+Approval state: missing
+Approval ID: (none)
+Approval hash: (none)
+Approval preview hash: (none)
+Approval revision hash: (none)
+Approval exact text hash: (none)
+Approval metadata hash: (none)
+Approval config hash: (none)
+Approval destination hash: (none)
+Approval policy basis hash: (none)
+Approval safety hash: (none)
+Approval draft expiry: (none)
+Approval expiry: (none)
+Approval override hash: (none)
+Approval actor: (none)
+Approval reason: (none)
+Safety
+Safety state: clear
+Safety scan hash: (none)
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Outcome: not-activated
+Provenance: local decision
+Next action: Activate the exact policy tuple interactively, or use human approva
+             l.
+
+===== policy-not-configured =====
+Policy status
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: (not supplied)
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: (none)
+Policy
+Policy state: not-configured
+Policy tuple: build_failed/release/high
+Policy config hash: 111111111111111111111111111111111111111111111111111111111111
+                    1111
+Policy tuple hash: 2222222222222222222222222222222222222222222222222222222222222
+                   222
+Policy activation ID: activation-1
+Policy recorded config hash: 111111111111111111111111111111111111111111111111111
+                             1111111111111
+Policy recorded tuple hash: 2222222222222222222222222222222222222222222222222222
+                            222222222222
+Policy current config hash: 1111111111111111111111111111111111111111111111111111
+                            111111111111
+Policy current tuple hash: 22222222222222222222222222222222222222222222222222222
+                           22222222222
+Policy activated at: 2026-01-01T00:00:00Z
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: one current exact activation
+Policy activations
+Policy activation 1: activation-1 (build_failed/release/high), active=true
+Policy activation 1 recorded config hash: 11111111111111111111111111111111111111
+                                          11111111111111111111111111
+Policy activation 1 recorded tuple hash: 222222222222222222222222222222222222222
+                                         2222222222222222222222222
+Policy activation 1 current config hash: 111111111111111111111111111111111111111
+                                         1111111111111111111111111
+Policy activation 1 current tuple hash: 2222222222222222222222222222222222222222
+                                        222222222222222222222222
+Policy activation 1 stale reason: (none)
+Approval
+Approval state: missing
+Approval ID: (none)
+Approval hash: (none)
+Approval preview hash: (none)
+Approval revision hash: (none)
+Approval exact text hash: (none)
+Approval metadata hash: (none)
+Approval config hash: (none)
+Approval destination hash: (none)
+Approval policy basis hash: (none)
+Approval safety hash: (none)
+Approval draft expiry: (none)
+Approval expiry: (none)
+Approval override hash: (none)
+Approval actor: (none)
+Approval reason: (none)
+Safety
+Safety state: clear
+Safety scan hash: (none)
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Outcome: not-configured
+Provenance: local decision
+Next action: Configure an exact policy tuple or use human approval.
+
+===== policy-deactivated =====
+Policy status
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: (not supplied)
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: (none)
+Policy
+Policy state: deactivated
+Policy tuple: build_failed/release/high
+Policy config hash: 111111111111111111111111111111111111111111111111111111111111
+                    1111
+Policy tuple hash: 2222222222222222222222222222222222222222222222222222222222222
+                   222
+Policy activation ID: activation-1
+Policy recorded config hash: 111111111111111111111111111111111111111111111111111
+                             1111111111111
+Policy recorded tuple hash: 2222222222222222222222222222222222222222222222222222
+                            222222222222
+Policy current config hash: 1111111111111111111111111111111111111111111111111111
+                            111111111111
+Policy current tuple hash: 22222222222222222222222222222222222222222222222222222
+                           22222222222
+Policy activated at: 2026-01-01T00:00:00Z
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: one current exact activation
+Policy activations
+Policy activation 1: activation-1 (build_failed/release/high), active=true
+Policy activation 1 recorded config hash: 11111111111111111111111111111111111111
+                                          11111111111111111111111111
+Policy activation 1 recorded tuple hash: 222222222222222222222222222222222222222
+                                         2222222222222222222222222
+Policy activation 1 current config hash: 111111111111111111111111111111111111111
+                                         1111111111111111111111111
+Policy activation 1 current tuple hash: 2222222222222222222222222222222222222222
+                                        222222222222222222222222
+Policy activation 1 stale reason: (none)
+Approval
+Approval state: missing
+Approval ID: (none)
+Approval hash: (none)
+Approval preview hash: (none)
+Approval revision hash: (none)
+Approval exact text hash: (none)
+Approval metadata hash: (none)
+Approval config hash: (none)
+Approval destination hash: (none)
+Approval policy basis hash: (none)
+Approval safety hash: (none)
+Approval draft expiry: (none)
+Approval expiry: (none)
+Approval override hash: (none)
+Approval actor: (none)
+Approval reason: (none)
+Safety
+Safety state: clear
+Safety scan hash: (none)
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Outcome: deactivated
+Provenance: local decision
+Next action: Use a new explicit operator decision or human approval for this rev
+             ision.
+
+===== policy-ambiguous =====
+Policy status
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: (not supplied)
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: (none)
+Policy
+Policy state: ambiguous
+Policy tuple: build_failed/release/high
+Policy config hash: 111111111111111111111111111111111111111111111111111111111111
+                    1111
+Policy tuple hash: 2222222222222222222222222222222222222222222222222222222222222
+                   222
+Policy activation ID: activation-1
+Policy recorded config hash: 111111111111111111111111111111111111111111111111111
+                             1111111111111
+Policy recorded tuple hash: 2222222222222222222222222222222222222222222222222222
+                            222222222222
+Policy current config hash: 1111111111111111111111111111111111111111111111111111
+                            111111111111
+Policy current tuple hash: 22222222222222222222222222222222222222222222222222222
+                           22222222222
+Policy activated at: 2026-01-01T00:00:00Z
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: 2 matching activations
+Policy activations
+Policy activation 1: activation-1 (build_failed/release/high), active=true
+Policy activation 1 recorded config hash: 11111111111111111111111111111111111111
+                                          11111111111111111111111111
+Policy activation 1 recorded tuple hash: 222222222222222222222222222222222222222
+                                         2222222222222222222222222
+Policy activation 1 current config hash: 111111111111111111111111111111111111111
+                                         1111111111111111111111111
+Policy activation 1 current tuple hash: 2222222222222222222222222222222222222222
+                                        222222222222222222222222
+Policy activation 1 stale reason: (none)
+Policy activation 2: activation-2 (build_failed/release/high), active=true
+Policy activation 2 recorded config hash: 11111111111111111111111111111111111111
+                                          11111111111111111111111111
+Policy activation 2 recorded tuple hash: 222222222222222222222222222222222222222
+                                         2222222222222222222222222
+Policy activation 2 current config hash: 111111111111111111111111111111111111111
+                                         1111111111111111111111111
+Policy activation 2 current tuple hash: 2222222222222222222222222222222222222222
+                                        222222222222222222222222
+Policy activation 2 stale reason: (none)
+Approval
+Approval state: missing
+Approval ID: (none)
+Approval hash: (none)
+Approval preview hash: (none)
+Approval revision hash: (none)
+Approval exact text hash: (none)
+Approval metadata hash: (none)
+Approval config hash: (none)
+Approval destination hash: (none)
+Approval policy basis hash: (none)
+Approval safety hash: (none)
+Approval draft expiry: (none)
+Approval expiry: (none)
+Approval override hash: (none)
+Approval actor: (none)
+Approval reason: (none)
+Safety
+Safety state: clear
+Safety scan hash: (none)
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Outcome: ambiguous
+Provenance: local decision
+Next action: Keep the send blocked and remove the ambiguous local activation sta
+             te.
+
+===== approval-valid =====
+Approval status
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: 5555555555555555555555555555555555555555555555555555555555555555
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 1900 seconds
+Approval
+Approval state: valid
+Approval ID: approval-1
+Approval hash: 3333333333333333333333333333333333333333333333333333333333333333
+Approval preview hash: 444444444444444444444444444444444444444444444444444444444
+                       4444444
+Approval revision hash: 55555555555555555555555555555555555555555555555555555555
+                        55555555
+Approval exact text hash: 666666666666666666666666666666666666666666666666666666
+                          6666666666
+Approval metadata hash: 77777777777777777777777777777777777777777777777777777777
+                        77777777
+Approval config hash: 8888888888888888888888888888888888888888888888888888888888
+                      888888
+Approval destination hash: 99999999999999999999999999999999999999999999999999999
+                           99999999999
+Approval policy basis hash: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                            aaaaaaaaaaaa
+Approval safety hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      bbbbbb
+Approval draft expiry: Unix 2000 seconds
+Approval expiry: Unix 1900 seconds
+Approval override hash: (none)
+Approval actor: operator
+Approval reason: (none)
+Preview hash: (none)
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Policy
+Policy state: not-evaluated
+Policy tuple: (none)
+Policy config hash: (none)
+Policy tuple hash: (none)
+Policy activation ID: (none)
+Policy recorded config hash: (none)
+Policy recorded tuple hash: (none)
+Policy current config hash: (none)
+Policy current tuple hash: (none)
+Policy activated at: (none)
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: (none)
+Safety
+Safety state: clear
+Safety scan hash: (none)
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Outcome: approved
+Provenance: local decision
+Next action: Carry the exact approval hashes into the current send decision.
+
+===== approval-expired =====
+Approval status
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: 5555555555555555555555555555555555555555555555555555555555555555
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 1900 seconds
+Approval
+Approval state: expired
+Approval ID: approval-1
+Approval hash: 3333333333333333333333333333333333333333333333333333333333333333
+Approval preview hash: 444444444444444444444444444444444444444444444444444444444
+                       4444444
+Approval revision hash: 55555555555555555555555555555555555555555555555555555555
+                        55555555
+Approval exact text hash: 666666666666666666666666666666666666666666666666666666
+                          6666666666
+Approval metadata hash: 77777777777777777777777777777777777777777777777777777777
+                        77777777
+Approval config hash: 8888888888888888888888888888888888888888888888888888888888
+                      888888
+Approval destination hash: 99999999999999999999999999999999999999999999999999999
+                           99999999999
+Approval policy basis hash: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                            aaaaaaaaaaaa
+Approval safety hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      bbbbbb
+Approval draft expiry: Unix 2000 seconds
+Approval expiry: Unix 1900 seconds
+Approval override hash: (none)
+Approval actor: operator
+Approval reason: (none)
+Preview hash: (none)
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Policy
+Policy state: not-evaluated
+Policy tuple: (none)
+Policy config hash: (none)
+Policy tuple hash: (none)
+Policy activation ID: (none)
+Policy recorded config hash: (none)
+Policy recorded tuple hash: (none)
+Policy current config hash: (none)
+Policy current tuple hash: (none)
+Policy activated at: (none)
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: (none)
+Safety
+Safety state: clear
+Safety scan hash: (none)
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Outcome: approval-expired
+Provenance: local decision
+Next action: Create a new revision or obtain a new exact approval; do not reuse 
+             expired authority.
+
+===== approval-missing =====
+Approval status
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: 5555555555555555555555555555555555555555555555555555555555555555
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 1900 seconds
+Approval
+Approval state: missing
+Approval ID: approval-1
+Approval hash: 3333333333333333333333333333333333333333333333333333333333333333
+Approval preview hash: 444444444444444444444444444444444444444444444444444444444
+                       4444444
+Approval revision hash: 55555555555555555555555555555555555555555555555555555555
+                        55555555
+Approval exact text hash: 666666666666666666666666666666666666666666666666666666
+                          6666666666
+Approval metadata hash: 77777777777777777777777777777777777777777777777777777777
+                        77777777
+Approval config hash: 8888888888888888888888888888888888888888888888888888888888
+                      888888
+Approval destination hash: 99999999999999999999999999999999999999999999999999999
+                           99999999999
+Approval policy basis hash: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                            aaaaaaaaaaaa
+Approval safety hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      bbbbbb
+Approval draft expiry: Unix 2000 seconds
+Approval expiry: Unix 1900 seconds
+Approval override hash: (none)
+Approval actor: operator
+Approval reason: (none)
+Preview hash: (none)
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Policy
+Policy state: not-evaluated
+Policy tuple: (none)
+Policy config hash: (none)
+Policy tuple hash: (none)
+Policy activation ID: (none)
+Policy recorded config hash: (none)
+Policy recorded tuple hash: (none)
+Policy current config hash: (none)
+Policy current tuple hash: (none)
+Policy activated at: (none)
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: (none)
+Safety
+Safety state: clear
+Safety scan hash: (none)
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Outcome: approval-missing
+Provenance: local decision
+Next action: Present the complete exact preview and request interactive approval
+              or policy authority.
+
+===== approval-invalid =====
+Approval status
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: 5555555555555555555555555555555555555555555555555555555555555555
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 1900 seconds
+Approval
+Approval state: invalid
+Approval ID: approval-1
+Approval hash: 3333333333333333333333333333333333333333333333333333333333333333
+Approval preview hash: 444444444444444444444444444444444444444444444444444444444
+                       4444444
+Approval revision hash: 55555555555555555555555555555555555555555555555555555555
+                        55555555
+Approval exact text hash: 666666666666666666666666666666666666666666666666666666
+                          6666666666
+Approval metadata hash: 77777777777777777777777777777777777777777777777777777777
+                        77777777
+Approval config hash: 8888888888888888888888888888888888888888888888888888888888
+                      888888
+Approval destination hash: 99999999999999999999999999999999999999999999999999999
+                           99999999999
+Approval policy basis hash: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                            aaaaaaaaaaaa
+Approval safety hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      bbbbbb
+Approval draft expiry: Unix 2000 seconds
+Approval expiry: Unix 1900 seconds
+Approval override hash: (none)
+Approval actor: operator
+Approval reason: (none)
+Preview hash: (none)
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Policy
+Policy state: not-evaluated
+Policy tuple: (none)
+Policy config hash: (none)
+Policy tuple hash: (none)
+Policy activation ID: (none)
+Policy recorded config hash: (none)
+Policy recorded tuple hash: (none)
+Policy current config hash: (none)
+Policy current tuple hash: (none)
+Policy activated at: (none)
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: (none)
+Safety
+Safety state: clear
+Safety scan hash: (none)
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Outcome: approval-invalid
+Provenance: local decision
+Next action: Resolve the redacted approval error before attempting delivery.
+
+===== approval-stale =====
+Approval status
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: 5555555555555555555555555555555555555555555555555555555555555555
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 1900 seconds
+Approval
+Approval state: stale
+Approval ID: approval-1
+Approval hash: 3333333333333333333333333333333333333333333333333333333333333333
+Approval preview hash: 444444444444444444444444444444444444444444444444444444444
+                       4444444
+Approval revision hash: 55555555555555555555555555555555555555555555555555555555
+                        55555555
+Approval exact text hash: 666666666666666666666666666666666666666666666666666666
+                          6666666666
+Approval metadata hash: 77777777777777777777777777777777777777777777777777777777
+                        77777777
+Approval config hash: 8888888888888888888888888888888888888888888888888888888888
+                      888888
+Approval destination hash: 99999999999999999999999999999999999999999999999999999
+                           99999999999
+Approval policy basis hash: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                            aaaaaaaaaaaa
+Approval safety hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      bbbbbb
+Approval draft expiry: Unix 2000 seconds
+Approval expiry: Unix 1900 seconds
+Approval override hash: (none)
+Approval actor: operator
+Approval reason: (none)
+Preview hash: (none)
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Policy
+Policy state: not-evaluated
+Policy tuple: (none)
+Policy config hash: (none)
+Policy tuple hash: (none)
+Policy activation ID: (none)
+Policy recorded config hash: (none)
+Policy recorded tuple hash: (none)
+Policy current config hash: (none)
+Policy current tuple hash: (none)
+Policy activated at: (none)
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: (none)
+Safety
+Safety state: clear
+Safety scan hash: (none)
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Outcome: approval-stale
+Provenance: local decision
+Next action: Rebuild current approval evidence before attempting delivery.
+
+===== approval-revoked =====
+Approval status
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: 5555555555555555555555555555555555555555555555555555555555555555
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 1900 seconds
+Approval
+Approval state: revoked
+Approval ID: approval-1
+Approval hash: 3333333333333333333333333333333333333333333333333333333333333333
+Approval preview hash: 444444444444444444444444444444444444444444444444444444444
+                       4444444
+Approval revision hash: 55555555555555555555555555555555555555555555555555555555
+                        55555555
+Approval exact text hash: 666666666666666666666666666666666666666666666666666666
+                          6666666666
+Approval metadata hash: 77777777777777777777777777777777777777777777777777777777
+                        77777777
+Approval config hash: 8888888888888888888888888888888888888888888888888888888888
+                      888888
+Approval destination hash: 99999999999999999999999999999999999999999999999999999
+                           99999999999
+Approval policy basis hash: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                            aaaaaaaaaaaa
+Approval safety hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      bbbbbb
+Approval draft expiry: Unix 2000 seconds
+Approval expiry: Unix 1900 seconds
+Approval override hash: (none)
+Approval actor: operator
+Approval reason: (none)
+Preview hash: (none)
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Policy
+Policy state: not-evaluated
+Policy tuple: (none)
+Policy config hash: (none)
+Policy tuple hash: (none)
+Policy activation ID: (none)
+Policy recorded config hash: (none)
+Policy recorded tuple hash: (none)
+Policy current config hash: (none)
+Policy current tuple hash: (none)
+Policy activated at: (none)
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: (none)
+Safety
+Safety state: clear
+Safety scan hash: (none)
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Outcome: approval-revoked
+Provenance: local decision
+Next action: Rebuild current approval evidence before attempting delivery.
+
+===== approval-override-required =====
+Approval status
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: 5555555555555555555555555555555555555555555555555555555555555555
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 1900 seconds
+Approval
+Approval state: override-required
+Approval ID: approval-1
+Approval hash: 3333333333333333333333333333333333333333333333333333333333333333
+Approval preview hash: 444444444444444444444444444444444444444444444444444444444
+                       4444444
+Approval revision hash: 55555555555555555555555555555555555555555555555555555555
+                        55555555
+Approval exact text hash: 666666666666666666666666666666666666666666666666666666
+                          6666666666
+Approval metadata hash: 77777777777777777777777777777777777777777777777777777777
+                        77777777
+Approval config hash: 8888888888888888888888888888888888888888888888888888888888
+                      888888
+Approval destination hash: 99999999999999999999999999999999999999999999999999999
+                           99999999999
+Approval policy basis hash: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                            aaaaaaaaaaaa
+Approval safety hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      bbbbbb
+Approval draft expiry: Unix 2000 seconds
+Approval expiry: Unix 1900 seconds
+Approval override hash: (none)
+Approval actor: operator
+Approval reason: (none)
+Preview hash: (none)
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Policy
+Policy state: not-evaluated
+Policy tuple: (none)
+Policy config hash: (none)
+Policy tuple hash: (none)
+Policy activation ID: (none)
+Policy recorded config hash: (none)
+Policy recorded tuple hash: (none)
+Policy current config hash: (none)
+Policy current tuple hash: (none)
+Policy activated at: (none)
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: (none)
+Safety
+Safety state: clear
+Safety scan hash: (none)
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Outcome: approval-override-required
+Provenance: local decision
+Next action: Review the redacted finding and request an exact TTY override if ap
+             propriate.
+
+===== secret-clear =====
+Secret finding
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: (not supplied)
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 2000 seconds
+Preview hash: 4444444444444444444444444444444444444444444444444444444444444444
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Approval
+Approval state: missing
+Approval ID: (none)
+Approval hash: (none)
+Approval preview hash: (none)
+Approval revision hash: (none)
+Approval exact text hash: (none)
+Approval metadata hash: (none)
+Approval config hash: (none)
+Approval destination hash: (none)
+Approval policy basis hash: (none)
+Approval safety hash: (none)
+Approval draft expiry: (none)
+Approval expiry: (none)
+Approval override hash: (none)
+Approval actor: (none)
+Approval reason: (none)
+Policy
+Policy state: not-evaluated
+Policy tuple: (none)
+Policy config hash: (none)
+Policy tuple hash: (none)
+Policy activation ID: (none)
+Policy recorded config hash: (none)
+Policy recorded tuple hash: (none)
+Policy current config hash: (none)
+Policy current tuple hash: (none)
+Policy activated at: (none)
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: (none)
+Safety
+Safety state: clear
+Safety scan hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                  bb
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Outcome: clear
+Provenance: local decision
+Next action: No override is required; continue with the current approval or poli
+             cy gate.
+
+===== secret-finding =====
+Secret finding
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: (not supplied)
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 2000 seconds
+Preview hash: 4444444444444444444444444444444444444444444444444444444444444444
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Approval
+Approval state: missing
+Approval ID: (none)
+Approval hash: (none)
+Approval preview hash: (none)
+Approval revision hash: (none)
+Approval exact text hash: (none)
+Approval metadata hash: (none)
+Approval config hash: (none)
+Approval destination hash: (none)
+Approval policy basis hash: (none)
+Approval safety hash: (none)
+Approval draft expiry: (none)
+Approval expiry: (none)
+Approval override hash: (none)
+Approval actor: (none)
+Approval reason: (none)
+Policy
+Policy state: not-evaluated
+Policy tuple: (none)
+Policy config hash: (none)
+Policy tuple hash: (none)
+Policy activation ID: (none)
+Policy recorded config hash: (none)
+Policy recorded tuple hash: (none)
+Policy current config hash: (none)
+Policy current tuple hash: (none)
+Policy activated at: (none)
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: (none)
+Safety
+Safety state: finding
+Safety scan hash: cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+                  cc
+Safety finding 1: authorization-value at rendered-text:12..48
+Safety finding 1 source: rendered-text
+Safety finding 1 metadata field: (none)
+Safety finding 1 byte range: 12..48
+Safety override hash: (none)
+Safety override reason: (none)
+Outcome: finding
+Provenance: local decision
+Next action: Review every redacted finding and, if appropriate, request an exact
+              TTY override.
+
+===== secret-override-required =====
+Secret finding
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: (not supplied)
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 2000 seconds
+Preview hash: 4444444444444444444444444444444444444444444444444444444444444444
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Approval
+Approval state: missing
+Approval ID: (none)
+Approval hash: (none)
+Approval preview hash: (none)
+Approval revision hash: (none)
+Approval exact text hash: (none)
+Approval metadata hash: (none)
+Approval config hash: (none)
+Approval destination hash: (none)
+Approval policy basis hash: (none)
+Approval safety hash: (none)
+Approval draft expiry: (none)
+Approval expiry: (none)
+Approval override hash: (none)
+Approval actor: (none)
+Approval reason: (none)
+Policy
+Policy state: not-evaluated
+Policy tuple: (none)
+Policy config hash: (none)
+Policy tuple hash: (none)
+Policy activation ID: (none)
+Policy recorded config hash: (none)
+Policy recorded tuple hash: (none)
+Policy current config hash: (none)
+Policy current tuple hash: (none)
+Policy activated at: (none)
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: (none)
+Safety
+Safety state: override-required
+Safety scan hash: cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+                  cc
+Safety finding 1: authorization-value at rendered-text:12..48
+Safety finding 1 source: rendered-text
+Safety finding 1 metadata field: (none)
+Safety finding 1 byte range: 12..48
+Safety override hash: (none)
+Safety override reason: (none)
+Outcome: override-required
+Provenance: local decision
+Next action: Review every redacted finding and, if appropriate, request an exact
+              TTY override.
+
+===== secret-expired =====
+Secret finding
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: (not supplied)
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 2000 seconds
+Preview hash: 4444444444444444444444444444444444444444444444444444444444444444
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Approval
+Approval state: missing
+Approval ID: (none)
+Approval hash: (none)
+Approval preview hash: (none)
+Approval revision hash: (none)
+Approval exact text hash: (none)
+Approval metadata hash: (none)
+Approval config hash: (none)
+Approval destination hash: (none)
+Approval policy basis hash: (none)
+Approval safety hash: (none)
+Approval draft expiry: (none)
+Approval expiry: (none)
+Approval override hash: (none)
+Approval actor: (none)
+Approval reason: (none)
+Policy
+Policy state: not-evaluated
+Policy tuple: (none)
+Policy config hash: (none)
+Policy tuple hash: (none)
+Policy activation ID: (none)
+Policy recorded config hash: (none)
+Policy recorded tuple hash: (none)
+Policy current config hash: (none)
+Policy current tuple hash: (none)
+Policy activated at: (none)
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: (none)
+Safety
+Safety state: expired
+Safety scan hash: cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+                  cc
+Safety finding 1: authorization-value at rendered-text:12..48
+Safety finding 1 source: rendered-text
+Safety finding 1 metadata field: (none)
+Safety finding 1 byte range: 12..48
+Safety override hash: (none)
+Safety override reason: (none)
+Outcome: expired
+Provenance: local decision
+Next action: Create a new immutable revision; the expired finding cannot be over
+             ridden.
+
+===== secret-not-evaluated =====
+Secret finding
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: (not supplied)
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 2000 seconds
+Preview hash: 4444444444444444444444444444444444444444444444444444444444444444
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Approval
+Approval state: missing
+Approval ID: (none)
+Approval hash: (none)
+Approval preview hash: (none)
+Approval revision hash: (none)
+Approval exact text hash: (none)
+Approval metadata hash: (none)
+Approval config hash: (none)
+Approval destination hash: (none)
+Approval policy basis hash: (none)
+Approval safety hash: (none)
+Approval draft expiry: (none)
+Approval expiry: (none)
+Approval override hash: (none)
+Approval actor: (none)
+Approval reason: (none)
+Policy
+Policy state: not-evaluated
+Policy tuple: (none)
+Policy config hash: (none)
+Policy tuple hash: (none)
+Policy activation ID: (none)
+Policy recorded config hash: (none)
+Policy recorded tuple hash: (none)
+Policy current config hash: (none)
+Policy current tuple hash: (none)
+Policy activated at: (none)
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: (none)
+Safety
+Safety state: not-evaluated
+Safety scan hash: cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+                  cc
+Safety finding 1: authorization-value at rendered-text:12..48
+Safety finding 1 source: rendered-text
+Safety finding 1 metadata field: (none)
+Safety finding 1 byte range: 12..48
+Safety override hash: (none)
+Safety override reason: (none)
+Outcome: not-evaluated
+Provenance: local decision
+Next action: Review every redacted finding and, if appropriate, request an exact
+              TTY override.
+
+===== secret-override =====
+Secret finding
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: (not supplied)
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 2000 seconds
+Preview hash: 4444444444444444444444444444444444444444444444444444444444444444
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Approval
+Approval state: missing
+Approval ID: (none)
+Approval hash: (none)
+Approval preview hash: (none)
+Approval revision hash: (none)
+Approval exact text hash: (none)
+Approval metadata hash: (none)
+Approval config hash: (none)
+Approval destination hash: (none)
+Approval policy basis hash: (none)
+Approval safety hash: (none)
+Approval draft expiry: (none)
+Approval expiry: (none)
+Approval override hash: (none)
+Approval actor: (none)
+Approval reason: (none)
+Policy
+Policy state: not-evaluated
+Policy tuple: (none)
+Policy config hash: (none)
+Policy tuple hash: (none)
+Policy activation ID: (none)
+Policy recorded config hash: (none)
+Policy recorded tuple hash: (none)
+Policy current config hash: (none)
+Policy current tuple hash: (none)
+Policy activated at: (none)
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: (none)
+Safety
+Safety state: override-recorded
+Safety scan hash: cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+                  cc
+Safety finding 1: authorization-value at rendered-text:12..48
+Safety finding 1 source: rendered-text
+Safety finding 1 metadata field: (none)
+Safety finding 1 byte range: 12..48
+Safety override hash: dddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+                      dddddd
+Safety override reason: reviewed-false-positive
+Outcome: override-recorded
+Provenance: local decision
+Next action: Keep the exact redacted override bound to this preview; do not reus
+             e it for another revision.
+
+===== delivery-unclaimed =====
+Delivery outcome
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: 5555555555555555555555555555555555555555555555555555555555555555
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 2000 seconds
+Attempt ID: attempt-1
+Attempt: attempt 1
+Exact text:
+  Build failed on main.
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Request nonce: (none)
+Content nonce: (none)
+Metadata
+Repository label: widgets
+Branch: main
+Commit: 0123456789abcdef0123456789abcdef01234567
+Approval
+Approval state: valid
+Approval ID: approval-1
+Approval hash: 3333333333333333333333333333333333333333333333333333333333333333
+Approval preview hash: 444444444444444444444444444444444444444444444444444444444
+                       4444444
+Approval revision hash: 55555555555555555555555555555555555555555555555555555555
+                        55555555
+Approval exact text hash: 666666666666666666666666666666666666666666666666666666
+                          6666666666
+Approval metadata hash: 77777777777777777777777777777777777777777777777777777777
+                        77777777
+Approval config hash: 8888888888888888888888888888888888888888888888888888888888
+                      888888
+Approval destination hash: 99999999999999999999999999999999999999999999999999999
+                           99999999999
+Approval policy basis hash: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                            aaaaaaaaaaaa
+Approval safety hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      bbbbbb
+Approval draft expiry: Unix 2000 seconds
+Approval expiry: Unix 1900 seconds
+Approval override hash: (none)
+Approval actor: operator
+Approval reason: (none)
+Policy
+Policy state: active
+Policy tuple: build_failed/release/high
+Policy config hash: 111111111111111111111111111111111111111111111111111111111111
+                    1111
+Policy tuple hash: 2222222222222222222222222222222222222222222222222222222222222
+                   222
+Policy activation ID: activation-1
+Policy recorded config hash: 111111111111111111111111111111111111111111111111111
+                             1111111111111
+Policy recorded tuple hash: 2222222222222222222222222222222222222222222222222222
+                            222222222222
+Policy current config hash: 1111111111111111111111111111111111111111111111111111
+                            111111111111
+Policy current tuple hash: 22222222222222222222222222222222222222222222222222222
+                           22222222222
+Policy activated at: 2026-01-01T00:00:00Z
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: one current exact activation
+Policy activations
+Policy activation 1: activation-1 (build_failed/release/high), active=true
+Policy activation 1 recorded config hash: 11111111111111111111111111111111111111
+                                          11111111111111111111111111
+Policy activation 1 recorded tuple hash: 222222222222222222222222222222222222222
+                                         2222222222222222222222222
+Policy activation 1 current config hash: 111111111111111111111111111111111111111
+                                         1111111111111111111111111
+Policy activation 1 current tuple hash: 2222222222222222222222222222222222222222
+                                        222222222222222222222222
+Policy activation 1 stale reason: (none)
+Safety
+Safety state: clear
+Safety scan hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                  bb
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Delivery result
+Outcome: unclaimed
+Provenance: local delivery record
+Next action: Run a current eligibility check; no delivery attempt is recorded.
+
+===== delivery-claimed =====
+Delivery outcome
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: 5555555555555555555555555555555555555555555555555555555555555555
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 2000 seconds
+Attempt ID: attempt-1
+Attempt: attempt 1
+Exact text:
+  Build failed on main.
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Request nonce: (none)
+Content nonce: (none)
+Metadata
+Repository label: widgets
+Branch: main
+Commit: 0123456789abcdef0123456789abcdef01234567
+Approval
+Approval state: valid
+Approval ID: approval-1
+Approval hash: 3333333333333333333333333333333333333333333333333333333333333333
+Approval preview hash: 444444444444444444444444444444444444444444444444444444444
+                       4444444
+Approval revision hash: 55555555555555555555555555555555555555555555555555555555
+                        55555555
+Approval exact text hash: 666666666666666666666666666666666666666666666666666666
+                          6666666666
+Approval metadata hash: 77777777777777777777777777777777777777777777777777777777
+                        77777777
+Approval config hash: 8888888888888888888888888888888888888888888888888888888888
+                      888888
+Approval destination hash: 99999999999999999999999999999999999999999999999999999
+                           99999999999
+Approval policy basis hash: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                            aaaaaaaaaaaa
+Approval safety hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      bbbbbb
+Approval draft expiry: Unix 2000 seconds
+Approval expiry: Unix 1900 seconds
+Approval override hash: (none)
+Approval actor: operator
+Approval reason: (none)
+Policy
+Policy state: active
+Policy tuple: build_failed/release/high
+Policy config hash: 111111111111111111111111111111111111111111111111111111111111
+                    1111
+Policy tuple hash: 2222222222222222222222222222222222222222222222222222222222222
+                   222
+Policy activation ID: activation-1
+Policy recorded config hash: 111111111111111111111111111111111111111111111111111
+                             1111111111111
+Policy recorded tuple hash: 2222222222222222222222222222222222222222222222222222
+                            222222222222
+Policy current config hash: 1111111111111111111111111111111111111111111111111111
+                            111111111111
+Policy current tuple hash: 22222222222222222222222222222222222222222222222222222
+                           22222222222
+Policy activated at: 2026-01-01T00:00:00Z
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: one current exact activation
+Policy activations
+Policy activation 1: activation-1 (build_failed/release/high), active=true
+Policy activation 1 recorded config hash: 11111111111111111111111111111111111111
+                                          11111111111111111111111111
+Policy activation 1 recorded tuple hash: 222222222222222222222222222222222222222
+                                         2222222222222222222222222
+Policy activation 1 current config hash: 111111111111111111111111111111111111111
+                                         1111111111111111111111111
+Policy activation 1 current tuple hash: 2222222222222222222222222222222222222222
+                                        222222222222222222222222
+Policy activation 1 stale reason: (none)
+Safety
+Safety state: clear
+Safety scan hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                  bb
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Delivery result
+Outcome: claimed
+Provenance: local delivery record
+Next action: Perform exactly one transport attempt through the delivery owner.
+
+===== delivery-accepted =====
+Delivery outcome
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: 5555555555555555555555555555555555555555555555555555555555555555
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 2000 seconds
+Attempt ID: attempt-1
+Attempt: attempt 1
+Exact text:
+  Build failed on main.
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Request nonce: (none)
+Content nonce: (none)
+Metadata
+Repository label: widgets
+Branch: main
+Commit: 0123456789abcdef0123456789abcdef01234567
+Approval
+Approval state: valid
+Approval ID: approval-1
+Approval hash: 3333333333333333333333333333333333333333333333333333333333333333
+Approval preview hash: 444444444444444444444444444444444444444444444444444444444
+                       4444444
+Approval revision hash: 55555555555555555555555555555555555555555555555555555555
+                        55555555
+Approval exact text hash: 666666666666666666666666666666666666666666666666666666
+                          6666666666
+Approval metadata hash: 77777777777777777777777777777777777777777777777777777777
+                        77777777
+Approval config hash: 8888888888888888888888888888888888888888888888888888888888
+                      888888
+Approval destination hash: 99999999999999999999999999999999999999999999999999999
+                           99999999999
+Approval policy basis hash: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                            aaaaaaaaaaaa
+Approval safety hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      bbbbbb
+Approval draft expiry: Unix 2000 seconds
+Approval expiry: Unix 1900 seconds
+Approval override hash: (none)
+Approval actor: operator
+Approval reason: (none)
+Policy
+Policy state: active
+Policy tuple: build_failed/release/high
+Policy config hash: 111111111111111111111111111111111111111111111111111111111111
+                    1111
+Policy tuple hash: 2222222222222222222222222222222222222222222222222222222222222
+                   222
+Policy activation ID: activation-1
+Policy recorded config hash: 111111111111111111111111111111111111111111111111111
+                             1111111111111
+Policy recorded tuple hash: 2222222222222222222222222222222222222222222222222222
+                            222222222222
+Policy current config hash: 1111111111111111111111111111111111111111111111111111
+                            111111111111
+Policy current tuple hash: 22222222222222222222222222222222222222222222222222222
+                           22222222222
+Policy activated at: 2026-01-01T00:00:00Z
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: one current exact activation
+Policy activations
+Policy activation 1: activation-1 (build_failed/release/high), active=true
+Policy activation 1 recorded config hash: 11111111111111111111111111111111111111
+                                          11111111111111111111111111
+Policy activation 1 recorded tuple hash: 222222222222222222222222222222222222222
+                                         2222222222222222222222222
+Policy activation 1 current config hash: 111111111111111111111111111111111111111
+                                         1111111111111111111111111
+Policy activation 1 current tuple hash: 2222222222222222222222222222222222222222
+                                        222222222222222222222222
+Policy activation 1 stale reason: (none)
+Safety
+Safety state: clear
+Safety scan hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                  bb
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Delivery result
+Outcome: accepted
+Remote message ID: 300000000000000000
+Remote meaning: message accepted; no recipient-attention or response claim
+Provenance: local delivery record
+Next action: Keep the immutable local record; do not infer recipient attention o
+             r a response.
+
+===== delivery-failed =====
+Delivery outcome
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: 5555555555555555555555555555555555555555555555555555555555555555
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 2000 seconds
+Attempt ID: attempt-1
+Attempt: attempt 1
+Exact text:
+  Build failed on main.
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Request nonce: (none)
+Content nonce: (none)
+Metadata
+Repository label: widgets
+Branch: main
+Commit: 0123456789abcdef0123456789abcdef01234567
+Approval
+Approval state: valid
+Approval ID: approval-1
+Approval hash: 3333333333333333333333333333333333333333333333333333333333333333
+Approval preview hash: 444444444444444444444444444444444444444444444444444444444
+                       4444444
+Approval revision hash: 55555555555555555555555555555555555555555555555555555555
+                        55555555
+Approval exact text hash: 666666666666666666666666666666666666666666666666666666
+                          6666666666
+Approval metadata hash: 77777777777777777777777777777777777777777777777777777777
+                        77777777
+Approval config hash: 8888888888888888888888888888888888888888888888888888888888
+                      888888
+Approval destination hash: 99999999999999999999999999999999999999999999999999999
+                           99999999999
+Approval policy basis hash: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                            aaaaaaaaaaaa
+Approval safety hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      bbbbbb
+Approval draft expiry: Unix 2000 seconds
+Approval expiry: Unix 1900 seconds
+Approval override hash: (none)
+Approval actor: operator
+Approval reason: (none)
+Policy
+Policy state: active
+Policy tuple: build_failed/release/high
+Policy config hash: 111111111111111111111111111111111111111111111111111111111111
+                    1111
+Policy tuple hash: 2222222222222222222222222222222222222222222222222222222222222
+                   222
+Policy activation ID: activation-1
+Policy recorded config hash: 111111111111111111111111111111111111111111111111111
+                             1111111111111
+Policy recorded tuple hash: 2222222222222222222222222222222222222222222222222222
+                            222222222222
+Policy current config hash: 1111111111111111111111111111111111111111111111111111
+                            111111111111
+Policy current tuple hash: 22222222222222222222222222222222222222222222222222222
+                           22222222222
+Policy activated at: 2026-01-01T00:00:00Z
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: one current exact activation
+Policy activations
+Policy activation 1: activation-1 (build_failed/release/high), active=true
+Policy activation 1 recorded config hash: 11111111111111111111111111111111111111
+                                          11111111111111111111111111
+Policy activation 1 recorded tuple hash: 222222222222222222222222222222222222222
+                                         2222222222222222222222222
+Policy activation 1 current config hash: 111111111111111111111111111111111111111
+                                         1111111111111111111111111
+Policy activation 1 current tuple hash: 2222222222222222222222222222222222222222
+                                        222222222222222222222222
+Policy activation 1 stale reason: (none)
+Safety
+Safety state: clear
+Safety scan hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                  bb
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Stable exit category: internal-failure
+Delivery result
+Outcome: failed
+Failure code: permission-denied
+Provenance: local delivery record
+Next action: Inspect the redacted failure and create a new explicitly authorized
+              attempt if safe.
+
+===== delivery-retry-wait =====
+Delivery outcome
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: 5555555555555555555555555555555555555555555555555555555555555555
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 2000 seconds
+Attempt ID: attempt-1
+Attempt: attempt 1
+Exact text:
+  Build failed on main.
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Request nonce: (none)
+Content nonce: (none)
+Metadata
+Repository label: widgets
+Branch: main
+Commit: 0123456789abcdef0123456789abcdef01234567
+Approval
+Approval state: valid
+Approval ID: approval-1
+Approval hash: 3333333333333333333333333333333333333333333333333333333333333333
+Approval preview hash: 444444444444444444444444444444444444444444444444444444444
+                       4444444
+Approval revision hash: 55555555555555555555555555555555555555555555555555555555
+                        55555555
+Approval exact text hash: 666666666666666666666666666666666666666666666666666666
+                          6666666666
+Approval metadata hash: 77777777777777777777777777777777777777777777777777777777
+                        77777777
+Approval config hash: 8888888888888888888888888888888888888888888888888888888888
+                      888888
+Approval destination hash: 99999999999999999999999999999999999999999999999999999
+                           99999999999
+Approval policy basis hash: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                            aaaaaaaaaaaa
+Approval safety hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      bbbbbb
+Approval draft expiry: Unix 2000 seconds
+Approval expiry: Unix 1900 seconds
+Approval override hash: (none)
+Approval actor: operator
+Approval reason: (none)
+Policy
+Policy state: active
+Policy tuple: build_failed/release/high
+Policy config hash: 111111111111111111111111111111111111111111111111111111111111
+                    1111
+Policy tuple hash: 2222222222222222222222222222222222222222222222222222222222222
+                   222
+Policy activation ID: activation-1
+Policy recorded config hash: 111111111111111111111111111111111111111111111111111
+                             1111111111111
+Policy recorded tuple hash: 2222222222222222222222222222222222222222222222222222
+                            222222222222
+Policy current config hash: 1111111111111111111111111111111111111111111111111111
+                            111111111111
+Policy current tuple hash: 22222222222222222222222222222222222222222222222222222
+                           22222222222
+Policy activated at: 2026-01-01T00:00:00Z
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: one current exact activation
+Policy activations
+Policy activation 1: activation-1 (build_failed/release/high), active=true
+Policy activation 1 recorded config hash: 11111111111111111111111111111111111111
+                                          11111111111111111111111111
+Policy activation 1 recorded tuple hash: 222222222222222222222222222222222222222
+                                         2222222222222222222222222
+Policy activation 1 current config hash: 111111111111111111111111111111111111111
+                                         1111111111111111111111111
+Policy activation 1 current tuple hash: 2222222222222222222222222222222222222222
+                                        222222222222222222222222
+Policy activation 1 stale reason: (none)
+Safety
+Safety state: clear
+Safety scan hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                  bb
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Stable exit category: connectivity-rate-limit
+Delivery result
+Outcome: retry-wait
+Next attempt: 2
+Wait seconds: 3
+Wait kind: discord-directed
+Provenance: local delivery record
+Next action: Honor the bounded wait and let the delivery owner claim the next at
+             tempt.
+
+===== delivery-unknown =====
+Delivery outcome
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: 5555555555555555555555555555555555555555555555555555555555555555
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 2000 seconds
+Attempt ID: attempt-1
+Attempt: attempt 1
+Exact text:
+  Build failed on main.
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Request nonce: (none)
+Content nonce: (none)
+Metadata
+Repository label: widgets
+Branch: main
+Commit: 0123456789abcdef0123456789abcdef01234567
+Approval
+Approval state: valid
+Approval ID: approval-1
+Approval hash: 3333333333333333333333333333333333333333333333333333333333333333
+Approval preview hash: 444444444444444444444444444444444444444444444444444444444
+                       4444444
+Approval revision hash: 55555555555555555555555555555555555555555555555555555555
+                        55555555
+Approval exact text hash: 666666666666666666666666666666666666666666666666666666
+                          6666666666
+Approval metadata hash: 77777777777777777777777777777777777777777777777777777777
+                        77777777
+Approval config hash: 8888888888888888888888888888888888888888888888888888888888
+                      888888
+Approval destination hash: 99999999999999999999999999999999999999999999999999999
+                           99999999999
+Approval policy basis hash: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                            aaaaaaaaaaaa
+Approval safety hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      bbbbbb
+Approval draft expiry: Unix 2000 seconds
+Approval expiry: Unix 1900 seconds
+Approval override hash: (none)
+Approval actor: operator
+Approval reason: (none)
+Policy
+Policy state: active
+Policy tuple: build_failed/release/high
+Policy config hash: 111111111111111111111111111111111111111111111111111111111111
+                    1111
+Policy tuple hash: 2222222222222222222222222222222222222222222222222222222222222
+                   222
+Policy activation ID: activation-1
+Policy recorded config hash: 111111111111111111111111111111111111111111111111111
+                             1111111111111
+Policy recorded tuple hash: 2222222222222222222222222222222222222222222222222222
+                            222222222222
+Policy current config hash: 1111111111111111111111111111111111111111111111111111
+                            111111111111
+Policy current tuple hash: 22222222222222222222222222222222222222222222222222222
+                           22222222222
+Policy activated at: 2026-01-01T00:00:00Z
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: one current exact activation
+Policy activations
+Policy activation 1: activation-1 (build_failed/release/high), active=true
+Policy activation 1 recorded config hash: 11111111111111111111111111111111111111
+                                          11111111111111111111111111
+Policy activation 1 recorded tuple hash: 222222222222222222222222222222222222222
+                                         2222222222222222222222222
+Policy activation 1 current config hash: 111111111111111111111111111111111111111
+                                         1111111111111111111111111
+Policy activation 1 current tuple hash: 2222222222222222222222222222222222222222
+                                        222222222222222222222222
+Policy activation 1 stale reason: (none)
+Safety
+Safety state: clear
+Safety scan hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                  bb
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Stable exit category: unknown-delivery
+Delivery result
+Outcome: unknown
+Unknown reason: post-dispatch-timeout
+Resend: blocked until exact reconciliation
+Provenance: local delivery record
+Next action: Reconcile the exact destination, bot author, nonce, and content bef
+             ore any resend.
+
+===== delivery-reconciliation-unknown =====
+Delivery outcome
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: 5555555555555555555555555555555555555555555555555555555555555555
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 2000 seconds
+Attempt ID: attempt-1
+Attempt: attempt 1
+Exact text:
+  Build failed on main.
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Request nonce: (none)
+Content nonce: (none)
+Metadata
+Repository label: widgets
+Branch: main
+Commit: 0123456789abcdef0123456789abcdef01234567
+Approval
+Approval state: valid
+Approval ID: approval-1
+Approval hash: 3333333333333333333333333333333333333333333333333333333333333333
+Approval preview hash: 444444444444444444444444444444444444444444444444444444444
+                       4444444
+Approval revision hash: 55555555555555555555555555555555555555555555555555555555
+                        55555555
+Approval exact text hash: 666666666666666666666666666666666666666666666666666666
+                          6666666666
+Approval metadata hash: 77777777777777777777777777777777777777777777777777777777
+                        77777777
+Approval config hash: 8888888888888888888888888888888888888888888888888888888888
+                      888888
+Approval destination hash: 99999999999999999999999999999999999999999999999999999
+                           99999999999
+Approval policy basis hash: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                            aaaaaaaaaaaa
+Approval safety hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      bbbbbb
+Approval draft expiry: Unix 2000 seconds
+Approval expiry: Unix 1900 seconds
+Approval override hash: (none)
+Approval actor: operator
+Approval reason: (none)
+Policy
+Policy state: active
+Policy tuple: build_failed/release/high
+Policy config hash: 111111111111111111111111111111111111111111111111111111111111
+                    1111
+Policy tuple hash: 2222222222222222222222222222222222222222222222222222222222222
+                   222
+Policy activation ID: activation-1
+Policy recorded config hash: 111111111111111111111111111111111111111111111111111
+                             1111111111111
+Policy recorded tuple hash: 2222222222222222222222222222222222222222222222222222
+                            222222222222
+Policy current config hash: 1111111111111111111111111111111111111111111111111111
+                            111111111111
+Policy current tuple hash: 22222222222222222222222222222222222222222222222222222
+                           22222222222
+Policy activated at: 2026-01-01T00:00:00Z
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: one current exact activation
+Policy activations
+Policy activation 1: activation-1 (build_failed/release/high), active=true
+Policy activation 1 recorded config hash: 11111111111111111111111111111111111111
+                                          11111111111111111111111111
+Policy activation 1 recorded tuple hash: 222222222222222222222222222222222222222
+                                         2222222222222222222222222
+Policy activation 1 current config hash: 111111111111111111111111111111111111111
+                                         1111111111111111111111111
+Policy activation 1 current tuple hash: 2222222222222222222222222222222222222222
+                                        222222222222222222222222
+Policy activation 1 stale reason: (none)
+Safety
+Safety state: clear
+Safety scan hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                  bb
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Stable exit category: unknown-delivery
+Delivery result
+Outcome: unknown
+Unknown reason: no-match-yet
+Successful reconciliation reads: 2
+Observation started: Unix 1200 seconds
+Last successful read: Unix 1500 seconds
+Resend: blocked until exact reconciliation
+Provenance: local delivery record
+Next action: Reconcile the exact destination, bot author, nonce, and content bef
+             ore any resend.
+
+===== delivery-reconciled-accepted =====
+Delivery outcome
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: 5555555555555555555555555555555555555555555555555555555555555555
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 2000 seconds
+Attempt ID: attempt-1
+Attempt: attempt 1
+Exact text:
+  Build failed on main.
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Request nonce: (none)
+Content nonce: (none)
+Metadata
+Repository label: widgets
+Branch: main
+Commit: 0123456789abcdef0123456789abcdef01234567
+Approval
+Approval state: valid
+Approval ID: approval-1
+Approval hash: 3333333333333333333333333333333333333333333333333333333333333333
+Approval preview hash: 444444444444444444444444444444444444444444444444444444444
+                       4444444
+Approval revision hash: 55555555555555555555555555555555555555555555555555555555
+                        55555555
+Approval exact text hash: 666666666666666666666666666666666666666666666666666666
+                          6666666666
+Approval metadata hash: 77777777777777777777777777777777777777777777777777777777
+                        77777777
+Approval config hash: 8888888888888888888888888888888888888888888888888888888888
+                      888888
+Approval destination hash: 99999999999999999999999999999999999999999999999999999
+                           99999999999
+Approval policy basis hash: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                            aaaaaaaaaaaa
+Approval safety hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      bbbbbb
+Approval draft expiry: Unix 2000 seconds
+Approval expiry: Unix 1900 seconds
+Approval override hash: (none)
+Approval actor: operator
+Approval reason: (none)
+Policy
+Policy state: active
+Policy tuple: build_failed/release/high
+Policy config hash: 111111111111111111111111111111111111111111111111111111111111
+                    1111
+Policy tuple hash: 2222222222222222222222222222222222222222222222222222222222222
+                   222
+Policy activation ID: activation-1
+Policy recorded config hash: 111111111111111111111111111111111111111111111111111
+                             1111111111111
+Policy recorded tuple hash: 2222222222222222222222222222222222222222222222222222
+                            222222222222
+Policy current config hash: 1111111111111111111111111111111111111111111111111111
+                            111111111111
+Policy current tuple hash: 22222222222222222222222222222222222222222222222222222
+                           22222222222
+Policy activated at: 2026-01-01T00:00:00Z
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: one current exact activation
+Policy activations
+Policy activation 1: activation-1 (build_failed/release/high), active=true
+Policy activation 1 recorded config hash: 11111111111111111111111111111111111111
+                                          11111111111111111111111111
+Policy activation 1 recorded tuple hash: 222222222222222222222222222222222222222
+                                         2222222222222222222222222
+Policy activation 1 current config hash: 111111111111111111111111111111111111111
+                                         1111111111111111111111111
+Policy activation 1 current tuple hash: 2222222222222222222222222222222222222222
+                                        222222222222222222222222
+Policy activation 1 stale reason: (none)
+Safety
+Safety state: clear
+Safety scan hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                  bb
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Delivery result
+Outcome: reconciled-accepted
+Reconciled message ID: 300000000000000000
+Successful reconciliation reads: 1
+Observed at: Unix 1500 seconds
+Remote meaning: exact message observed; no recipient-attention or response claim
+Provenance: local delivery record
+Next action: Keep the reconciled local record; do not infer recipient attention 
+             or a response.
+
+===== delivery-reconciled-absent =====
+Delivery outcome
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: 5555555555555555555555555555555555555555555555555555555555555555
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 2000 seconds
+Attempt ID: attempt-1
+Attempt: attempt 1
+Exact text:
+  Build failed on main.
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Request nonce: (none)
+Content nonce: (none)
+Metadata
+Repository label: widgets
+Branch: main
+Commit: 0123456789abcdef0123456789abcdef01234567
+Approval
+Approval state: valid
+Approval ID: approval-1
+Approval hash: 3333333333333333333333333333333333333333333333333333333333333333
+Approval preview hash: 444444444444444444444444444444444444444444444444444444444
+                       4444444
+Approval revision hash: 55555555555555555555555555555555555555555555555555555555
+                        55555555
+Approval exact text hash: 666666666666666666666666666666666666666666666666666666
+                          6666666666
+Approval metadata hash: 77777777777777777777777777777777777777777777777777777777
+                        77777777
+Approval config hash: 8888888888888888888888888888888888888888888888888888888888
+                      888888
+Approval destination hash: 99999999999999999999999999999999999999999999999999999
+                           99999999999
+Approval policy basis hash: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                            aaaaaaaaaaaa
+Approval safety hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      bbbbbb
+Approval draft expiry: Unix 2000 seconds
+Approval expiry: Unix 1900 seconds
+Approval override hash: (none)
+Approval actor: operator
+Approval reason: (none)
+Policy
+Policy state: active
+Policy tuple: build_failed/release/high
+Policy config hash: 111111111111111111111111111111111111111111111111111111111111
+                    1111
+Policy tuple hash: 2222222222222222222222222222222222222222222222222222222222222
+                   222
+Policy activation ID: activation-1
+Policy recorded config hash: 111111111111111111111111111111111111111111111111111
+                             1111111111111
+Policy recorded tuple hash: 2222222222222222222222222222222222222222222222222222
+                            222222222222
+Policy current config hash: 1111111111111111111111111111111111111111111111111111
+                            111111111111
+Policy current tuple hash: 22222222222222222222222222222222222222222222222222222
+                           22222222222
+Policy activated at: 2026-01-01T00:00:00Z
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: one current exact activation
+Policy activations
+Policy activation 1: activation-1 (build_failed/release/high), active=true
+Policy activation 1 recorded config hash: 11111111111111111111111111111111111111
+                                          11111111111111111111111111
+Policy activation 1 recorded tuple hash: 222222222222222222222222222222222222222
+                                         2222222222222222222222222
+Policy activation 1 current config hash: 111111111111111111111111111111111111111
+                                         1111111111111111111111111
+Policy activation 1 current tuple hash: 2222222222222222222222222222222222222222
+                                        222222222222222222222222
+Policy activation 1 stale reason: (none)
+Safety
+Safety state: clear
+Safety scan hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                  bb
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Stable exit category: unknown-delivery
+Delivery result
+Outcome: reconciled-absent
+Successful reconciliation reads: 4
+Observation started: Unix 1200 seconds
+Observed at: Unix 1600 seconds
+Provenance: local delivery record
+Next action: Review the absence evidence and require a fresh domain decision bef
+             ore any resend.
+
+===== delivery-unresolved =====
+Delivery outcome
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: 5555555555555555555555555555555555555555555555555555555555555555
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 2000 seconds
+Attempt ID: attempt-1
+Attempt: attempt 1
+Exact text:
+  Build failed on main.
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Request nonce: (none)
+Content nonce: (none)
+Metadata
+Repository label: widgets
+Branch: main
+Commit: 0123456789abcdef0123456789abcdef01234567
+Approval
+Approval state: valid
+Approval ID: approval-1
+Approval hash: 3333333333333333333333333333333333333333333333333333333333333333
+Approval preview hash: 444444444444444444444444444444444444444444444444444444444
+                       4444444
+Approval revision hash: 55555555555555555555555555555555555555555555555555555555
+                        55555555
+Approval exact text hash: 666666666666666666666666666666666666666666666666666666
+                          6666666666
+Approval metadata hash: 77777777777777777777777777777777777777777777777777777777
+                        77777777
+Approval config hash: 8888888888888888888888888888888888888888888888888888888888
+                      888888
+Approval destination hash: 99999999999999999999999999999999999999999999999999999
+                           99999999999
+Approval policy basis hash: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                            aaaaaaaaaaaa
+Approval safety hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      bbbbbb
+Approval draft expiry: Unix 2000 seconds
+Approval expiry: Unix 1900 seconds
+Approval override hash: (none)
+Approval actor: operator
+Approval reason: (none)
+Policy
+Policy state: active
+Policy tuple: build_failed/release/high
+Policy config hash: 111111111111111111111111111111111111111111111111111111111111
+                    1111
+Policy tuple hash: 2222222222222222222222222222222222222222222222222222222222222
+                   222
+Policy activation ID: activation-1
+Policy recorded config hash: 111111111111111111111111111111111111111111111111111
+                             1111111111111
+Policy recorded tuple hash: 2222222222222222222222222222222222222222222222222222
+                            222222222222
+Policy current config hash: 1111111111111111111111111111111111111111111111111111
+                            111111111111
+Policy current tuple hash: 22222222222222222222222222222222222222222222222222222
+                           22222222222
+Policy activated at: 2026-01-01T00:00:00Z
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: one current exact activation
+Policy activations
+Policy activation 1: activation-1 (build_failed/release/high), active=true
+Policy activation 1 recorded config hash: 11111111111111111111111111111111111111
+                                          11111111111111111111111111
+Policy activation 1 recorded tuple hash: 222222222222222222222222222222222222222
+                                         2222222222222222222222222
+Policy activation 1 current config hash: 111111111111111111111111111111111111111
+                                         1111111111111111111111111
+Policy activation 1 current tuple hash: 2222222222222222222222222222222222222222
+                                        222222222222222222222222
+Policy activation 1 stale reason: (none)
+Safety
+Safety state: clear
+Safety scan hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                  bb
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Stable exit category: unknown-delivery
+Delivery result
+Outcome: unresolved
+Unresolved reason: conflicting-content
+Successful reconciliation reads: 2
+Provenance: local delivery record
+Next action: Keep the send blocked and inspect the redacted reconciliation evide
+             nce.
+
+===== eligibility-rejected =====
+Delivery outcome
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: 5555555555555555555555555555555555555555555555555555555555555555
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 2000 seconds
+Attempt ID: attempt-1
+Attempt: attempt 1
+Exact text:
+  Build failed on main.
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Request nonce: (none)
+Content nonce: (none)
+Metadata
+Repository label: widgets
+Branch: main
+Commit: 0123456789abcdef0123456789abcdef01234567
+Approval
+Approval state: valid
+Approval ID: approval-1
+Approval hash: 3333333333333333333333333333333333333333333333333333333333333333
+Approval preview hash: 444444444444444444444444444444444444444444444444444444444
+                       4444444
+Approval revision hash: 55555555555555555555555555555555555555555555555555555555
+                        55555555
+Approval exact text hash: 666666666666666666666666666666666666666666666666666666
+                          6666666666
+Approval metadata hash: 77777777777777777777777777777777777777777777777777777777
+                        77777777
+Approval config hash: 8888888888888888888888888888888888888888888888888888888888
+                      888888
+Approval destination hash: 99999999999999999999999999999999999999999999999999999
+                           99999999999
+Approval policy basis hash: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                            aaaaaaaaaaaa
+Approval safety hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      bbbbbb
+Approval draft expiry: Unix 2000 seconds
+Approval expiry: Unix 1900 seconds
+Approval override hash: (none)
+Approval actor: operator
+Approval reason: (none)
+Policy
+Policy state: active
+Policy tuple: build_failed/release/high
+Policy config hash: 111111111111111111111111111111111111111111111111111111111111
+                    1111
+Policy tuple hash: 2222222222222222222222222222222222222222222222222222222222222
+                   222
+Policy activation ID: activation-1
+Policy recorded config hash: 111111111111111111111111111111111111111111111111111
+                             1111111111111
+Policy recorded tuple hash: 2222222222222222222222222222222222222222222222222222
+                            222222222222
+Policy current config hash: 1111111111111111111111111111111111111111111111111111
+                            111111111111
+Policy current tuple hash: 22222222222222222222222222222222222222222222222222222
+                           22222222222
+Policy activated at: 2026-01-01T00:00:00Z
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: one current exact activation
+Policy activations
+Policy activation 1: activation-1 (build_failed/release/high), active=true
+Policy activation 1 recorded config hash: 11111111111111111111111111111111111111
+                                          11111111111111111111111111
+Policy activation 1 recorded tuple hash: 222222222222222222222222222222222222222
+                                         2222222222222222222222222
+Policy activation 1 current config hash: 111111111111111111111111111111111111111
+                                         1111111111111111111111111
+Policy activation 1 current tuple hash: 2222222222222222222222222222222222222222
+                                        222222222222222222222222
+Policy activation 1 stale reason: (none)
+Safety
+Safety state: clear
+Safety scan hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                  bb
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Stable exit category: policy-blocked
+Delivery result
+Outcome: eligibility-rejected
+Eligibility blocker: authority-missing
+Provenance: local delivery record
+Next action: Resolve the exact approval, policy, safety, destination, or revisio
+             n blocker.
+
+===== delivery-expired =====
+Delivery outcome
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: 5555555555555555555555555555555555555555555555555555555555555555
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 2000 seconds
+Attempt ID: attempt-1
+Attempt: attempt 1
+Exact text:
+  Build failed on main.
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Request nonce: (none)
+Content nonce: (none)
+Metadata
+Repository label: widgets
+Branch: main
+Commit: 0123456789abcdef0123456789abcdef01234567
+Approval
+Approval state: valid
+Approval ID: approval-1
+Approval hash: 3333333333333333333333333333333333333333333333333333333333333333
+Approval preview hash: 444444444444444444444444444444444444444444444444444444444
+                       4444444
+Approval revision hash: 55555555555555555555555555555555555555555555555555555555
+                        55555555
+Approval exact text hash: 666666666666666666666666666666666666666666666666666666
+                          6666666666
+Approval metadata hash: 77777777777777777777777777777777777777777777777777777777
+                        77777777
+Approval config hash: 8888888888888888888888888888888888888888888888888888888888
+                      888888
+Approval destination hash: 99999999999999999999999999999999999999999999999999999
+                           99999999999
+Approval policy basis hash: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                            aaaaaaaaaaaa
+Approval safety hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      bbbbbb
+Approval draft expiry: Unix 2000 seconds
+Approval expiry: Unix 1900 seconds
+Approval override hash: (none)
+Approval actor: operator
+Approval reason: (none)
+Policy
+Policy state: active
+Policy tuple: build_failed/release/high
+Policy config hash: 111111111111111111111111111111111111111111111111111111111111
+                    1111
+Policy tuple hash: 2222222222222222222222222222222222222222222222222222222222222
+                   222
+Policy activation ID: activation-1
+Policy recorded config hash: 111111111111111111111111111111111111111111111111111
+                             1111111111111
+Policy recorded tuple hash: 2222222222222222222222222222222222222222222222222222
+                            222222222222
+Policy current config hash: 1111111111111111111111111111111111111111111111111111
+                            111111111111
+Policy current tuple hash: 22222222222222222222222222222222222222222222222222222
+                           22222222222
+Policy activated at: 2026-01-01T00:00:00Z
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: one current exact activation
+Policy activations
+Policy activation 1: activation-1 (build_failed/release/high), active=true
+Policy activation 1 recorded config hash: 11111111111111111111111111111111111111
+                                          11111111111111111111111111
+Policy activation 1 recorded tuple hash: 222222222222222222222222222222222222222
+                                         2222222222222222222222222
+Policy activation 1 current config hash: 111111111111111111111111111111111111111
+                                         1111111111111111111111111
+Policy activation 1 current tuple hash: 2222222222222222222222222222222222222222
+                                        222222222222222222222222
+Policy activation 1 stale reason: (none)
+Safety
+Safety state: clear
+Safety scan hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                  bb
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Stable exit category: policy-blocked
+Delivery result
+Outcome: expired
+Expiry: draft or approval boundary reached
+Provenance: local delivery record
+Next action: Create a new immutable draft revision; an expired revision cannot b
+             e sent.
+
+===== delivery-stale-authority =====
+Delivery outcome
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: 5555555555555555555555555555555555555555555555555555555555555555
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 2000 seconds
+Attempt ID: attempt-1
+Attempt: attempt 1
+Exact text:
+  Build failed on main.
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Request nonce: (none)
+Content nonce: (none)
+Metadata
+Repository label: widgets
+Branch: main
+Commit: 0123456789abcdef0123456789abcdef01234567
+Approval
+Approval state: valid
+Approval ID: approval-1
+Approval hash: 3333333333333333333333333333333333333333333333333333333333333333
+Approval preview hash: 444444444444444444444444444444444444444444444444444444444
+                       4444444
+Approval revision hash: 55555555555555555555555555555555555555555555555555555555
+                        55555555
+Approval exact text hash: 666666666666666666666666666666666666666666666666666666
+                          6666666666
+Approval metadata hash: 77777777777777777777777777777777777777777777777777777777
+                        77777777
+Approval config hash: 8888888888888888888888888888888888888888888888888888888888
+                      888888
+Approval destination hash: 99999999999999999999999999999999999999999999999999999
+                           99999999999
+Approval policy basis hash: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                            aaaaaaaaaaaa
+Approval safety hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      bbbbbb
+Approval draft expiry: Unix 2000 seconds
+Approval expiry: Unix 1900 seconds
+Approval override hash: (none)
+Approval actor: operator
+Approval reason: (none)
+Policy
+Policy state: active
+Policy tuple: build_failed/release/high
+Policy config hash: 111111111111111111111111111111111111111111111111111111111111
+                    1111
+Policy tuple hash: 2222222222222222222222222222222222222222222222222222222222222
+                   222
+Policy activation ID: activation-1
+Policy recorded config hash: 111111111111111111111111111111111111111111111111111
+                             1111111111111
+Policy recorded tuple hash: 2222222222222222222222222222222222222222222222222222
+                            222222222222
+Policy current config hash: 1111111111111111111111111111111111111111111111111111
+                            111111111111
+Policy current tuple hash: 22222222222222222222222222222222222222222222222222222
+                           22222222222
+Policy activated at: 2026-01-01T00:00:00Z
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: one current exact activation
+Policy activations
+Policy activation 1: activation-1 (build_failed/release/high), active=true
+Policy activation 1 recorded config hash: 11111111111111111111111111111111111111
+                                          11111111111111111111111111
+Policy activation 1 recorded tuple hash: 222222222222222222222222222222222222222
+                                         2222222222222222222222222
+Policy activation 1 current config hash: 111111111111111111111111111111111111111
+                                         1111111111111111111111111
+Policy activation 1 current tuple hash: 2222222222222222222222222222222222222222
+                                        222222222222222222222222
+Policy activation 1 stale reason: (none)
+Safety
+Safety state: clear
+Safety scan hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                  bb
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Stable exit category: policy-blocked
+Delivery result
+Outcome: stale-authority
+Stale authority: approval-state-changed
+Provenance: local delivery record
+Next action: Rebuild current approval or policy authority before attempting deli
+             very.
+
+===== delivery-error =====
+Delivery outcome
+Repository: acme/widgets
+Object: draft draft-outbound-1
+Revision: 7
+Revision hash: 5555555555555555555555555555555555555555555555555555555555555555
+Destination: release (workspace 100000000000000000, channel 200000000000000000)
+Destination workspace: 100000000000000000
+Destination channel: 200000000000000000
+Allowed mentions: on_call=role:300000000000000000
+Expires: Unix 2000 seconds
+Attempt ID: attempt-1
+Attempt: attempt 1
+Exact text:
+  Build failed on main.
+Exact text hash: 666666666666666666666666666666666666666666666666666666666666666
+                 6
+Request nonce: (none)
+Content nonce: (none)
+Metadata
+Repository label: widgets
+Branch: main
+Commit: 0123456789abcdef0123456789abcdef01234567
+Approval
+Approval state: valid
+Approval ID: approval-1
+Approval hash: 3333333333333333333333333333333333333333333333333333333333333333
+Approval preview hash: 444444444444444444444444444444444444444444444444444444444
+                       4444444
+Approval revision hash: 55555555555555555555555555555555555555555555555555555555
+                        55555555
+Approval exact text hash: 666666666666666666666666666666666666666666666666666666
+                          6666666666
+Approval metadata hash: 77777777777777777777777777777777777777777777777777777777
+                        77777777
+Approval config hash: 8888888888888888888888888888888888888888888888888888888888
+                      888888
+Approval destination hash: 99999999999999999999999999999999999999999999999999999
+                           99999999999
+Approval policy basis hash: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                            aaaaaaaaaaaa
+Approval safety hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                      bbbbbb
+Approval draft expiry: Unix 2000 seconds
+Approval expiry: Unix 1900 seconds
+Approval override hash: (none)
+Approval actor: operator
+Approval reason: (none)
+Policy
+Policy state: active
+Policy tuple: build_failed/release/high
+Policy config hash: 111111111111111111111111111111111111111111111111111111111111
+                    1111
+Policy tuple hash: 2222222222222222222222222222222222222222222222222222222222222
+                   222
+Policy activation ID: activation-1
+Policy recorded config hash: 111111111111111111111111111111111111111111111111111
+                             1111111111111
+Policy recorded tuple hash: 2222222222222222222222222222222222222222222222222222
+                            222222222222
+Policy current config hash: 1111111111111111111111111111111111111111111111111111
+                            111111111111
+Policy current tuple hash: 22222222222222222222222222222222222222222222222222222
+                           22222222222
+Policy activated at: 2026-01-01T00:00:00Z
+Policy deactivated at: (none)
+Policy stale reason: (none)
+Policy basis: one current exact activation
+Policy activations
+Policy activation 1: activation-1 (build_failed/release/high), active=true
+Policy activation 1 recorded config hash: 11111111111111111111111111111111111111
+                                          11111111111111111111111111
+Policy activation 1 recorded tuple hash: 222222222222222222222222222222222222222
+                                         2222222222222222222222222
+Policy activation 1 current config hash: 111111111111111111111111111111111111111
+                                         1111111111111111111111111
+Policy activation 1 current tuple hash: 2222222222222222222222222222222222222222
+                                        222222222222222222222222
+Policy activation 1 stale reason: (none)
+Safety
+Safety state: clear
+Safety scan hash: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+                  bb
+Safety finding: none
+Safety override hash: (none)
+Safety override reason: (none)
+Stable exit category: storage-integrity
+Delivery result
+Outcome: error
+Error category: storage-integrity
+Error detail:
+  redacted local state failure
+Provenance: local delivery record
+Next action: Inspect the stable error category and redacted detail before retryi
+             ng.
+
+===== local-error =====
+Outbound error
+Repository: (none)
+Object: (none)
+Revision: (none)
+Destination: (none)
+Error category: connectivity-rate-limit
+Error detail:
+  redacted transport diagnostic
+Outcome: error
+Provenance: local error
+Next action: retry after the bounded server-directed wait
+
