@@ -1,12 +1,12 @@
 {
   "runId": "7acb4fd7-13bc-4f05-aa63-f810395058df",
   "startedAt": "2026-09-24T08:46:22.421Z",
-  "lastUpdatedAt": "2026-09-24T22:08:55.557Z",
+  "lastUpdatedAt": "2026-09-24T22:25:33.681Z",
   "manifestPath": "/home/mcfuzzysquirrel/Projects/repo-com/docs/EXECUTION-MANIFEST.json",
   "manifestVersion": "1.0",
   "harness": "opencode",
   "status": "running",
-  "currentPhase": "RELEASE-READINESS-2",
+  "currentPhase": "RELEASE-READINESS-3",
   "tasks": {
     "PLAT-1": {
       "taskId": "PLAT-1",
@@ -3084,10 +3084,30 @@
     },
     "REL-PERF-1": {
       "taskId": "REL-PERF-1",
-      "status": "pending",
+      "status": "complete",
       "ownerAgent": "quality-engineer",
-      "attempt": 0,
-      "outputFiles": []
+      "attempt": 1,
+      "outputFiles": [
+        "crates/repo-com-performance/Cargo.toml",
+        "crates/repo-com-performance/src/lib.rs",
+        "crates/repo-com-performance/src/main.rs",
+        "crates/repo-com-performance/tests/performance_contract.rs",
+        "Cargo.lock"
+      ],
+      "startedAt": "2026-09-24T22:08:55.620Z",
+      "attemptHistory": [
+        {
+          "attempt": 1,
+          "outcome": "passed",
+          "resultPath": "docs/artifacts/REL-PERF-1.2026-09-24T22-25-33-677Z.attempt-1.result.json"
+        }
+      ],
+      "completedAt": "2026-09-24T22:25:33.681Z",
+      "agentOutput": "Implemented `REL-PERF-1` in the owned performance crate.\n\n### Changes\n\nCreated:\n\n- `crates/repo-com-performance/Cargo.toml`\n- `crates/repo-com-performance/src/lib.rs`\n- `crates/repo-com-performance/src/main.rs`\n- `crates/repo-com-performance/tests/performance_contract.rs`\n\nChanged:\n\n- `Cargo.lock` — registered the new workspace package.\n\nThe execution file and `docs/artifacts/` were not modified.\n\n### Validation\n\nAll required commands passed:\n\n- `cargo fmt --all -- --check` — exit 0\n- `cargo clippy --workspace --all-targets --all-features -- -D warnings` — exit 0\n- `cargo nextest run --no-tests fail -E 'binary_id(performance_contract)'` — 3 passed, 0 skipped\n\nThe observed harness run used 8 documented local command classes, exactly 100 measured samples per class, and 1 untimed warm-up per class:\n\n| Command class | p50 | p95 | max |\n|---|---:|---:|---:|\n| `config.validate` | 5 ms | 6 ms | 7 ms |\n| `policy.status` | 7 ms | 8 ms | 9 ms |\n| `state.verify` | 6 ms | 8 ms | 8 ms |\n| `lifecycle.inspect` | 7 ms | 9 ms | 9 ms |\n| `audit.query` | 7 ms | 9 ms | 11 ms |\n| `purge.plan` | 8 ms | 9 ms | 10 ms |\n| `draft.show` | 8 ms | 9 ms | 9 ms |\n| `draft.preview` | 8 ms | 9 ms | 15 ms |\n\nAll classes passed the inclusive 500 ms p95 threshold. The no-network probe observed 0 external network syscalls, 0 network-capable commands, and no Discord credential in the child environment.\n\nThe available environment was Linux/x86_64 with Rust 1.98.1, but it did not identify a pinned CI reference runner. These are observed local automated results, not pinned-runner release evidence.\n\n```forge-result\n{\"summary\":\"Implemented the REL-PERF-1 performance harness and contract; all required checks passed and 800 measured local samples completed within the 500 ms p95 threshold.\",\"unresolved\":[]}\n```\n",
+      "artifactId": "work-rel-perf-1-001",
+      "inputArtifactIds": [
+        "work-rel-app-1-001"
+      ]
     },
     "REL-CI-1": {
       "taskId": "REL-CI-1",

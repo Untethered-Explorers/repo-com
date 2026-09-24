@@ -1,9 +1,9 @@
 # Project Progress
 
 ## Current State
-**Phase**: RELEASE-READINESS-2
+**Phase**: RELEASE-READINESS-3
 **Status**: In Progress
-**Last Updated**: 2026-09-24T22:08:55.560Z
+**Last Updated**: 2026-09-24T22:25:33.687Z
 **Run ID**: 7acb4fd7-13bc-4f05-aa63-f810395058df
 **Harness**: opencode
 **Execution Mode**: auto
@@ -63,6 +63,8 @@
   - Files: crates/repo-com-doc-validation/Cargo.toml, crates/repo-com-doc-validation/src/lib.rs, crates/repo-com-doc-validation/tests/documentation_contract.rs, docs/configuration.md, docs/discord-setup.md, docs/operator-guide.md, docs/security-model.md, docs/threat-model.md, Cargo.lock
 - [x] Phase RELEASE-READINESS-2, Task REL-APP-1: Compose the final repo-com binary (@cli-engineer)
   - Files: crates/repo-com-cli/Cargo.toml, crates/repo-com-cli/src/main.rs, crates/repo-com-cli/src/app.rs, crates/repo-com-cli/tests/command_routing_contract.rs, Cargo.lock, crates/repo-com-cli/src/lib.rs
+- [x] Phase RELEASE-READINESS-3, Task REL-PERF-1: Measure the local command performance budget (@quality-engineer)
+  - Files: crates/repo-com-performance/Cargo.toml, crates/repo-com-performance/src/lib.rs, crates/repo-com-performance/src/main.rs, crates/repo-com-performance/tests/performance_contract.rs, Cargo.lock
 
 ## Current Task
 - None currently running
