@@ -1,0 +1,22 @@
+[package]
+# The package name is the stable nextest binary ID selected by DISC-DELIVERY-2.
+name = "delivery_retry_contract"
+autotests = false
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "Bounded retry and read-only unknown-delivery reconciliation for repo-com"
+
+[lib]
+name = "repo_com_delivery_retry"
+path = "src/lib.rs"
+
+[dependencies]
+repo-com-delivery = { package = "delivery_contract", path = "../repo-com-delivery" }
+repo-com-discord-message = { package = "discord_message_contract", path = "../repo-com-discord-message" }
+
+[dev-dependencies]
+repo-com-config = { package = "config_contract", path = "../repo-com-config" }
+repo-com-send-eligibility = { package = "send_eligibility_contract", path = "../repo-com-send-eligibility" }
