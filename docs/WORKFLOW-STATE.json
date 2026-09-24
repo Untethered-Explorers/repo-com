@@ -1,7 +1,7 @@
 {
   "runId": "7acb4fd7-13bc-4f05-aa63-f810395058df",
   "startedAt": "2026-09-24T08:46:22.421Z",
-  "lastUpdatedAt": "2026-09-24T12:24:32.429Z",
+  "lastUpdatedAt": "2026-09-24T12:49:42.646Z",
   "manifestPath": "/home/mcfuzzysquirrel/Projects/repo-com/docs/EXECUTION-MANIFEST.json",
   "manifestVersion": "1.0",
   "harness": "opencode",
@@ -2433,10 +2433,43 @@
     },
     "DRAFT-APPROVAL-1": {
       "taskId": "DRAFT-APPROVAL-1",
-      "status": "pending",
+      "status": "complete",
       "ownerAgent": "approval-engineer",
-      "attempt": 0,
-      "outputFiles": []
+      "attempt": 2,
+      "outputFiles": [
+        "crates/repo-com-approval/Cargo.toml",
+        "crates/repo-com-approval/src/lib.rs",
+        "crates/repo-com-approval/src/service.rs",
+        "crates/repo-com-approval/src/override.rs",
+        "crates/repo-com-approval/tests/approval_contract.rs",
+        "Cargo.lock"
+      ],
+      "startedAt": "2026-09-24T12:45:20.751Z",
+      "attemptHistory": [
+        {
+          "attempt": 1,
+          "outcome": "failed",
+          "reason": "Missing fenced forge-result JSON report.",
+          "resultPath": "docs/artifacts/DRAFT-APPROVAL-1.2026-09-24T12-45-15-742Z.attempt-1.result.json"
+        },
+        {
+          "attempt": 2,
+          "outcome": "passed",
+          "resultPath": "docs/artifacts/DRAFT-APPROVAL-1.2026-09-24T12-49-42-643Z.attempt-2.result.json"
+        }
+      ],
+      "completedAt": "2026-09-24T12:49:42.646Z",
+      "agentOutput": "Implemented and verified `DRAFT-APPROVAL-1`.\n\n- Added exact-revision, repository, configuration, destination, policy-basis, and secret-scan binding.\n- Added injected-clock approval expiry at the earlier of draft expiry or 15 minutes.\n- Added TTY-only approval and redacted exact-revision secret override.\n- Added idempotent approval/audit persistence and current-state invalidation checks.\n- Exposed no outbound edit or delete operations.\n- No Discord or network side effects were added.\n\n### Validation\n\n- `cargo fmt --all -- --check` — passed.\n- `cargo clippy --workspace --all-targets --all-features -- -D warnings` — passed.\n- `cargo nextest run --no-tests fail -E 'binary_id(approval_contract)'` — **8 passed, 0 failed**.\n- Full workspace nextest run — **89 passed, 0 failed**.\n\n### Files created or changed\n\n- `crates/repo-com-approval/Cargo.toml`\n- `crates/repo-com-approval/src/lib.rs`\n- `crates/repo-com-approval/src/service.rs`\n- `crates/repo-com-approval/src/override.rs`\n- `crates/repo-com-approval/tests/approval_contract.rs`\n- `Cargo.lock`\n\nThe execution artifact and `docs/artifacts/` were not modified.\n\n```forge-result\n{\"summary\":\"Implemented DRAFT-APPROVAL-1 and verified the required checks; approval_contract selected 8 tests and all passed.\",\"unresolved\":[]}\n```\n",
+      "artifactId": "work-draft-approval-1-001",
+      "inputArtifactIds": [
+        "work-draft-model-1-001",
+        "work-draft-secret-1-001",
+        "work-repo-policy-1-001",
+        "work-repo-state-1-001",
+        "work-repo-cfg-1-001",
+        "work-repo-audit-1-001",
+        "work-repo-audit-2-001"
+      ]
     },
     "DRAFT-ELIG-1": {
       "taskId": "DRAFT-ELIG-1",
