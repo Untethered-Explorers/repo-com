@@ -1,7 +1,7 @@
 {
   "runId": "7acb4fd7-13bc-4f05-aa63-f810395058df",
   "startedAt": "2026-09-24T08:46:22.421Z",
-  "lastUpdatedAt": "2026-09-24T12:00:39.374Z",
+  "lastUpdatedAt": "2026-09-24T12:24:32.429Z",
   "manifestPath": "/home/mcfuzzysquirrel/Projects/repo-com/docs/EXECUTION-MANIFEST.json",
   "manifestVersion": "1.0",
   "harness": "opencode",
@@ -2394,10 +2394,42 @@
     },
     "DRAFT-SECRET-1": {
       "taskId": "DRAFT-SECRET-1",
-      "status": "pending",
+      "status": "complete",
       "ownerAgent": "security-engineer",
-      "attempt": 0,
-      "outputFiles": []
+      "attempt": 2,
+      "outputFiles": [
+        "crates/repo-com-draft-safety/Cargo.toml",
+        "crates/repo-com-draft-safety/src/lib.rs",
+        "crates/repo-com-draft-safety/src/patterns.rs",
+        "crates/repo-com-draft-safety/src/scanner.rs",
+        "crates/repo-com-draft-safety/tests/draft_safety_contract.rs",
+        "Cargo.lock"
+      ],
+      "startedAt": "2026-09-24T12:22:15.585Z",
+      "attemptHistory": [
+        {
+          "attempt": 1,
+          "outcome": "failed",
+          "reason": "Missing fenced forge-result JSON report.",
+          "resultPath": "docs/artifacts/DRAFT-SECRET-1.2026-09-24T12-22-10-576Z.attempt-1.result.json"
+        },
+        {
+          "attempt": 2,
+          "outcome": "passed",
+          "resultPath": "docs/artifacts/DRAFT-SECRET-1.2026-09-24T12-24-32-425Z.attempt-2.result.json"
+        }
+      ],
+      "completedAt": "2026-09-24T12:24:32.429Z",
+      "agentOutput": "Implemented and verified `DRAFT-SECRET-1`.\n\n### Result\n\n- Added a pure, deterministic pre-send secret scanner for:\n  - Discord bot tokens\n  - Authorization values\n  - Private-key markers\n  - Credential-bearing URLs\n  - Secret assignments\n- Added stable reason codes and redacted source/field/byte-offset locations.\n- Scanner results, `Debug`, `Display`, and serialization do not retain matched values.\n- Metadata is scanned by bounded field with no persistence, network access, approval override, or Discord client behavior.\n- Documented explicitly as defense in depth, not complete DLP.\n- Added eight contract tests covering detection, redaction, metadata scanning, false positives, determinism, Unicode, and overlap handling.\n\n### Validation observed\n\n- `cargo fmt --all -- --check` — passed\n- `cargo clippy --workspace --all-targets --all-features -- -D warnings` — passed\n- `cargo nextest run --no-tests fail -E 'binary_id(draft_safety_contract)'` — **8 selected, 8 passed**\n- Nextest run ID: `92ba9e1f-7336-44f4-9b75-1d3ee34ec032`\n\n### Files created or changed\n\n- `crates/repo-com-draft-safety/Cargo.toml`\n- `crates/repo-com-draft-safety/src/lib.rs`\n- `crates/repo-com-draft-safety/src/patterns.rs`\n- `crates/repo-com-draft-safety/src/scanner.rs`\n- `crates/repo-com-draft-safety/tests/draft_safety_contract.rs`\n- `Cargo.lock` — generated workspace package entry\n\nThe execution file and execution artifacts were not modified. Pre-existing working-tree changes to `docs/EXECUTION-AUDIT.jsonl` and `docs/WORKFLOW-STATE.json` were left untouched.\n\n```forge-result\n{\"summary\":\"Implemented DRAFT-SECRET-1 and verified the required checks: formatting and clippy passed, and draft_safety_contract selected 8 tests with 8 passing.\",\"unresolved\":[]}\n```\n",
+      "artifactId": "work-draft-secret-1-001",
+      "inputArtifactIds": [
+        "work-draft-content-1-001",
+        "work-repo-cfg-1-001",
+        "work-repo-state-1-001",
+        "work-repo-policy-1-001",
+        "work-repo-audit-1-001",
+        "work-repo-audit-2-001"
+      ]
     },
     "DRAFT-APPROVAL-1": {
       "taskId": "DRAFT-APPROVAL-1",

@@ -1,0 +1,22 @@
+[package]
+# The package name is the stable nextest binary ID selected by DRAFT-SECRET-1.
+name = "draft_safety_contract"
+autotests = false
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "Pure, deterministic pre-send credential detection for repo-com drafts"
+
+[lib]
+name = "repo_com_draft_safety"
+path = "src/lib.rs"
+
+[dependencies]
+repo-com-draft-content = { package = "draft_content_contract", path = "../repo-com-draft-content" }
+repo-com-draft-model = { package = "draft_model_contract", path = "../repo-com-draft-model" }
+serde.workspace = true
+
+[dev-dependencies]
+serde_json.workspace = true
