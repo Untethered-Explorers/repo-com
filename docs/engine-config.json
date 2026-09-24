@@ -2,14 +2,14 @@
   "harness": "opencode",
   "granularity": "",
   "concurrency": "",
-  "taskTimeoutMs": "",
+  "taskTimeoutMs": "3600000",
   "maxRetries": "",
   "viz": false,
   "vizPort": "",
   "keepAlive": false,
   "attach": "",
   "autoCommit": true,
-  "logHarnessActivity": false,
-  "executionMode": "manual",
+  "logHarnessActivity": true,
+  "executionMode": "auto",
   "selectedTaskIds": []
 }

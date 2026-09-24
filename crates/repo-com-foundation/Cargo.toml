@@ -1,0 +1,19 @@
+[package]
+# The package name is the stable binary ID selected by PLAT-1's nextest command.
+name = "foundation_contract"
+autotests = false
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "I/O-free command and protocol contracts for repo-com"
+
+[lib]
+name = "repo_com_foundation"
+path = "src/lib.rs"
+
+[dependencies]
+clap.workspace = true
+serde.workspace = true
+serde_json.workspace = true

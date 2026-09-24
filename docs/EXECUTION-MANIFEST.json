@@ -1,0 +1,2649 @@
+{
+  "version": "1.0",
+  "generatedAt": "2026-09-24T08:42:03.652Z",
+  "granularity": "fine",
+  "sourceLayout": "features",
+  "repoRoot": "/home/mcfuzzysquirrel/Projects/repo-com",
+  "harnessRoot": ".opencode",
+  "prdPath": "/home/mcfuzzysquirrel/Projects/repo-com/docs/PRD.md",
+  "visionPath": "/home/mcfuzzysquirrel/Projects/repo-com/docs/PRD.md",
+  "featureOrder": [
+    "CLI Foundation",
+    "Repository Configuration and State",
+    "Draft and Approval Workflow",
+    "Discord Delivery and Reconciliation",
+    "Inbound Retrieval and Reply",
+    "Privacy and Lifecycle Operations",
+    "Release Readiness"
+  ],
+  "progressPath": "/home/mcfuzzysquirrel/Projects/repo-com/docs/PROGRESS.md",
+  "auditPath": "/home/mcfuzzysquirrel/Projects/repo-com/docs/EXECUTION-AUDIT.jsonl",
+  "validationCommands": [],
+  "approvalGates": {
+    "preflight": true,
+    "betweenPhases": true
+  },
+  "phases": [
+    {
+      "id": "CLI-FOUNDATION-1",
+      "title": "Phase 1: Reproducible Protocol Foundation",
+      "feature": "CLI Foundation",
+      "description": "```forge-task {   \"id\": \"PLAT-1\",",
+      "ownerAgents": [
+        "rust-foundation-engineer"
+      ],
+      "dependencies": [],
+      "approvalRequired": false,
+      "tasks": [
+        {
+          "id": "PLAT-1",
+          "title": "Establish the Rust workspace and command contract",
+          "description": "Establish a reproducible Rust 2024 workspace and a typed foundation for global arguments, protocol version 1 output, stable error categories, explicit TTY mode, and fail-on-zero-tests selection. Pin Rust 1.98.1, centralize direct dependency versions, commit Cargo.lock, and create only the focused repo-com-foundation library plus its contract test. Machine stdout must remain one JSON object and diagnostics or prompts must use stderr. Do not create the final binary, feature commands, storage, configuration, or network clients.",
+          "ownerAgent": "rust-foundation-engineer",
+          "dependencies": [],
+          "expectedOutputs": [
+            "Cargo.toml",
+            "Cargo.lock",
+            "rust-toolchain.toml",
+            ".config/nextest.toml",
+            "crates/repo-com-foundation/Cargo.toml",
+            "crates/repo-com-foundation/src/lib.rs",
+            "crates/repo-com-foundation/src/args.rs",
+            "crates/repo-com-foundation/src/protocol.rs",
+            "crates/repo-com-foundation/src/error.rs",
+            "crates/repo-com-foundation/tests/foundation_contract.rs"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(foundation_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "FOUND-FR-03: Define protocol version 1 as exactly one JSON object on stdout for machine mode, with protocol_version, status, data, and error fields; keep diagnostics and prompts off stdout.",
+              "FOUND-FR-04: Expose an explicit TTY versus non-TTY mode and prohibit interactive prompts whenever stdin or stdout is non-interactive unless the command is an operator-only action that fails closed in automation.",
+              "FOUND-FR-05: Map errors to stable process categories: usage/schema, approval or operator action required, policy blocked, authentication, permission, remote conflict, unknown delivery, storage integrity, connectivity/rate limit, and internal failure.",
+              "FOUND-FR-06: Provide a cargo-nextest convention using --no-tests fail and exact test-binary filters so every task can prove its intended tests were discovered and executed.",
+              "RC-FR-04: Keep draft, delivery, and inbox domain interfaces provider-neutral while shipping only a Discord adapter in v1."
+            ],
+            "acceptanceCriteria": [
+              "Foundation contract tests prove protocol version 1 serializes exactly one valid JSON envelope for success and every stable error category",
+              "Foundation contract tests prove non-TTY mode cannot request an interactive prompt and diagnostics never appear in the machine stdout value",
+              "Foundation contract tests prove the selected nextest binary is discovered; the command is configured to fail when no test matches",
+              "Toolchain and lockfile checks prove Rust 1.98.1, edition 2024, and locked direct dependencies are in force"
+            ],
+            "constraints": [
+              "Keep the foundation library free of repository-specific behavior and external I/O",
+              "FOUND-CON-01: Pin Rust 1.98.1 and the Rust 2024 edition, commit Cargo.lock, use one central workspace dependency table, and do not add a new major dependency without an explicit planning review.",
+              "FOUND-CON-02: Keep machine-mode stdout valid JSON even for operational errors; reserve stderr for opt-in diagnostics and never mix prompts into protocol output.",
+              "AUDIT-CON-01: Audit records are append-only local evidence; a later remote edit or deletion is represented as a new event and never overwrites the original local snapshot."
+            ],
+            "references": [
+              "docs/PRD.md#7. Technical Architecture",
+              "docs/PRD.md#12. User Interface / Interaction Design",
+              "docs/features/cli-foundation.md#FOUND-FR-03",
+              "docs/features/cli-foundation.md#FOUND-FR-04",
+              "docs/features/cli-foundation.md#FOUND-FR-05",
+              "docs/features/cli-foundation.md#FOUND-FR-06",
+              "docs/PRD.md#RC-FR-04",
+              "docs/features/cli-foundation.md#FOUND-CON-01",
+              "docs/features/cli-foundation.md#FOUND-CON-02",
+              "docs/features/repository-configuration-and-state.md#AUDIT-CON-01"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.plat-1",
+          "inputs": [],
+          "timeoutMs": 3600000
+        }
+      ]
+    },
+    {
+      "id": "REPOSITORY-CONFIGURATION-AND-STATE-1",
+      "title": "Phase 1: Configuration, State, and Audit Foundations",
+      "feature": "Repository Configuration and State",
+      "description": "```forge-task {   \"id\": \"REPO-CFG-1\",",
+      "ownerAgents": [
+        "configuration-engineer",
+        "persistence-engineer",
+        "policy-engineer",
+        "audit-engineer"
+      ],
+      "dependencies": [
+        "CLI-FOUNDATION-1"
+      ],
+      "approvalRequired": true,
+      "tasks": [
+        {
+          "id": "REPO-CFG-1",
+          "title": "Implement strict repository configuration",
+          "description": "Implement strict schema-version-1 repository configuration discovery, parsing, destination and named-mention alias resolution, and path-aware diagnostics in the focused repo-com-config crate. Search only from the working directory through the detected repository root, reject unknown fields, unsafe versions, duplicate aliases, missing mention targets, secret-like keys, and cross-workspace references, and provide a non-secret example configuration. Do not activate policy, access Discord, or persist operational state.",
+          "ownerAgent": "configuration-engineer",
+          "dependencies": [
+            "PLAT-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-config/Cargo.toml",
+            "crates/repo-com-config/src/lib.rs",
+            "crates/repo-com-config/src/model.rs",
+            "crates/repo-com-config/src/resolve.rs",
+            "crates/repo-com-config/src/validation.rs",
+            "crates/repo-com-config/tests/config_contract.rs",
+            "examples/repo-com.example.toml"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(config_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "REPO-FR-01: Resolve configuration from an explicit normalized path or by searching the current directory and ancestors up to the repository root for exactly one .repo-com.toml file; stop with a typed error when zero or multiple candidates apply.",
+              "REPO-FR-02: Parse repository configuration schema version 1 with strict unknown-field rejection and support repository identity, one Discord workspace ID, destination aliases, named mention aliases, inbound aliases, retention, and exact auto-send entries.",
+              "REPO-FR-03: Resolve destination aliases to one channel and an allowlist of named mention aliases whose targets are role: or user: identifiers, and resolve inbound aliases only to configured channels in the same workspace.",
+              "REPO-FR-04: Provide config validation that reports precise path-aware errors in human or protocol JSON form without logging file contents or secret-like values.",
+              "RC-FR-03: Support one configured Discord workspace per repository and one destination per outbound draft; broadcasts and fan-out require separate drafts."
+            ],
+            "acceptanceCriteria": [
+              "Configuration tests cover explicit-path and ancestor discovery, zero/multiple-candidate failures, and no search above the repository root",
+              "Configuration tests cover valid schema version 1, unknown keys, unsafe versions, duplicate aliases, missing or invalid named mention targets, and cross-workspace references",
+              "Configuration tests prove secret-like fields and raw destination fields are rejected without echoing their values",
+              "The example configuration parses successfully and contains no credential value"
+            ],
+            "constraints": [
+              "Configuration parsing must be side-effect free",
+              "REPO-CON-01: Repository configuration must contain no token, password, private key, cookie, authorization value, or secret-like field; unknown or future schema versions and unknown keys fail closed without automatic migration.",
+              "RC-SEC-03: Keep committed TOML configuration limited to non-secret workspace, alias, inbound, retention, and exact auto-send policy data; reject secret-like keys and unknown or unsafe schema versions."
+            ],
+            "references": [
+              "docs/PRD.md#7. Technical Architecture",
+              "docs/features/repository-configuration-and-state.md#2. Interfaces and Preconditions",
+              "docs/features/repository-configuration-and-state.md#REPO-FR-01",
+              "docs/features/repository-configuration-and-state.md#REPO-FR-02",
+              "docs/features/repository-configuration-and-state.md#REPO-FR-03",
+              "docs/features/repository-configuration-and-state.md#REPO-FR-04",
+              "docs/PRD.md#RC-FR-03",
+              "docs/features/repository-configuration-and-state.md#REPO-CON-01",
+              "docs/PRD.md#RC-SEC-03"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.repo-cfg-1",
+          "inputs": [
+            "work.plat-1"
+          ],
+          "timeoutMs": 3600000
+        },
+        {
+          "id": "REPO-STATE-1",
+          "title": "Create the repository-scoped SQLite store",
+          "description": "Create the focused repo-com-state crate with OS user-data path resolution, user-only database creation, forward-only migrations, and transactional repositories for every v1 state family. The initial schema must cover repository identity, draft revisions, approvals, policy activation, delivery attempts, inbound snapshots and cursors, acknowledgement/archive/reply links, and append-only audit events. Enable foreign keys, WAL, and bounded busy timeout, and fail without destructive recreation on corruption, lock timeout, or unsupported schema. Do not implement draft policy, network calls, retention execution, or audit queries.",
+          "ownerAgent": "persistence-engineer",
+          "dependencies": [
+            "PLAT-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-state/Cargo.toml",
+            "crates/repo-com-state/src/lib.rs",
+            "crates/repo-com-state/src/paths.rs",
+            "crates/repo-com-state/src/migrations.rs",
+            "crates/repo-com-state/src/store.rs",
+            "crates/repo-com-state/migrations/0001_initial.sql",
+            "crates/repo-com-state/tests/state_contract.rs"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(state_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "STATE-FR-01: Store one user-level SQLite database in the OS application-data location, create it with user-only filesystem permissions, and namespace every record by the configured repository ID.",
+              "STATE-FR-02: Provide forward-only migrations and transactional repositories for repository identity, drafts and immutable revisions, approvals, policy activations, delivery attempts, inbound items and cursors, acknowledgement/archive/reply links, and append-only audit events.",
+              "STATE-FR-03: Enable foreign keys, WAL, and a bounded busy timeout; handle concurrent readers/writers deterministically and report corruption, unsupported schema, lock timeout, or migration failure without deleting or recreating the database."
+            ],
+            "acceptanceCriteria": [
+              "State tests verify OS-specific user-data path selection and user-only permissions or the documented Windows ACL behavior",
+              "Migration tests start from an empty database, apply schema version 1 exactly once, and reopen without destructive changes",
+              "Repository scoping tests prove records from one repository ID cannot be read or mutated through another repository ID",
+              "Concurrency tests cover WAL readers, bounded busy timeout, and conflicting transactions without data loss",
+              "Corruption and unsupported-schema tests preserve the original database bytes and return typed integrity errors"
+            ],
+            "constraints": [
+              "Operational state must not be stored beneath the repository",
+              "STATE-CON-01: Local state must never be uploaded, synchronized, or exposed through a network service and must not use repository-relative storage for operational data.",
+              "STATE-CON-02: Release builds must assert SQLite version 3.53.4 or newer at runtime and compile; development may use a newer local SQLite but must never silently test a release artifact against an older engine.",
+              "RC-NFR-03: Pin the toolchain and lock dependencies; release builds must statically link a patched SQLite version at least 3.53.4 and publish dependency and license evidence."
+            ],
+            "references": [
+              "docs/PRD.md#7. Technical Architecture",
+              "docs/features/repository-configuration-and-state.md#2. Interfaces and Preconditions",
+              "docs/features/repository-configuration-and-state.md#STATE-FR-01",
+              "docs/features/repository-configuration-and-state.md#STATE-FR-02",
+              "docs/features/repository-configuration-and-state.md#STATE-FR-03",
+              "docs/features/repository-configuration-and-state.md#STATE-CON-01",
+              "docs/features/repository-configuration-and-state.md#STATE-CON-02",
+              "docs/PRD.md#RC-NFR-03"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.repo-state-1",
+          "inputs": [
+            "work.plat-1"
+          ],
+          "timeoutMs": 3600000
+        },
+        {
+          "id": "REPO-POLICY-1",
+          "title": "Implement exact operator policy activation",
+          "description": "Implement the focused repo-com-policy crate for exact event type, destination alias, and severity matching plus an operator-controlled activation registry. Canonicalize and hash the complete relevant configuration and policy tuple, record activation time in user state, mark stale on any relevant hash change, and require interactive TTY confirmation for activation. Permit status inspection and permission-reducing deactivation in automation. Do not evaluate draft content or call Discord.",
+          "ownerAgent": "policy-engineer",
+          "dependencies": [
+            "REPO-CFG-1",
+            "REPO-STATE-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-policy/Cargo.toml",
+            "crates/repo-com-policy/src/lib.rs",
+            "crates/repo-com-policy/src/hash.rs",
+            "crates/repo-com-policy/src/activation.rs",
+            "crates/repo-com-policy/src/evaluate.rs",
+            "crates/repo-com-policy/tests/policy_contract.rs"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(policy_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "POLICY-FR-01: Match automatic sending only when one configured policy exactly equals the draft event type, destination alias, and severity; a wildcard, prefix, or broader severity match is ineligible.",
+              "POLICY-FR-02: Activate an exact policy only through a TTY operator confirmation that records the canonical configuration hash, policy tuple hash, and activation time in user-level state.",
+              "POLICY-FR-03: Expose policy status and deactivation, automatically report an activation stale after any relevant config or tuple hash change, and prevent a skill from activating or widening policy in non-TTY mode."
+            ],
+            "acceptanceCriteria": [
+              "Policy tests prove only an exact event type, destination alias, and severity tuple matches and reject wildcard or broader-severity matches",
+              "Activation tests prove a TTY-confirmed policy is eligible only while both canonical config hash and tuple hash match",
+              "Activation tests prove a changed destination, mention set, retention value, or policy tuple makes prior activation stale",
+              "Non-TTY tests prove activation fails closed while status and deactivation remain available"
+            ],
+            "constraints": [
+              "Policy matching must be deterministic across platforms and normalized config ordering",
+              "POLICY-CON-01: Policy activation and deactivation commands that expand permission require an interactive TTY; non-TTY execution may inspect or deactivate but may not activate.",
+              "RC-SEC-04: Require a separate interactive operator action to activate an auto-send policy, and invalidate activation when the canonical configuration hash or exact policy tuple changes."
+            ],
+            "references": [
+              "docs/features/repository-configuration-and-state.md#2. Interfaces and Preconditions",
+              "docs/PRD.md#10. Security and Privacy",
+              "docs/features/repository-configuration-and-state.md#POLICY-FR-01",
+              "docs/features/repository-configuration-and-state.md#POLICY-FR-02",
+              "docs/features/repository-configuration-and-state.md#POLICY-FR-03",
+              "docs/features/repository-configuration-and-state.md#POLICY-CON-01",
+              "docs/PRD.md#RC-SEC-04"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.repo-policy-1",
+          "inputs": [
+            "work.repo-cfg-1",
+            "work.repo-state-1",
+            "work.plat-1"
+          ],
+          "timeoutMs": 3600000
+        },
+        {
+          "id": "REPO-AUDIT-1",
+          "title": "Write redacted append-only audit events",
+          "description": "Implement the focused repo-com-audit crate as a transactional append-only audit writer plus opt-in diagnostic initialization. Record the defined transition envelope without message content or secret values, support the same transaction as a state mutation, and redact content, token values, authorization headers, and secret-like values at every diagnostic level. Do not implement query pagination, remote history, or product telemetry.",
+          "ownerAgent": "audit-engineer",
+          "dependencies": [
+            "REPO-STATE-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-audit/Cargo.toml",
+            "crates/repo-com-audit/src/lib.rs",
+            "crates/repo-com-audit/src/event.rs",
+            "crates/repo-com-audit/src/redact.rs",
+            "crates/repo-com-audit/src/writer.rs",
+            "crates/repo-com-audit/tests/audit_contract.rs"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(audit_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "AUDIT-FR-01: Append a structured audit event for each meaningful local transition with repository ID, object type and ID, transition, UTC timestamp, actor kind, outcome, and redacted metadata in the same transaction as the state change when one exists.",
+              "AUDIT-FR-02: Enable diagnostics only by explicit operator flag or environment setting and redact message content, token values, authorization headers, and secret-like values by default even in the highest supported diagnostic level.",
+              "RC-FR-05: Record every meaningful local lifecycle transition with timestamps and stable draft, revision, delivery, or inbound identifiers so the workflow can be recovered and inspected."
+            ],
+            "acceptanceCriteria": [
+              "Audit tests prove a state change and its event commit or roll back together",
+              "Redaction tests cover Discord bot tokens, authorization headers, message text, private-key markers, and secret-like field names at every enabled diagnostic level",
+              "Append-only tests prove existing events cannot be updated or deleted through the writer API",
+              "Diagnostics remain disabled by default and emit no output unless explicitly enabled"
+            ],
+            "constraints": [
+              "Audit records must not contain raw message content",
+              "AUDIT-CON-01: Audit records are append-only local evidence; a later remote edit or deletion is represented as a new event and never overwrites the original local snapshot.",
+              "RC-SEC-01: Accept the Discord bot token only from the REPO_COM_DISCORD_TOKEN environment variable, keep it out of repository configuration and local state, redact it from errors and diagnostics, and zeroize owned copies on drop."
+            ],
+            "references": [
+              "docs/PRD.md#10. Security and Privacy",
+              "docs/features/repository-configuration-and-state.md#2. Interfaces and Preconditions",
+              "docs/features/repository-configuration-and-state.md#AUDIT-FR-01",
+              "docs/features/repository-configuration-and-state.md#AUDIT-FR-02",
+              "docs/PRD.md#RC-FR-05",
+              "docs/features/repository-configuration-and-state.md#AUDIT-CON-01",
+              "docs/PRD.md#RC-SEC-01"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.repo-audit-1",
+          "inputs": [
+            "work.repo-state-1",
+            "work.plat-1"
+          ],
+          "timeoutMs": 3600000
+        },
+        {
+          "id": "REPO-AUDIT-2",
+          "title": "Query local audit evidence",
+          "description": "Implement the focused repo-com-audit-query crate for bounded, repository-scoped audit lookup by time, object type, object ID, and transition. Return only redacted local evidence with stable pagination and explicit truncation metadata, and expose no remote-history or read-receipt operation. Do not add a live UI, export format, or mutation path.",
+          "ownerAgent": "audit-engineer",
+          "dependencies": [
+            "REPO-AUDIT-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-audit-query/Cargo.toml",
+            "crates/repo-com-audit-query/src/lib.rs",
+            "crates/repo-com-audit-query/src/filter.rs",
+            "crates/repo-com-audit-query/src/query.rs",
+            "crates/repo-com-audit-query/tests/audit_query_contract.rs"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(audit_query_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "AUDIT-FR-03: Query local audit events by repository, time range, object type, object ID, and transition with bounded pagination; inspection never claims a remote read receipt or mutates Discord.",
+              "RC-FR-06: Treat a teammate noticing an agent-originated request and replying to it as the primary success outcome; do not claim read receipts or response analytics."
+            ],
+            "acceptanceCriteria": [
+              "Query tests combine and separately apply repository, time, object type, object ID, and transition filters",
+              "Pagination tests prove stable ordering, bounded page size, and explicit next-page or truncation metadata",
+              "Repository isolation tests prove no event from another repository ID is returned",
+              "Query output contains no raw message content and has no Discord mutation operation"
+            ],
+            "constraints": [
+              "Audit inspection remains local-only",
+              "AUDIT-CON-01: Audit records are append-only local evidence; a later remote edit or deletion is represented as a new event and never overwrites the original local snapshot."
+            ],
+            "references": [
+              "docs/PRD.md#7. Technical Architecture",
+              "docs/PRD.md#16. Analytics / Success Metrics",
+              "docs/features/repository-configuration-and-state.md#AUDIT-FR-03",
+              "docs/PRD.md#RC-FR-06",
+              "docs/features/repository-configuration-and-state.md#AUDIT-CON-01"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.repo-audit-2",
+          "inputs": [
+            "work.repo-audit-1",
+            "work.plat-1"
+          ],
+          "timeoutMs": 3600000
+        }
+      ]
+    },
+    {
+      "id": "DRAFT-AND-APPROVAL-WORKFLOW-1",
+      "title": "Phase 1: Draft, Safety, and Approval Boundaries",
+      "feature": "Draft and Approval Workflow",
+      "description": "```forge-task {   \"id\": \"DRAFT-MODEL-1\",",
+      "ownerAgents": [
+        "messaging-engineer",
+        "security-engineer",
+        "approval-engineer"
+      ],
+      "dependencies": [
+        "REPOSITORY-CONFIGURATION-AND-STATE-1"
+      ],
+      "approvalRequired": true,
+      "tasks": [
+        {
+          "id": "DRAFT-MODEL-1",
+          "title": "Model immutable draft revisions and previews",
+          "description": "Implement the focused repo-com-draft-model crate for validated one-destination draft creation, immutable revision storage, canonical SHA-256 revision hashes, expiry, and side-effect-free preview data. Enforce exact text, event-type, severity, optional repository metadata, and an optional already-validated inbound reply reference; reject broadcasts, unvalidated or arbitrary reply IDs, unknown fields, and edits to an existing revision. Resolve aliases through the current config interface and expose the approval, policy, and safety bases as unresolved preview facts. Do not render Discord text, approve, scan secrets, or call Discord.",
+          "ownerAgent": "messaging-engineer",
+          "dependencies": [
+            "REPO-CFG-1",
+            "REPO-STATE-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-draft-model/Cargo.toml",
+            "crates/repo-com-draft-model/src/lib.rs",
+            "crates/repo-com-draft-model/src/model.rs",
+            "crates/repo-com-draft-model/src/canonical.rs",
+            "crates/repo-com-draft-model/src/preview.rs",
+            "crates/repo-com-draft-model/tests/draft_model_contract.rs"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(draft_model_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "DRAFT-FR-01: Create a draft with one configured destination alias, non-empty channel text, event type, severity, optional repository label, branch, and commit metadata, and an optional inbound-item reply reference; reject broadcasts, multiple destinations, unvalidated reply references, and unknown metadata.",
+              "DRAFT-FR-02: Store every draft body, metadata set, destination alias, resolved destination, and expiry as an immutable revision with a monotonically increasing revision number and deterministic content hash.",
+              "DRAFT-FR-03: Preview one revision with the resolved alias and Discord identifiers, exact final text, metadata, expiry, current approval or policy basis, secret-scan status, and a typed send decision without mutating the draft or Discord."
+            ],
+            "acceptanceCriteria": [
+              "Model tests cover valid draft boundaries, an authorized opaque inbound reply reference, arbitrary or unvalidated reply IDs, unknown metadata, multiple destinations, empty text, invalid event type, invalid severity, and expiry above seven days",
+              "Revision tests prove any body, metadata, alias, resolved-destination, repository, or expiry change creates a new revision and never mutates the prior snapshot",
+              "Canonical hash tests are deterministic across metadata ordering and change when any approval-bound field changes",
+              "Preview tests prove exact current fields and unresolved approval, policy, and safety bases are returned without a state or network mutation"
+            ],
+            "constraints": [
+              "Draft revisions contain no file or code attachment",
+              "DRAFT-CON-01: Default draft expiry is 24 hours, callers may choose at most 7 days, and expired revisions cannot be approved, made eligible, or sent.",
+              "DRAFT-CON-02: A revision may contain text and bounded metadata only; never attach repository code, files, diffs, embeds, attachments, or automatically generated message copy.",
+              "RC-SEC-06: Revalidate destination aliases at approval and immediately before every send attempt; normal skill-facing commands reject raw Discord destinations."
+            ],
+            "references": [
+              "docs/PRD.md#7. Technical Architecture",
+              "docs/features/draft-and-approval-workflow.md#2. Interfaces and Preconditions",
+              "docs/features/draft-and-approval-workflow.md#DRAFT-FR-01",
+              "docs/features/draft-and-approval-workflow.md#DRAFT-FR-02",
+              "docs/features/draft-and-approval-workflow.md#DRAFT-FR-03",
+              "docs/features/draft-and-approval-workflow.md#DRAFT-CON-01",
+              "docs/features/draft-and-approval-workflow.md#DRAFT-CON-02",
+              "docs/PRD.md#RC-SEC-06"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.draft-model-1",
+          "inputs": [
+            "work.repo-cfg-1",
+            "work.repo-state-1",
+            "work.repo-policy-1",
+            "work.repo-audit-1",
+            "work.repo-audit-2"
+          ],
+          "timeoutMs": 3600000
+        },
+        {
+          "id": "DRAFT-CONTENT-1",
+          "title": "Render deterministic channel-ready text",
+          "description": "Implement the focused repo-com-draft-content crate to render one immutable draft revision as Discord text, append a deterministic delivery-nonce footer, resolve only configured mention aliases, and carry an optional already-validated message_reference as request metadata rather than body text. Normalize line endings and Unicode without changing semantic content, reject unsupported or raw mention forms, and enforce the final 2,000-character Discord limit. Do not add attachments, embeds, generated copy, secret scanning, or network I/O.",
+          "ownerAgent": "messaging-engineer",
+          "dependencies": [
+            "DRAFT-MODEL-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-draft-content/Cargo.toml",
+            "crates/repo-com-draft-content/src/lib.rs",
+            "crates/repo-com-draft-content/src/normalize.rs",
+            "crates/repo-com-draft-content/src/mentions.rs",
+            "crates/repo-com-draft-content/src/render.rs",
+            "crates/repo-com-draft-content/tests/draft_content_contract.rs"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(draft_content_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "DRAFT-FR-03: Preview one revision with the resolved alias and Discord identifiers, exact final text, metadata, expiry, current approval or policy basis, secret-scan status, and a typed send decision without mutating the draft or Discord.",
+              "DRAFT-FR-04: Create one Discord text message with a deterministic delivery-nonce footer, only named mentions resolved from the destination allowlist, and a validated message_reference when the draft is a reply; reject any rendered message over Discord's 2,000-character limit."
+            ],
+            "acceptanceCriteria": [
+              "Renderer tests prove identical revision input yields byte-identical text and nonce footer on repeated runs",
+              "Mention tests prove configured named role and user aliases resolve and every unlisted, raw, malformed, or user-bot target is rejected",
+              "Normalization tests cover CRLF, Unicode, trailing whitespace, and already-rendered nonce protection without silent semantic expansion",
+              "Boundary tests reject a final Discord message over 2,000 characters and the 2,000-character maximum succeeds"
+            ],
+            "constraints": [
+              "Rendering supports one message and text plus allowlisted mentions only",
+              "DRAFT-CON-02: A revision may contain text and bounded metadata only; never attach repository code, files, diffs, embeds, attachments, or automatically generated message copy.",
+              "CONTENT-CON-01: Normal draft input accepts aliases rather than raw Discord channel, role, or user identifiers and every mention emitted by the renderer must belong to that destination allowlist.",
+              "RC-SEC-08: Keep sent messages immutable; corrections use a new draft, and inbound acknowledgement or archival is local-only with no Discord reaction, edit, or delete."
+            ],
+            "references": [
+              "docs/PRD.md#7. Technical Architecture",
+              "docs/features/draft-and-approval-workflow.md#2. Interfaces and Preconditions",
+              "docs/features/draft-and-approval-workflow.md#DRAFT-FR-03",
+              "docs/features/draft-and-approval-workflow.md#DRAFT-FR-04",
+              "docs/features/draft-and-approval-workflow.md#DRAFT-CON-02",
+              "docs/features/draft-and-approval-workflow.md#CONTENT-CON-01",
+              "docs/PRD.md#RC-SEC-08"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.draft-content-1",
+          "inputs": [
+            "work.draft-model-1",
+            "work.repo-cfg-1",
+            "work.repo-state-1",
+            "work.repo-policy-1",
+            "work.repo-audit-1",
+            "work.repo-audit-2"
+          ],
+          "timeoutMs": 3600000
+        },
+        {
+          "id": "DRAFT-SECRET-1",
+          "title": "Detect pre-send credential patterns",
+          "description": "Implement the focused repo-com-draft-safety crate to scan final rendered text and metadata for high-confidence Discord tokens, authorization values, private-key markers, credential-bearing URLs, and common secret assignments. Return stable reason codes and redacted match locations without returning the matched secret, keep the scanner side-effect free, and expose an explicit result object for TTY override evaluation. Do not claim complete data-loss prevention, persist findings, or perform an override.",
+          "ownerAgent": "security-engineer",
+          "dependencies": [
+            "DRAFT-CONTENT-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-draft-safety/Cargo.toml",
+            "crates/repo-com-draft-safety/src/lib.rs",
+            "crates/repo-com-draft-safety/src/patterns.rs",
+            "crates/repo-com-draft-safety/src/scanner.rs",
+            "crates/repo-com-draft-safety/tests/draft_safety_contract.rs"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(draft_safety_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "DRAFT-FR-05: Scan the final rendered text and metadata for high-confidence Discord tokens, authorization values, private-key markers, and common credential URL or assignment patterns before a send can become eligible."
+            ],
+            "acceptanceCriteria": [
+              "Scanner tests cover Discord bot token, Authorization header, private-key marker, credential URL, and secret-assignment fixtures with stable reason codes",
+              "Finding output contains only redacted location and reason metadata, never the matched value",
+              "Clean repository text, branch names, commit hashes, and ordinary URLs do not trigger the high-confidence rules",
+              "Scanner tests prove repeated scans of the same input are deterministic and perform no persistence or network action"
+            ],
+            "constraints": [
+              "Treat secret detection as defense in depth, not complete DLP",
+              "SAFETY-CON-01: A secret-scan finding blocks send by default; only an interactive TTY operator may override the exact revision after reviewing the preview, the override must be audited without the matched value, and non-TTY override is forbidden.",
+              "RC-SEC-09: Detect common credential patterns before send, require an explicit exact-revision TTY override for a false positive, prohibit non-TTY override, and audit every override without recording the secret value."
+            ],
+            "references": [
+              "docs/PRD.md#5. Research Findings",
+              "docs/features/draft-and-approval-workflow.md#2. Interfaces and Preconditions",
+              "docs/features/draft-and-approval-workflow.md#DRAFT-FR-05",
+              "docs/features/draft-and-approval-workflow.md#SAFETY-CON-01",
+              "docs/PRD.md#RC-SEC-09"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.draft-secret-1",
+          "inputs": [
+            "work.draft-content-1",
+            "work.repo-cfg-1",
+            "work.repo-state-1",
+            "work.repo-policy-1",
+            "work.repo-audit-1",
+            "work.repo-audit-2"
+          ],
+          "timeoutMs": 3600000
+        },
+        {
+          "id": "DRAFT-APPROVAL-1",
+          "title": "Bind human approval to one draft revision",
+          "description": "Implement the focused repo-com-approval crate for TTY-only human approval, exact revision and config binding, time-bounded validity, secret-finding override, and idempotent audit events. Approval expires at the earlier of draft expiry or 15 minutes and becomes invalid on any revision, repository, config, or destination change. A TTY override is allowed only for the reviewed exact revision; non-TTY approval and override must fail closed. Do not send Discord requests or treat approval as a reusable send bypass.",
+          "ownerAgent": "approval-engineer",
+          "dependencies": [
+            "DRAFT-MODEL-1",
+            "DRAFT-SECRET-1",
+            "REPO-POLICY-1",
+            "REPO-STATE-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-approval/Cargo.toml",
+            "crates/repo-com-approval/src/lib.rs",
+            "crates/repo-com-approval/src/service.rs",
+            "crates/repo-com-approval/src/override.rs",
+            "crates/repo-com-approval/tests/approval_contract.rs"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(approval_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "DRAFT-FR-05: Scan the final rendered text and metadata for high-confidence Discord tokens, authorization values, private-key markers, and common credential URL or assignment patterns before a send can become eligible.",
+              "APPROVAL-FR-01: Allow an operator to approve only after seeing the complete preview in an interactive TTY, and bind the recorded approval to the exact current revision hash and repository ID.",
+              "APPROVAL-FR-02: Expire approval at the earlier of draft expiry or 15 minutes after approval, and invalidate it immediately when the revision hash, repository config hash, destination resolution, or policy basis changes.",
+              "APPROVAL-FR-03: Keep an accepted remote message immutable; represent a correction as a new draft or a validated threaded reply and expose no edit or delete operation for outbound content."
+            ],
+            "acceptanceCriteria": [
+              "Approval tests prove TTY confirmation records the exact repository, revision, config, and destination hashes and is idempotent for the same confirmation",
+              "Invalidation tests change body, metadata, alias, resolved destination, repository config, and expiry and prove approval becomes invalid",
+              "Time tests use an injected clock to cover the 15-minute approval limit, draft expiry, and earlier-expiry precedence",
+              "Override tests require TTY and exact current revision, record only a redacted reason code, and reject non-TTY override",
+              "No approval API exposes outbound edit or delete"
+            ],
+            "constraints": [
+              "Approval authorizes one exact revision and never bypasses final delivery revalidation",
+              "SAFETY-CON-01: A secret-scan finding blocks send by default; only an interactive TTY operator may override the exact revision after reviewing the preview, the override must be audited without the matched value, and non-TTY override is forbidden.",
+              "APPROVAL-CON-01: Approval is permission to evaluate and claim one exact revision, not a reusable bypass; the delivery coordinator must consume it idempotently and a concurrent or repeated call must not create a second remote send.",
+              "DRAFT-CON-01: Default draft expiry is 24 hours, callers may choose at most 7 days, and expired revisions cannot be approved, made eligible, or sent.",
+              "RC-SEC-05: Bind human approval to one immutable draft revision hash containing text, metadata, destination alias, resolved destination, and expiry; any change invalidates approval.",
+              "RC-SEC-08: Keep sent messages immutable; corrections use a new draft, and inbound acknowledgement or archival is local-only with no Discord reaction, edit, or delete."
+            ],
+            "references": [
+              "docs/PRD.md#12. User Interface / Interaction Design",
+              "docs/features/draft-and-approval-workflow.md#2. Interfaces and Preconditions",
+              "docs/features/draft-and-approval-workflow.md#DRAFT-FR-05",
+              "docs/features/draft-and-approval-workflow.md#APPROVAL-FR-01",
+              "docs/features/draft-and-approval-workflow.md#APPROVAL-FR-02",
+              "docs/features/draft-and-approval-workflow.md#APPROVAL-FR-03",
+              "docs/features/draft-and-approval-workflow.md#SAFETY-CON-01",
+              "docs/features/draft-and-approval-workflow.md#APPROVAL-CON-01",
+              "docs/features/draft-and-approval-workflow.md#DRAFT-CON-01",
+              "docs/PRD.md#RC-SEC-05",
+              "docs/PRD.md#RC-SEC-08"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.draft-approval-1",
+          "inputs": [
+            "work.draft-model-1",
+            "work.draft-secret-1",
+            "work.repo-policy-1",
+            "work.repo-state-1",
+            "work.repo-cfg-1",
+            "work.repo-audit-1",
+            "work.repo-audit-2"
+          ],
+          "timeoutMs": 3600000
+        },
+        {
+          "id": "DRAFT-ELIG-1",
+          "title": "Evaluate current send eligibility",
+          "description": "Implement the focused repo-com-send-eligibility crate as a pure, fail-closed decision over current repository config, immutable draft revision, resolved destination, expiry, exact human approval, activated policy, and secret-scan result. Return a typed decision containing the basis and all hashes the delivery coordinator must revalidate atomically. Permit non-TTY send only for a pre-existing exact approval or activated policy; do not create approval, activate policy, override findings, claim delivery, or call Discord.",
+          "ownerAgent": "approval-engineer",
+          "dependencies": [
+            "DRAFT-APPROVAL-1",
+            "DRAFT-CONTENT-1",
+            "DRAFT-SECRET-1",
+            "REPO-POLICY-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-send-eligibility/Cargo.toml",
+            "crates/repo-com-send-eligibility/src/lib.rs",
+            "crates/repo-com-send-eligibility/src/decision.rs",
+            "crates/repo-com-send-eligibility/src/evaluator.rs",
+            "crates/repo-com-send-eligibility/tests/send_eligibility_contract.rs"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(send_eligibility_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "APPROVAL-FR-02: Expire approval at the earlier of draft expiry or 15 minutes after approval, and invalidate it immediately when the revision hash, repository config hash, destination resolution, or policy basis changes.",
+              "APPROVAL-FR-03: Keep an accepted remote message immutable; represent a correction as a new draft or a validated threaded reply and expose no edit or delete operation for outbound content.",
+              "ELIG-FR-01: Mark a revision eligible only when it has unexpired exact-revision human approval or an unexpired exact activated policy and has no unresolved secret-scan finding.",
+              "ELIG-FR-02: Revalidate current config hash, repository ID, expiry, revision hash, destination resolution, approval or activation, and secret scan at eligibility evaluation and again inside the delivery claim immediately before network I/O.",
+              "ELIG-FR-03: Permit a non-TTY send invocation only when an existing exact human approval or activated policy already satisfies ELIG-FR-01; a non-TTY invocation may not create approval, activate policy, or override a finding."
+            ],
+            "acceptanceCriteria": [
+              "Eligibility tests cover valid exact approval, valid exact activated policy, both absent, expired approval, stale activation, expired draft, changed config, changed destination, and unresolved scan finding",
+              "Decision tests prove every eligible result carries repository, revision, config, destination, approval or policy, and scan hashes for final revalidation",
+              "Non-TTY tests prove an existing valid approval or policy can be evaluated but no approval, activation, or override is created",
+              "Decision tests prove an outbound correction requires a new draft or reply and offers no edit or delete path"
+            ],
+            "constraints": [
+              "Eligibility is a decision, not a durable send claim",
+              "APPROVAL-CON-01: Approval is permission to evaluate and claim one exact revision, not a reusable bypass; the delivery coordinator must consume it idempotently and a concurrent or repeated call must not create a second remote send.",
+              "RC-SEC-04: Require a separate interactive operator action to activate an auto-send policy, and invalidate activation when the canonical configuration hash or exact policy tuple changes.",
+              "RC-SEC-05: Bind human approval to one immutable draft revision hash containing text, metadata, destination alias, resolved destination, and expiry; any change invalidates approval.",
+              "RC-SEC-06: Revalidate destination aliases at approval and immediately before every send attempt; normal skill-facing commands reject raw Discord destinations."
+            ],
+            "references": [
+              "docs/PRD.md#13. System States / Lifecycle",
+              "docs/features/draft-and-approval-workflow.md#2. Interfaces and Preconditions",
+              "docs/features/draft-and-approval-workflow.md#APPROVAL-FR-02",
+              "docs/features/draft-and-approval-workflow.md#APPROVAL-FR-03",
+              "docs/features/draft-and-approval-workflow.md#ELIG-FR-01",
+              "docs/features/draft-and-approval-workflow.md#ELIG-FR-02",
+              "docs/features/draft-and-approval-workflow.md#ELIG-FR-03",
+              "docs/features/draft-and-approval-workflow.md#APPROVAL-CON-01",
+              "docs/PRD.md#RC-SEC-04",
+              "docs/PRD.md#RC-SEC-05",
+              "docs/PRD.md#RC-SEC-06"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.draft-elig-1",
+          "inputs": [
+            "work.draft-approval-1",
+            "work.draft-content-1",
+            "work.draft-secret-1",
+            "work.repo-policy-1",
+            "work.repo-cfg-1",
+            "work.repo-state-1",
+            "work.repo-audit-1",
+            "work.repo-audit-2"
+          ],
+          "timeoutMs": 3600000
+        }
+      ]
+    },
+    {
+      "id": "DISCORD-DELIVERY-AND-RECONCILIATION-1",
+      "title": "Phase 1: Discord Adapter and Delivery Safety",
+      "feature": "Discord Delivery and Reconciliation",
+      "description": "```forge-task {   \"id\": \"DISC-CLIENT-1\",",
+      "ownerAgents": [
+        "discord-engineer",
+        "delivery-engineer"
+      ],
+      "dependencies": [
+        "DRAFT-AND-APPROVAL-WORKFLOW-1"
+      ],
+      "approvalRequired": true,
+      "tasks": [
+        {
+          "id": "DISC-CLIENT-1",
+          "title": "Implement read-only Discord setup validation",
+          "description": "Implement the focused repo-com-discord-client crate for dedicated bot authentication from REPO_COM_DISCORD_TOKEN and read-only REST v10 setup diagnostics. Validate bot identity, configured workspace membership, destination and inbound channel visibility, VIEW_CHANNEL, SEND_MESSAGES, READ_MESSAGE_HISTORY, and resolved mention access; return structured remediation without changing Discord. Redact tokens and response bodies, reject user-token schemes, and do not implement message creation, Gateway, or application or permission mutation.",
+          "ownerAgent": "discord-engineer",
+          "dependencies": [
+            "PLAT-1",
+            "REPO-CFG-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-discord-client/Cargo.toml",
+            "crates/repo-com-discord-client/src/lib.rs",
+            "crates/repo-com-discord-client/src/auth.rs",
+            "crates/repo-com-discord-client/src/client.rs",
+            "crates/repo-com-discord-client/src/setup.rs",
+            "crates/repo-com-discord-client/tests/discord_client_contract.rs"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(discord_client_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "DISC-FR-01: Provide a guided, read-only setup check that validates the configured bot identity, workspace membership, destination and inbound channels, required channel permissions, and resolved mention access without creating an application or changing Discord permissions.",
+              "DISC-FR-02: Read the bot token only from REPO_COM_DISCORD_TOKEN, send it only in the Discord Bot authorization scheme, redact it from errors and diagnostics, and fail with a rotation instruction when authentication fails."
+            ],
+            "acceptanceCriteria": [
+              "Client tests use wiremock to verify every request path is under /api/v10 and uses the Bot authorization scheme",
+              "Setup tests cover bot identity, missing guild, missing channel, each missing required permission, mention denial, and complete success",
+              "Authentication failure returns a token-rotation remediation and no token or raw response body in Debug, Display, or diagnostics",
+              "Request logs prove setup issues only GET or HEAD requests and no application, role, channel, or permission mutation endpoint"
+            ],
+            "constraints": [
+              "Use a dedicated bot identity and read-only setup operations",
+              "DISC-CON-01: Pin every Discord route to REST API v10, use a dedicated bot token only, and reject user tokens, Bearer user authentication, self-bots, and unpinned API versions.",
+              "DISC-CON-02: Setup and validation are read-only and must not create applications, join additional workspaces, change roles, overwrite channels, or mutate permissions.",
+              "RC-SEC-01: Accept the Discord bot token only from the REPO_COM_DISCORD_TOKEN environment variable, keep it out of repository configuration and local state, redact it from errors and diagnostics, and zeroize owned copies on drop.",
+              "RC-SEC-02: Use only a dedicated Discord bot identity; never accept a user token, self-bot credential, or mechanism that impersonates the operator."
+            ],
+            "references": [
+              "docs/PRD.md#5. Research Findings",
+              "docs/features/discord-delivery-and-reconciliation.md#2. Interfaces and Preconditions",
+              "docs/features/discord-delivery-and-reconciliation.md#DISC-FR-01",
+              "docs/features/discord-delivery-and-reconciliation.md#DISC-FR-02",
+              "docs/features/discord-delivery-and-reconciliation.md#DISC-CON-01",
+              "docs/features/discord-delivery-and-reconciliation.md#DISC-CON-02",
+              "docs/PRD.md#RC-SEC-01",
+              "docs/PRD.md#RC-SEC-02"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.disc-client-1",
+          "inputs": [
+            "work.plat-1",
+            "work.repo-cfg-1",
+            "work.draft-model-1",
+            "work.draft-content-1",
+            "work.draft-secret-1",
+            "work.draft-approval-1",
+            "work.draft-elig-1"
+          ],
+          "timeoutMs": 3600000
+        },
+        {
+          "id": "DISC-MSG-1",
+          "title": "Implement one Discord message operation",
+          "description": "Implement the focused repo-com-discord-message crate for exactly one create-message request using rendered draft text, deterministic nonce, an allowlisted allowed_mentions policy, and an optional already-validated message_reference. Pin REST v10, enforce request limits, parse dynamic rate-limit headers and 429 Retry-After, and classify validation, authentication, permission, not-found, conflict, rate-limit, server, pre-dispatch, and ambiguous outcomes without logging content or credentials. Do not claim delivery, retry across attempts, reconcile, or expose rich-message behavior.",
+          "ownerAgent": "discord-engineer",
+          "dependencies": [
+            "DISC-CLIENT-1",
+            "DRAFT-CONTENT-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-discord-message/Cargo.toml",
+            "crates/repo-com-discord-message/src/lib.rs",
+            "crates/repo-com-discord-message/src/request.rs",
+            "crates/repo-com-discord-message/src/rate_limit.rs",
+            "crates/repo-com-discord-message/src/error.rs",
+            "crates/repo-com-discord-message/tests/discord_message_contract.rs"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(discord_message_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "DISC-FR-03: Create exactly one Discord text message through the versioned channel endpoint with the deterministic draft nonce and an allowed_mentions policy containing only configured role and user IDs.",
+              "DISC-FR-04: Apply proactive route and global rate-limit headers and obey HTTP 429 Retry-After or retry_after values for both user and shared scopes without hard-coded bucket timing.",
+              "DISC-FR-05: Classify validation, authentication, permission, not-found, conflict, rate-limit, server, pre-dispatch network, and post-dispatch ambiguous outcomes into stable typed errors without logging response bodies that may contain content or credentials."
+            ],
+            "acceptanceCriteria": [
+              "Message tests assert one POST to /api/v10/channels/{channel_id}/messages with exact text, nonce footer, only allowlisted role and user IDs, and a message_reference only for a validated reply draft",
+              "Request tests reject attachments, embeds, raw channel IDs, unlisted mentions, oversized content, and any API version other than v10",
+              "Rate-limit tests cover route and global headers plus user and shared 429 scopes and prove the client uses server-provided reset timing",
+              "Error tests cover 400, 401, 403, 404, 409, 429, 5xx, connect failure, pre-dispatch timeout, and post-dispatch timeout without leaking body content or token",
+              "Request and error types distinguish proven-not-sent from ambiguous outcomes for the delivery recovery layer"
+            ],
+            "constraints": [
+              "A message operation performs at most one HTTP send attempt",
+              "DISC-CON-01: Pin every Discord route to REST API v10, use a dedicated bot token only, and reject user tokens, Bearer user authentication, self-bots, and unpinned API versions.",
+              "DEL-CON-03: Do not hard-code Discord rate limits, retry all errors, or exceed three total transport attempts; each request must have bounded connect, total, and response time.",
+              "RC-NFR-04: Pin every Discord request to REST API v10 and obey dynamic route, global, and shared rate-limit responses without hard-coded reset assumptions.",
+              "RC-NFR-05: Limit each Discord request to three total transport attempts; retry only outcomes proven not to create a message, and cap any Discord-directed wait at 30 seconds per attempt."
+            ],
+            "references": [
+              "docs/PRD.md#5. Research Findings",
+              "docs/features/discord-delivery-and-reconciliation.md#2. Interfaces and Preconditions",
+              "docs/features/discord-delivery-and-reconciliation.md#DISC-FR-03",
+              "docs/features/discord-delivery-and-reconciliation.md#DISC-FR-04",
+              "docs/features/discord-delivery-and-reconciliation.md#DISC-FR-05",
+              "docs/features/discord-delivery-and-reconciliation.md#DISC-CON-01",
+              "docs/features/discord-delivery-and-reconciliation.md#DEL-CON-03",
+              "docs/PRD.md#RC-NFR-04",
+              "docs/PRD.md#RC-NFR-05"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.disc-msg-1",
+          "inputs": [
+            "work.disc-client-1",
+            "work.draft-content-1",
+            "work.draft-model-1",
+            "work.draft-secret-1",
+            "work.draft-approval-1",
+            "work.draft-elig-1"
+          ],
+          "timeoutMs": 3600000
+        },
+        {
+          "id": "DISC-DELIVERY-1",
+          "title": "Implement atomic duplicate-safe delivery claims",
+          "description": "Implement the focused repo-com-delivery crate as the durable state machine around one draft revision. In a single SQLite transaction, reload current config, revision, expiry, resolved destination, exact approval or activated policy, and secret decision; create one uniquely constrained attempt and audit event; then commit before network I/O. Concurrent and repeated callers receive the recorded state without a second POST. Record accepted message ID, definitive failure, retry_wait, or unknown and audit each transition. Do not implement retry timing, reconciliation, or a bypass around the claim.",
+          "ownerAgent": "delivery-engineer",
+          "dependencies": [
+            "DISC-MSG-1",
+            "DRAFT-ELIG-1",
+            "REPO-STATE-1",
+            "REPO-AUDIT-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-delivery/Cargo.toml",
+            "crates/repo-com-delivery/src/lib.rs",
+            "crates/repo-com-delivery/src/model.rs",
+            "crates/repo-com-delivery/src/claim.rs",
+            "crates/repo-com-delivery/src/transition.rs",
+            "crates/repo-com-delivery/tests/delivery_contract.rs"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(delivery_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "DEL-FR-01: Claim a send in one local database transaction only when the exact draft revision is unclaimed, and enforce a uniqueness boundary so concurrent or repeated invocations cannot both proceed to network I/O.",
+              "DEL-FR-02: Inside the claim transaction, revalidate current repository and config hashes, draft revision hash and expiry, resolved alias and mention allowlist, exact approval or activated policy, and secret-scan decision before recording the claim.",
+              "DEL-FR-03: Record every delivery attempt with attempt number, request nonce, start and completion time, redacted error code, Discord message ID when known, and accepted, failed, retry_wait, or unknown state, and append the matching audit event transactionally.",
+              "DEL-FR-07: Return the existing accepted, failed, retry_wait, unknown, or reconciled outcome to duplicate and concurrent callers for the same draft revision rather than creating another attempt."
+            ],
+            "acceptanceCriteria": [
+              "Claim tests prove stale config, revision, expiry, destination, approval, activation, or scan input rolls back with no attempt or network authorization",
+              "A 100-way concurrent test for one revision proves exactly one claim commits and all callers observe the same recorded outcome",
+              "Transition tests cover accepted, definitive failed, retry_wait, and unknown with required attempt metadata and transactional audit events",
+              "Crash-boundary tests stop after claim and after remote response but before local completion and prove the next caller does not POST again",
+              "State tests reject outbound edit, delete, second accepted message, and transition from a terminal state to a new claim"
+            ],
+            "constraints": [
+              "Keep claim, authorization, duplicate protection, attempt creation, and audit atomic",
+              "DEL-CON-01: Authorization, current revision and destination revalidation, duplicate claim, attempt creation, and audit state must commit atomically before any network call; no intermediate state may authorize a second send.",
+              "DEL-CON-04: Outbound messages are immutable in repo-com; expose no Discord edit or delete API and record reconciliation without mutating the remote message.",
+              "RC-NFR-02: A crash or process termination must not create a second remote send for the same draft revision, and an ambiguous send must remain blocked until reconciliation resolves it.",
+              "RC-SEC-05: Bind human approval to one immutable draft revision hash containing text, metadata, destination alias, resolved destination, and expiry; any change invalidates approval.",
+              "RC-SEC-06: Revalidate destination aliases at approval and immediately before every send attempt; normal skill-facing commands reject raw Discord destinations."
+            ],
+            "references": [
+              "docs/PRD.md#RC-US-03",
+              "docs/PRD.md#13. System States / Lifecycle",
+              "docs/features/discord-delivery-and-reconciliation.md#2. Interfaces and Preconditions",
+              "docs/features/discord-delivery-and-reconciliation.md#DEL-FR-01",
+              "docs/features/discord-delivery-and-reconciliation.md#DEL-FR-02",
+              "docs/features/discord-delivery-and-reconciliation.md#DEL-FR-03",
+              "docs/features/discord-delivery-and-reconciliation.md#DEL-FR-07",
+              "docs/features/discord-delivery-and-reconciliation.md#DEL-CON-01",
+              "docs/features/discord-delivery-and-reconciliation.md#DEL-CON-04",
+              "docs/PRD.md#RC-NFR-02",
+              "docs/PRD.md#RC-SEC-05",
+              "docs/PRD.md#RC-SEC-06"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.disc-delivery-1",
+          "inputs": [
+            "work.disc-msg-1",
+            "work.draft-elig-1",
+            "work.repo-state-1",
+            "work.repo-audit-1",
+            "work.draft-model-1",
+            "work.draft-content-1",
+            "work.draft-secret-1",
+            "work.draft-approval-1"
+          ],
+          "timeoutMs": 3600000
+        },
+        {
+          "id": "DISC-DELIVERY-2",
+          "title": "Implement bounded retry and unknown reconciliation",
+          "description": "Implement the focused repo-com-delivery-retry crate on top of the delivery state machine. Permit at most three total transport attempts and retry only proven pre-dispatch failures or HTTP 429, using bounded jitter or the server delay capped at 30 seconds. Classify any post-dispatch timeout, reset, or 5xx as unknown. Reconcile unknown by reading only the configured destination and matching bot author, deterministic nonce, and exact content; require a five-minute observation window and three successful reads before reconciled_absent, while conflicts remain unresolved. Do not automatically resend unknown or expose a remote mutation.",
+          "ownerAgent": "delivery-engineer",
+          "dependencies": [
+            "DISC-DELIVERY-1",
+            "DISC-CLIENT-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-delivery-retry/Cargo.toml",
+            "crates/repo-com-delivery-retry/src/lib.rs",
+            "crates/repo-com-delivery-retry/src/policy.rs",
+            "crates/repo-com-delivery-retry/src/reconcile.rs",
+            "crates/repo-com-delivery-retry/tests/delivery_retry_contract.rs"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(delivery_retry_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "DEL-FR-04: Represent a timeout, reset, or server response after dispatch may have reached Discord as unknown and attach the deterministic nonce and exact intended content needed for read-only reconciliation.",
+              "DEL-FR-05: Reconcile an unknown outcome by reading only the configured destination and matching the bot author, deterministic nonce, and exact content; one match becomes accepted, no match remains unknown during the observation window, and multiple or conflicting matches remain unresolved.",
+              "DEL-FR-06: Retry at most three total transport attempts and only for a proven pre-dispatch failure or HTTP 429; use bounded jitter for pre-dispatch failures and the server-directed delay capped at 30 seconds for 429, while every post-dispatch ambiguity becomes unknown."
+            ],
+            "acceptanceCriteria": [
+              "Retry tests prove no fourth attempt and no retry for 400, 401, 403, 404, 409, or ambiguous post-dispatch outcomes",
+              "Clock-controlled tests prove pre-dispatch jitter bounds, 429 server-directed delay, and the 30-second per-attempt cap without wall-clock sleeps",
+              "Unknown tests prove timeout, connection reset after dispatch, and 5xx responses enter unknown and never automatic resend",
+              "Reconciliation tests match only the configured destination, bot author, exact nonce, and exact content and distinguish one match, no match, multiple matches, edited match, and deleted match",
+              "Absence tests require five minutes and three successful reads before reconciled_absent; conflicts and insufficient evidence remain unresolved",
+              "Recovery tests prove no reconciliation call mutates Discord"
+            ],
+            "constraints": [
+              "Unknown and unresolved outcomes are permission-blocking, not retry suggestions",
+              "DEL-CON-02: An unknown or unresolved delivery must never be automatically resent; only exact reconciliation or a later explicit operator-authorized new attempt may change that state.",
+              "DEL-CON-03: Do not hard-code Discord rate limits, retry all errors, or exceed three total transport attempts; each request must have bounded connect, total, and response time.",
+              "DEL-CON-04: Outbound messages are immutable in repo-com; expose no Discord edit or delete API and record reconciliation without mutating the remote message.",
+              "RC-NFR-02: A crash or process termination must not create a second remote send for the same draft revision, and an ambiguous send must remain blocked until reconciliation resolves it.",
+              "RC-NFR-04: Pin every Discord request to REST API v10 and obey dynamic route, global, and shared rate-limit responses without hard-coded reset assumptions.",
+              "RC-NFR-05: Limit each Discord request to three total transport attempts; retry only outcomes proven not to create a message, and cap any Discord-directed wait at 30 seconds per attempt."
+            ],
+            "references": [
+              "docs/PRD.md#13. System States / Lifecycle",
+              "docs/features/discord-delivery-and-reconciliation.md#2. Interfaces and Preconditions",
+              "docs/features/discord-delivery-and-reconciliation.md#DEL-FR-04",
+              "docs/features/discord-delivery-and-reconciliation.md#DEL-FR-05",
+              "docs/features/discord-delivery-and-reconciliation.md#DEL-FR-06",
+              "docs/features/discord-delivery-and-reconciliation.md#DEL-CON-02",
+              "docs/features/discord-delivery-and-reconciliation.md#DEL-CON-03",
+              "docs/features/discord-delivery-and-reconciliation.md#DEL-CON-04",
+              "docs/PRD.md#RC-NFR-02",
+              "docs/PRD.md#RC-NFR-04",
+              "docs/PRD.md#RC-NFR-05"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.disc-delivery-2",
+          "inputs": [
+            "work.disc-delivery-1",
+            "work.disc-client-1",
+            "work.draft-model-1",
+            "work.draft-content-1",
+            "work.draft-secret-1",
+            "work.draft-approval-1",
+            "work.draft-elig-1"
+          ],
+          "timeoutMs": 3600000
+        }
+      ]
+    },
+    {
+      "id": "INBOUND-RETRIEVAL-AND-REPLY-1",
+      "title": "Phase 1: Durable Inbound State",
+      "feature": "Inbound Retrieval and Reply",
+      "description": "```forge-task {   \"id\": \"IN-STATE-1\",",
+      "ownerAgents": [
+        "persistence-engineer"
+      ],
+      "dependencies": [
+        "DISCORD-DELIVERY-AND-RECONCILIATION-1"
+      ],
+      "approvalRequired": true,
+      "tasks": [
+        {
+          "id": "IN-STATE-1",
+          "title": "Persist inbound snapshots and local lifecycle",
+          "description": "Implement the focused repo-com-inbox-state crate for repository-scoped first snapshots, separate current snapshots or deleted markers, per-alias cursors, acknowledgement, archive, and reply links. Commit fetched items, edit or deletion events, and the advanced cursor in one transaction so a storage failure leaves the previous cursor authoritative. Make acknowledgement and archive idempotent local operations and preserve first snapshots across every later transition. Do not call Discord, interpret content, or create reply drafts.",
+          "ownerAgent": "persistence-engineer",
+          "dependencies": [
+            "REPO-STATE-1",
+            "REPO-AUDIT-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-inbox-state/Cargo.toml",
+            "crates/repo-com-inbox-state/src/lib.rs",
+            "crates/repo-com-inbox-state/src/item.rs",
+            "crates/repo-com-inbox-state/src/store.rs",
+            "crates/repo-com-inbox-state/src/cursor.rs",
+            "crates/repo-com-inbox-state/tests/inbox_state_contract.rs"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(inbox_state_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "IN-FR-05: Reconcile edits and deletions through bounded read-only point checks for recently stored messages, preserve the first snapshot, and record the current remote content or deleted state separately.",
+              "INBOX-FR-01: Persist each accepted inbound item's first remote snapshot, current remote snapshot or deleted marker, local acknowledgement and archive timestamps, and linked reply draft identifiers in a repository-scoped transaction.",
+              "INBOX-FR-02: Advance an inbound alias cursor only after all items and edit or deletion events from the fetch are durably stored; on failure retain the previous cursor and return a retryable storage error.",
+              "INBOX-FR-03: Acknowledge and archive one or more stored inbound items locally with idempotent timestamps, and expose no Discord reaction, edit, delete, assignment, or read state."
+            ],
+            "acceptanceCriteria": [
+              "Store tests preserve the first snapshot while recording changed current content, deleted state, acknowledgement, archive, and reply-link transitions separately",
+              "Transaction tests inject failure during item persistence and prove no cursor advances and no partial page is visible",
+              "Cursor tests prove per-alias, per-repository monotonic values and deterministic continuation after a retry",
+              "Acknowledgement and archive tests are idempotent and expose no remote mutation operation",
+              "Repository isolation tests reject cross-repository item, cursor, acknowledgement, archive, and reply-link access"
+            ],
+            "constraints": [
+              "All inbound lifecycle changes remain local",
+              "IN-CON-02: Inbound acknowledgement, archive, cursor, and reply-link changes are local-only and must never mutate the remote Discord message.",
+              "IN-CON-04: Preserve the original local inbound snapshot even after a remote edit, deletion, purge, or acknowledgement; a later transition is represented separately.",
+              "RC-SEC-08: Keep sent messages immutable; corrections use a new draft, and inbound acknowledgement or archival is local-only with no Discord reaction, edit, or delete."
+            ],
+            "references": [
+              "docs/PRD.md#13. System States / Lifecycle",
+              "docs/features/inbound-retrieval-and-reply.md#2. Interfaces and Preconditions",
+              "docs/features/inbound-retrieval-and-reply.md#IN-FR-05",
+              "docs/features/inbound-retrieval-and-reply.md#INBOX-FR-01",
+              "docs/features/inbound-retrieval-and-reply.md#INBOX-FR-02",
+              "docs/features/inbound-retrieval-and-reply.md#INBOX-FR-03",
+              "docs/features/inbound-retrieval-and-reply.md#IN-CON-02",
+              "docs/features/inbound-retrieval-and-reply.md#IN-CON-04",
+              "docs/PRD.md#RC-SEC-08"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.in-state-1",
+          "inputs": [
+            "work.repo-state-1",
+            "work.repo-audit-1",
+            "work.disc-client-1",
+            "work.disc-msg-1",
+            "work.disc-delivery-1",
+            "work.disc-delivery-2"
+          ],
+          "timeoutMs": 3600000
+        }
+      ]
+    },
+    {
+      "id": "INBOUND-RETRIEVAL-AND-REPLY-2",
+      "title": "Phase 2: Bounded Fetch and Reply Drafting",
+      "feature": "Inbound Retrieval and Reply",
+      "description": "```forge-task {   \"id\": \"IN-FETCH-1\",",
+      "ownerAgents": [
+        "discord-engineer",
+        "messaging-engineer"
+      ],
+      "dependencies": [
+        "INBOUND-RETRIEVAL-AND-REPLY-1"
+      ],
+      "approvalRequired": true,
+      "tasks": [
+        {
+          "id": "IN-FETCH-1",
+          "title": "Fetch and reconcile bounded untrusted replies",
+          "description": "Implement the focused repo-com-inbox-fetch crate for on-demand REST v10 reads from enabled inbound aliases. Require exactly one cursor or RFC 3339 boundary, paginate deterministically with 10-page and 1,000-message limits, retain only human replies to accepted local deliveries or direct bot mentions, ignore bots and repo-com messages, and return explicit untrusted envelopes. After storing a page transactionally, perform at most 100 read-only point checks for recently stored messages to record edits and deletions. Do not connect to Gateway, backfill arbitrary history, interpret content, or mutate Discord.",
+          "ownerAgent": "discord-engineer",
+          "dependencies": [
+            "IN-STATE-1",
+            "DISC-CLIENT-1",
+            "DISC-DELIVERY-2"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-inbox-fetch/Cargo.toml",
+            "crates/repo-com-inbox-fetch/src/lib.rs",
+            "crates/repo-com-inbox-fetch/src/boundary.rs",
+            "crates/repo-com-inbox-fetch/src/filter.rs",
+            "crates/repo-com-inbox-fetch/src/fetch.rs",
+            "crates/repo-com-inbox-fetch/src/reconcile.rs",
+            "crates/repo-com-inbox-fetch/tests/inbox_fetch_contract.rs"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(inbox_fetch_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "IN-FR-01: Fetch only channels named by enabled inbound aliases in the current repository configuration and reject any raw or unconfigured inbound channel identifier.",
+              "IN-FR-02: Require exactly one explicit last-event-ID cursor or RFC 3339 time boundary per fetch, follow Discord pagination in deterministic order, and stop after at most 10 pages or 1,000 raw messages with explicit continuation metadata.",
+              "IN-FR-03: Retain only human-authored messages that either reply to an accepted repo-com delivery in the same repository or directly mention the configured bot user; ignore all bot-authored and repo-com-authored messages in v1.",
+              "IN-FR-04: Return each inbound item in an explicit untrusted envelope containing remote IDs, channel, author, timestamp, text, reply context, mention evidence, attachment indicators, and provenance, without interpreting content as an instruction or permission.",
+              "IN-FR-05: Reconcile edits and deletions through bounded read-only point checks for recently stored messages, preserve the first snapshot, and record the current remote content or deleted state separately."
+            ],
+            "acceptanceCriteria": [
+              "Fetch tests cover cursor and time alternatives, both/neither boundary rejection, deterministic ordering, continuation metadata, 10-page stop, and 1,000-message stop",
+              "Filter tests retain a human reply to an accepted same-repository delivery and a human direct bot mention while excluding unrelated messages, other bots, repo-com messages, and cross-repository replies",
+              "Envelope tests mark all content untrusted and include remote provenance, reply and mention evidence, and attachment indicators without attachment bytes",
+              "Reconciliation tests record point-read edits and 404 deletions separately from first snapshots and stop after 100 probes with explicit continuation",
+              "HTTP fixtures prove only configured channel GET requests and no Gateway, webhook, reaction, edit, or delete request"
+            ],
+            "constraints": [
+              "Fetch is explicit, bounded, read-only, and untrusted",
+              "IN-CON-01: Treat every inbound field as untrusted data; no inbound text, mention, edit, deletion, or attachment indicator may approve a draft, activate policy, override safety, or trigger a send by itself.",
+              "IN-CON-03: Do not connect to Gateway, start a background monitor, scan arbitrary history, or perform historical backfill in v1; every fetch requires an explicit cursor or time boundary and a hard 10-page/1,000-message bound.",
+              "IN-CON-04: Preserve the original local inbound snapshot even after a remote edit, deletion, purge, or acknowledgement; a later transition is represented separately.",
+              "RC-SEC-07: Treat every inbound message, mention, edit, and deletion as untrusted data that cannot grant permission, approve a draft, or trigger a send."
+            ],
+            "references": [
+              "docs/PRD.md#RC-US-04",
+              "docs/PRD.md#5. Research Findings",
+              "docs/features/inbound-retrieval-and-reply.md#2. Interfaces and Preconditions",
+              "docs/features/inbound-retrieval-and-reply.md#IN-FR-01",
+              "docs/features/inbound-retrieval-and-reply.md#IN-FR-02",
+              "docs/features/inbound-retrieval-and-reply.md#IN-FR-03",
+              "docs/features/inbound-retrieval-and-reply.md#IN-FR-04",
+              "docs/features/inbound-retrieval-and-reply.md#IN-FR-05",
+              "docs/features/inbound-retrieval-and-reply.md#IN-CON-01",
+              "docs/features/inbound-retrieval-and-reply.md#IN-CON-03",
+              "docs/features/inbound-retrieval-and-reply.md#IN-CON-04",
+              "docs/PRD.md#RC-SEC-07"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.in-fetch-1",
+          "inputs": [
+            "work.in-state-1",
+            "work.disc-client-1",
+            "work.disc-delivery-2"
+          ],
+          "timeoutMs": 3600000
+        },
+        {
+          "id": "IN-REPLY-1",
+          "title": "Create validated threaded reply drafts",
+          "description": "Implement the focused repo-com-reply crate to validate one retained inbound item as a same-repository, same-workspace, configured-channel target and create one normal immutable draft revision with a Discord message_reference. Reject missing, deleted, expired, cross-repository, or unauthorized targets, revalidate the target before delivery eligibility, and link the inbound item to the reply draft. Mark replied only after the linked delivery is accepted. Do not send directly, bypass approval, or mutate the inbound message.",
+          "ownerAgent": "messaging-engineer",
+          "dependencies": [
+            "IN-STATE-1",
+            "DRAFT-MODEL-1",
+            "DRAFT-ELIG-1",
+            "DISC-DELIVERY-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-reply/Cargo.toml",
+            "crates/repo-com-reply/src/lib.rs",
+            "crates/repo-com-reply/src/target.rs",
+            "crates/repo-com-reply/src/draft.rs",
+            "crates/repo-com-reply/src/link.rs",
+            "crates/repo-com-reply/tests/reply_contract.rs"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(reply_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "REPLY-FR-01: Validate a reply target by repository ID, stored inbound item, current retained snapshot, configured workspace and channel, and authorization; reject missing, deleted, expired, cross-repository, or unauthorized targets.",
+              "REPLY-FR-02: Create a reply as one new immutable draft revision carrying a validated Discord message_reference to the inbound item; the reply must then pass the same exact approval, policy, secret, idempotency, and delivery gates as any other draft.",
+              "REPLY-FR-03: Mark an inbound item replied only after the linked reply delivery is accepted, preserve the local reply link and audit event, and do not claim delivery of the human-authored response."
+            ],
+            "acceptanceCriteria": [
+              "Target tests accept one retained authorized item and reject missing, deleted, expired, cross-repository, cross-workspace, unconfigured-channel, and arbitrary remote-ID targets",
+              "Draft tests prove a valid target creates one immutable reply revision with exactly one message_reference and the normal draft lifecycle",
+              "Eligibility tests prove a changed or deleted target blocks send before any delivery claim",
+              "Link tests mark replied only after accepted delivery and preserve draft ID, remote message ID, accepted delivery ID, and audit event",
+              "Command-service tests prove reply creation cannot call Discord or bypass approval, policy, safety, or idempotency gates"
+            ],
+            "constraints": [
+              "Reply creation produces a draft, never a direct send",
+              "REPLY-CON-01: A reply command may create a draft only; it may not send directly, bypass preview or approval, target an arbitrary Discord message ID, or include an unauthorized raw destination.",
+              "REPLY-CON-02: A valid reply draft references one stored inbound item and one immutable remote message ID; the target is revalidated immediately before delivery and a changed or deleted target blocks the send.",
+              "RC-SEC-07: Treat every inbound message, mention, edit, and deletion as untrusted data that cannot grant permission, approve a draft, or trigger a send.",
+              "RC-SEC-08: Keep sent messages immutable; corrections use a new draft, and inbound acknowledgement or archival is local-only with no Discord reaction, edit, or delete."
+            ],
+            "references": [
+              "docs/PRD.md#6. Concept",
+              "docs/features/inbound-retrieval-and-reply.md#2. Interfaces and Preconditions",
+              "docs/features/inbound-retrieval-and-reply.md#REPLY-FR-01",
+              "docs/features/inbound-retrieval-and-reply.md#REPLY-FR-02",
+              "docs/features/inbound-retrieval-and-reply.md#REPLY-FR-03",
+              "docs/features/inbound-retrieval-and-reply.md#REPLY-CON-01",
+              "docs/features/inbound-retrieval-and-reply.md#REPLY-CON-02",
+              "docs/PRD.md#RC-SEC-07",
+              "docs/PRD.md#RC-SEC-08"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.in-reply-1",
+          "inputs": [
+            "work.in-state-1",
+            "work.draft-model-1",
+            "work.draft-elig-1",
+            "work.disc-delivery-1"
+          ],
+          "timeoutMs": 3600000
+        }
+      ]
+    },
+    {
+      "id": "PRIVACY-AND-LIFECYCLE-OPERATIONS-1",
+      "title": "Phase 1: Automatic Retention",
+      "feature": "Privacy and Lifecycle Operations",
+      "description": "```forge-task {   \"id\": \"PRIV-RET-1\",",
+      "ownerAgents": [
+        "privacy-engineer"
+      ],
+      "dependencies": [
+        "INBOUND-RETRIEVAL-AND-REPLY-2"
+      ],
+      "approvalRequired": true,
+      "tasks": [
+        {
+          "id": "PRIV-RET-1",
+          "title": "Enforce content and metadata retention",
+          "description": "Implement the focused repo-com-retention crate with validated per-repository cutoffs, clock injection, and a transactional sweep that runs before state mutation or explicit invocation. Remove or replace draft and inbound text at content expiry while preserving non-content metadata, and remove expired metadata only at its later cutoff. A failed sweep must return a blocking storage-integrity result. Do not implement full purge, lifecycle inspection, remote deletion, or background scheduling.",
+          "ownerAgent": "privacy-engineer",
+          "dependencies": [
+            "REPO-CFG-1",
+            "REPO-STATE-1",
+            "REPO-AUDIT-1",
+            "IN-STATE-1",
+            "DISC-DELIVERY-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-retention/Cargo.toml",
+            "crates/repo-com-retention/src/lib.rs",
+            "crates/repo-com-retention/src/policy.rs",
+            "crates/repo-com-retention/src/sweep.rs",
+            "crates/repo-com-retention/tests/retention_contract.rs"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(retention_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "RET-FR-01: Retain draft and inbound message content for 30 days by default and non-content delivery or audit metadata for one year by default, with validated per-repository overrides.",
+              "RET-FR-02: Run an opportunistic retention sweep before each state-mutating invocation and on explicit request; if retention fails, block the new mutation with a typed storage-integrity error rather than continuing past the cutoff.",
+              "RET-FR-03: At content expiry remove or irreversibly replace draft and inbound text with a retained content-expired marker while preserving non-content IDs, hashes, timestamps, lifecycle state, and audit evidence."
+            ],
+            "acceptanceCriteria": [
+              "Clock-controlled tests cover the 30-day and 365-day defaults and exact content and metadata cutoff boundaries",
+              "Override tests cover allowed minimum and maximum values and reject metadata retention shorter than content retention",
+              "Sweep tests prove expired draft and inbound text is removed or replaced while non-content IDs, hashes, timestamps, links, and audit evidence remain",
+              "Failure-injection tests prove a partial or failed sweep rolls back and blocks the attempted new state mutation",
+              "Repository isolation tests prove one repository's retention never changes another repository's rows",
+              "Sweep tests prove no Discord request or remote mutation is possible"
+            ],
+            "constraints": [
+              "Automatic retention changes only local content and metadata",
+              "RET-CON-01: Content retention defaults to 30 days, metadata retention defaults to 365 days, content override is 1 through 365 days, metadata override is 30 through 3,650 days, and metadata retention must be at least content retention.",
+              "RET-CON-02: Automatic retention may remove content or metadata only; full purge, alternate cutoffs, and cross-category deletion require an explicit operator-confirmed plan.",
+              "RET-CON-03: Purge and retention operate only on the selected local repository and never edit, delete, react to, or otherwise mutate a Discord message.",
+              "PRIV-CON-01: v1 state is protected by user-only filesystem permissions rather than encryption at rest; documentation and human security review must state that local account access, backups, and filesystem snapshots can still read retained content.",
+              "PRIV-CON-02: Send no product telemetry, analytics, crash upload, or remote audit synchronization, and keep retention and purge execution entirely local."
+            ],
+            "references": [
+              "docs/PRD.md#10. Security and Privacy",
+              "docs/features/privacy-and-lifecycle-operations.md#2. Interfaces and Preconditions",
+              "docs/features/privacy-and-lifecycle-operations.md#RET-FR-01",
+              "docs/features/privacy-and-lifecycle-operations.md#RET-FR-02",
+              "docs/features/privacy-and-lifecycle-operations.md#RET-FR-03",
+              "docs/features/privacy-and-lifecycle-operations.md#RET-CON-01",
+              "docs/features/privacy-and-lifecycle-operations.md#RET-CON-02",
+              "docs/features/privacy-and-lifecycle-operations.md#RET-CON-03",
+              "docs/features/privacy-and-lifecycle-operations.md#PRIV-CON-01",
+              "docs/features/privacy-and-lifecycle-operations.md#PRIV-CON-02"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.priv-ret-1",
+          "inputs": [
+            "work.repo-cfg-1",
+            "work.repo-state-1",
+            "work.repo-audit-1",
+            "work.in-state-1",
+            "work.disc-delivery-1",
+            "work.in-fetch-1",
+            "work.in-reply-1"
+          ],
+          "timeoutMs": 3600000
+        }
+      ]
+    },
+    {
+      "id": "PRIVACY-AND-LIFECYCLE-OPERATIONS-2",
+      "title": "Phase 2: Purge and Read-Only Lifecycle",
+      "feature": "Privacy and Lifecycle Operations",
+      "description": "```forge-task {   \"id\": \"PRIV-RET-2\",",
+      "ownerAgents": [
+        "security-engineer",
+        "operations-engineer"
+      ],
+      "dependencies": [
+        "PRIVACY-AND-LIFECYCLE-OPERATIONS-1"
+      ],
+      "approvalRequired": true,
+      "tasks": [
+        {
+          "id": "PRIV-RET-2",
+          "title": "Implement hashed dry-run and confirmed purge",
+          "description": "Implement the focused repo-com-purge crate with repository-scoped content, metadata, and all-state plans. A plan must return exact category and row counts plus a deterministic plan hash without mutation. Execution must require an interactive TTY confirmation matching repository, scope, cutoff, configuration hash, and plan hash, then delete locally in bounded transactions and append a redacted count-only audit event. Do not permit non-TTY execution, remote deletion, automatic alternate cutoff, or database recreation.",
+          "ownerAgent": "security-engineer",
+          "dependencies": [
+            "PRIV-RET-1",
+            "REPO-CFG-1",
+            "REPO-STATE-1",
+            "REPO-AUDIT-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-purge/Cargo.toml",
+            "crates/repo-com-purge/src/lib.rs",
+            "crates/repo-com-purge/src/plan.rs",
+            "crates/repo-com-purge/src/execute.rs",
+            "crates/repo-com-purge/tests/purge_contract.rs"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(purge_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "RET-FR-04: Provide a non-mutating purge plan that reports exact repository-scoped counts for content, metadata, or all local state before an operator executes it.",
+              "RET-FR-05: Execute a purge only after an interactive TTY confirmation bound to the current repository, scope, cutoff, plan hash, and configuration hash, and append a redacted audit record of removed counts."
+            ],
+            "acceptanceCriteria": [
+              "Plan tests cover content, metadata, and all scopes with exact deterministic counts and a stable hash while proving no row changes",
+              "Confirmation tests reject non-TTY execution and mismatched repository, scope, cutoff, config hash, or plan hash",
+              "Execution tests prove only the confirmed repository and category are deleted and a count-only audit event remains available",
+              "Failure-injection tests prove partial purge rolls back and a new plan is required before retry",
+              "API tests expose no Discord client or remote delete operation"
+            ],
+            "constraints": [
+              "Destructive local purge requires an explicit confirmed plan",
+              "RET-CON-02: Automatic retention may remove content or metadata only; full purge, alternate cutoffs, and cross-category deletion require an explicit operator-confirmed plan.",
+              "RET-CON-03: Purge and retention operate only on the selected local repository and never edit, delete, react to, or otherwise mutate a Discord message.",
+              "PRIV-CON-02: Send no product telemetry, analytics, crash upload, or remote audit synchronization, and keep retention and purge execution entirely local.",
+              "RC-PRIV-02: Retain message content for 30 days and non-content audit or delivery metadata for one year by default, allow per-repository overrides, provide explicit purge, and send no product telemetry."
+            ],
+            "references": [
+              "docs/PRD.md#10. Security and Privacy",
+              "docs/features/privacy-and-lifecycle-operations.md#2. Interfaces and Preconditions",
+              "docs/features/privacy-and-lifecycle-operations.md#RET-FR-04",
+              "docs/features/privacy-and-lifecycle-operations.md#RET-FR-05",
+              "docs/features/privacy-and-lifecycle-operations.md#RET-CON-02",
+              "docs/features/privacy-and-lifecycle-operations.md#RET-CON-03",
+              "docs/features/privacy-and-lifecycle-operations.md#PRIV-CON-02",
+              "docs/PRD.md#RC-PRIV-02"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.priv-ret-2",
+          "inputs": [
+            "work.priv-ret-1",
+            "work.repo-cfg-1",
+            "work.repo-state-1",
+            "work.repo-audit-1"
+          ],
+          "timeoutMs": 3600000
+        },
+        {
+          "id": "PRIV-LIFE-1",
+          "title": "Expose read-only lifecycle and state verification",
+          "description": "Implement the focused repo-com-lifecycle crate for bounded repository-scoped inspection of drafts, delivery attempts, inbound items, acknowledgement, archive, reply links, and audit transitions, plus a state verifier for SQLite quick_check, foreign keys, expected migration, repository scope, and filesystem permissions. Return content only when the caller explicitly requests a retained item and redact diagnostics. Do not interpret inbound content, fetch Discord, migrate, repair, back up, or mutate state.",
+          "ownerAgent": "operations-engineer",
+          "dependencies": [
+            "PRIV-RET-1",
+            "REPO-AUDIT-2",
+            "IN-STATE-1",
+            "DISC-DELIVERY-2",
+            "IN-REPLY-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-lifecycle/Cargo.toml",
+            "crates/repo-com-lifecycle/src/lib.rs",
+            "crates/repo-com-lifecycle/src/inspect.rs",
+            "crates/repo-com-lifecycle/src/verify.rs",
+            "crates/repo-com-lifecycle/tests/lifecycle_contract.rs"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(lifecycle_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "LIFE-FR-01: Inspect repository, draft revision, delivery attempt, inbound item, acknowledgement, archive, reply link, and audit transitions through bounded read-only queries without interpreting content or claiming remote state beyond the last recorded fetch.",
+              "LIFE-FR-02: Verify SQLite quick_check, foreign keys, expected migration version, repository scope, and filesystem permissions and return a structured report without modifying or recreating the database."
+            ],
+            "acceptanceCriteria": [
+              "Inspection tests cover every listed object type, stable bounded pagination, retained-content opt-in, and cross-repository denial",
+              "Projection tests distinguish local state from last-fetched remote state and never label accepted delivery as read or replied",
+              "Verifier tests cover healthy quick_check, foreign-key failure, unexpected migration, wrong repository scope, and unsafe filesystem permissions",
+              "Failure tests prove verifier and inspector preserve database bytes and expose no migration, repair, backup, remote fetch, or mutation path",
+              "Diagnostic tests prove retained content and secret-like values are redacted"
+            ],
+            "constraints": [
+              "Lifecycle inspection is bounded and read-only",
+              "LIFE-CON-01: Lifecycle inspection and state verification are read-only, bounded, paginated where applicable, and never attempt an implicit migration, repair, backup upload, or remote fetch.",
+              "PRIV-CON-01: v1 state is protected by user-only filesystem permissions rather than encryption at rest; documentation and human security review must state that local account access, backups, and filesystem snapshots can still read retained content.",
+              "PRIV-CON-02: Send no product telemetry, analytics, crash upload, or remote audit synchronization, and keep retention and purge execution entirely local."
+            ],
+            "references": [
+              "docs/PRD.md#12. User Interface / Interaction Design",
+              "docs/features/privacy-and-lifecycle-operations.md#2. Interfaces and Preconditions",
+              "docs/features/privacy-and-lifecycle-operations.md#LIFE-FR-01",
+              "docs/features/privacy-and-lifecycle-operations.md#LIFE-FR-02",
+              "docs/features/privacy-and-lifecycle-operations.md#LIFE-CON-01",
+              "docs/features/privacy-and-lifecycle-operations.md#PRIV-CON-01",
+              "docs/features/privacy-and-lifecycle-operations.md#PRIV-CON-02"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.priv-life-1",
+          "inputs": [
+            "work.priv-ret-1",
+            "work.repo-audit-2",
+            "work.in-state-1",
+            "work.disc-delivery-2",
+            "work.in-reply-1"
+          ],
+          "timeoutMs": 3600000
+        }
+      ]
+    },
+    {
+      "id": "RELEASE-READINESS-1",
+      "title": "Phase 1: Presentation, Handler, and Documentation Boundaries",
+      "feature": "Release Readiness",
+      "description": "```forge-task {   \"id\": \"REL-UI-OUT-1\",",
+      "ownerAgents": [
+        "cli-ux-engineer",
+        "cli-engineer",
+        "technical-writer"
+      ],
+      "dependencies": [
+        "PRIVACY-AND-LIFECYCLE-OPERATIONS-2"
+      ],
+      "approvalRequired": true,
+      "tasks": [
+        {
+          "id": "REL-UI-OUT-1",
+          "title": "Implement accessible outbound terminal presentation",
+          "description": "Implement the focused repo-com-terminal-outbound crate for draft preview, policy status, exact approval, secret-finding override, and accepted, failed, retry-wait, unknown, or reconciled send outcomes. Render complete labeled text at an 80-column minimum, honor NO_COLOR, never encode meaning by color alone, and keep approval and override unavailable in non-TTY mode. Produce deterministic snapshots and keyboard-flow tests, but do not render inbound or lifecycle views, execute commands, call Discord, or self-approve human review.",
+          "ownerAgent": "cli-ux-engineer",
+          "dependencies": [
+            "PLAT-1",
+            "REPO-POLICY-1",
+            "DRAFT-APPROVAL-1",
+            "DISC-DELIVERY-2"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-terminal-outbound/Cargo.toml",
+            "crates/repo-com-terminal-outbound/src/lib.rs",
+            "crates/repo-com-terminal-outbound/src/render.rs",
+            "crates/repo-com-terminal-outbound/src/preview.rs",
+            "crates/repo-com-terminal-outbound/src/prompt.rs",
+            "crates/repo-com-terminal-outbound/src/width.rs",
+            "crates/repo-com-terminal-outbound/tests/terminal_outbound_contract.rs",
+            "crates/repo-com-terminal-outbound/tests/snapshots/terminal_outbound_contract.snap"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(terminal_outbound_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "REL-FR-03: Render every command in labeled human or protocol JSON mode, map domain outcomes to stable exit categories, prohibit prompts in non-TTY mode, and preserve complete security and approval information at 80 columns without color."
+            ],
+            "acceptanceCriteria": [
+              "Snapshot tests cover every outbound view and outcome at 80 columns with no ANSI when color is disabled",
+              "Prompt tests cover cancel, default, invalid input, expiry, and complete exact-preview confirmation for approval and secret override",
+              "Linear output tests prove destination, revision, approval or policy basis, safety state, delivery outcome, and next action are text labels rather than color or position alone",
+              "Keyboard tests prove all outbound actions are reachable without a mouse and no prompt is invoked in non-TTY mode"
+            ],
+            "constraints": [
+              "Outbound presentation is deterministic and cannot execute domain actions itself",
+              "RC-ACC-01: Design every interactive command for keyboard operation, linear screen-reader reading, visible focus or selection, and no color-only meaning, following applicable WCAG 2.2 AA principles for terminal software.",
+              "RC-ACC-02: Never prompt in non-TTY mode, honor NO_COLOR and non-color output requests, and provide a complete plain-text rendering at an 80-column minimum without truncating security or approval information.",
+              "RC-ACC-03: Announce state and errors in text, including destination, revision, policy or approval basis, and next action; ANSI styling may supplement but never replace those labels.",
+              "REL-CON-04: Human rubric scores, live acceptance, native-language or stakeholder judgment, and final approval may appear only in dependent human-review tasks and their review files; implementation tasks may provide evidence but never approval."
+            ],
+            "references": [
+              "docs/PRD.md#12. User Interface / Interaction Design",
+              "docs/features/release-readiness.md#2. Interfaces and Preconditions",
+              "docs/features/release-readiness.md#REL-FR-03",
+              "docs/PRD.md#RC-ACC-01",
+              "docs/PRD.md#RC-ACC-02",
+              "docs/PRD.md#RC-ACC-03",
+              "docs/features/release-readiness.md#REL-CON-04"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.rel-ui-out-1",
+          "inputs": [
+            "work.plat-1",
+            "work.repo-policy-1",
+            "work.draft-approval-1",
+            "work.disc-delivery-2",
+            "work.priv-ret-2",
+            "work.priv-life-1"
+          ],
+          "timeoutMs": 3600000
+        },
+        {
+          "id": "REL-UI-OPS-1",
+          "title": "Implement accessible operations terminal presentation",
+          "description": "Implement the focused repo-com-terminal-operations crate for config and policy status, state verification, bounded audit and lifecycle inspection, inbound untrusted items, acknowledgement, archive, retention status, purge plan, confirmed purge execution, and local errors. Render complete labeled text at an 80-column minimum, honor NO_COLOR, distinguish untrusted content and local from remote state, and keep activation and purge confirmation unavailable in non-TTY mode. Produce deterministic snapshots and keyboard-flow tests, but do not render outbound messaging, execute commands, call Discord, or self-approve human review.",
+          "ownerAgent": "cli-ux-engineer",
+          "dependencies": [
+            "PLAT-1",
+            "IN-STATE-1",
+            "REPO-AUDIT-2",
+            "PRIV-RET-1",
+            "PRIV-LIFE-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-terminal-operations/Cargo.toml",
+            "crates/repo-com-terminal-operations/src/lib.rs",
+            "crates/repo-com-terminal-operations/src/render.rs",
+            "crates/repo-com-terminal-operations/src/purge.rs",
+            "crates/repo-com-terminal-operations/src/prompt.rs",
+            "crates/repo-com-terminal-operations/src/width.rs",
+            "crates/repo-com-terminal-operations/tests/terminal_operations_contract.rs",
+            "crates/repo-com-terminal-operations/tests/snapshots/terminal_operations_contract.snap"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(terminal_operations_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "REL-FR-03: Render every command in labeled human or protocol JSON mode, map domain outcomes to stable exit categories, prohibit prompts in non-TTY mode, and preserve complete security and approval information at 80 columns without color."
+            ],
+            "acceptanceCriteria": [
+              "Snapshot tests cover every operations, inbound, audit, retention, purge, and local-state view at 80 columns with no ANSI when color is disabled",
+              "Prompt tests cover cancel, default, invalid input, plan-hash change, and complete exact-scope confirmation for activation and purge execution",
+              "Linear output tests label inbound content as untrusted, distinguish last-fetched remote state from local state, and never present delivery as read",
+              "Keyboard tests prove all operations actions are reachable without a mouse and no prompt is invoked in non-TTY mode"
+            ],
+            "constraints": [
+              "Operations presentation is deterministic and cannot execute domain actions itself",
+              "RC-ACC-01: Design every interactive command for keyboard operation, linear screen-reader reading, visible focus or selection, and no color-only meaning, following applicable WCAG 2.2 AA principles for terminal software.",
+              "RC-ACC-02: Never prompt in non-TTY mode, honor NO_COLOR and non-color output requests, and provide a complete plain-text rendering at an 80-column minimum without truncating security or approval information.",
+              "RC-ACC-03: Announce state and errors in text, including destination, revision, policy or approval basis, and next action; ANSI styling may supplement but never replace those labels.",
+              "RC-SEC-07: Treat every inbound message, mention, edit, and deletion as untrusted data that cannot grant permission, approve a draft, or trigger a send.",
+              "REL-CON-04: Human rubric scores, live acceptance, native-language or stakeholder judgment, and final approval may appear only in dependent human-review tasks and their review files; implementation tasks may provide evidence but never approval."
+            ],
+            "references": [
+              "docs/PRD.md#12. User Interface / Interaction Design",
+              "docs/features/release-readiness.md#2. Interfaces and Preconditions",
+              "docs/features/release-readiness.md#REL-FR-03",
+              "docs/PRD.md#RC-ACC-01",
+              "docs/PRD.md#RC-ACC-02",
+              "docs/PRD.md#RC-ACC-03",
+              "docs/PRD.md#RC-SEC-07",
+              "docs/features/release-readiness.md#REL-CON-04"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.rel-ui-ops-1",
+          "inputs": [
+            "work.plat-1",
+            "work.in-state-1",
+            "work.repo-audit-2",
+            "work.priv-ret-1",
+            "work.priv-life-1",
+            "work.priv-ret-2"
+          ],
+          "timeoutMs": 3600000
+        },
+        {
+          "id": "REL-OPS-CMD-1",
+          "title": "Implement operator and lifecycle command handlers",
+          "description": "Implement the focused repo-com-cli-operations crate with validated handlers for config, policy, state verification, audit inspection, purge planning, and confirmed purge execution. Parse structured stdin JSON at protocol version 1, enforce explicit repository and object identifiers, map domain outcomes to stable exit categories, route activation and purge confirmation through the operations UI adapter, and keep diagnostics off machine stdout. Do not implement draft, send, inbox, or reply commands, the final executable, releases, live services, or human review evidence.",
+          "ownerAgent": "cli-engineer",
+          "dependencies": [
+            "PLAT-1",
+            "REPO-CFG-1",
+            "REPO-POLICY-1",
+            "PRIV-LIFE-1",
+            "REL-UI-OPS-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-cli-operations/Cargo.toml",
+            "crates/repo-com-cli-operations/src/lib.rs",
+            "crates/repo-com-cli-operations/src/input.rs",
+            "crates/repo-com-cli-operations/src/handlers/config.rs",
+            "crates/repo-com-cli-operations/src/handlers/policy.rs",
+            "crates/repo-com-cli-operations/src/handlers/state.rs",
+            "crates/repo-com-cli-operations/src/handlers/audit.rs",
+            "crates/repo-com-cli-operations/src/handlers/purge.rs",
+            "crates/repo-com-cli-operations/tests/cli_operations_contract.rs"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(cli_operations_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "REL-FR-02: Expose config, policy, draft, send, inbox, reply, audit, state, and purge command groups with explicit identifiers, stdin JSON where structured input is needed, and no command that implies a default destination.",
+              "REL-FR-03: Render every command in labeled human or protocol JSON mode, map domain outcomes to stable exit categories, prohibit prompts in non-TTY mode, and preserve complete security and approval information at 80 columns without color."
+            ],
+            "acceptanceCriteria": [
+              "Handler tests cover config validation, policy status, activation, state verification, audit query, purge plan, and purge execution with explicit repository identifiers",
+              "Structured-input tests cover protocol version 1, unknown-field rejection, bounded pagination, and one valid JSON stdout object for every failure",
+              "TTY tests prove activation and purge execution require the operations UI and return operator-action-required in automation",
+              "Dispatch tests prove state verification is read-only, purge plan is non-mutating, and services retain their own authorization and transaction rules"
+            ],
+            "constraints": [
+              "Operator handlers validate and route but do not reimplement lifecycle safety logic",
+              "FOUND-CON-02: Keep machine-mode stdout valid JSON even for operational errors; reserve stderr for opt-in diagnostics and never mix prompts into protocol output.",
+              "LIFE-CON-01: Lifecycle inspection and state verification are read-only, bounded, paginated where applicable, and never attempt an implicit migration, repair, backup upload, or remote fetch."
+            ],
+            "references": [
+              "docs/PRD.md#7. Technical Architecture",
+              "docs/PRD.md#12. User Interface / Interaction Design",
+              "docs/features/release-readiness.md#REL-FR-02",
+              "docs/features/release-readiness.md#REL-FR-03",
+              "docs/features/cli-foundation.md#FOUND-CON-02",
+              "docs/features/privacy-and-lifecycle-operations.md#LIFE-CON-01"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.rel-ops-cmd-1",
+          "inputs": [
+            "work.plat-1",
+            "work.repo-cfg-1",
+            "work.repo-policy-1",
+            "work.priv-life-1",
+            "work.rel-ui-ops-1",
+            "work.priv-ret-2"
+          ],
+          "timeoutMs": 3600000
+        },
+        {
+          "id": "REL-MSG-CMD-1",
+          "title": "Implement messaging command handlers",
+          "description": "Implement the focused repo-com-cli-messaging crate with validated handlers for draft create, show, update, preview, approval, send, setup check, inbox fetch, item acknowledgement or archive, and reply-draft creation. Parse structured stdin JSON at protocol version 1, enforce explicit draft, revision, destination, cursor or time, and inbound identifiers, map domain outcomes to stable exit categories, and route approval and override through the outbound UI adapter. Do not implement config, policy, audit, state, purge, the final executable, releases, live services, or human review evidence.",
+          "ownerAgent": "cli-engineer",
+          "dependencies": [
+            "PLAT-1",
+            "DRAFT-ELIG-1",
+            "DISC-CLIENT-1",
+            "DISC-DELIVERY-2",
+            "IN-FETCH-1",
+            "IN-REPLY-1",
+            "REL-UI-OUT-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-cli-messaging/Cargo.toml",
+            "crates/repo-com-cli-messaging/src/lib.rs",
+            "crates/repo-com-cli-messaging/src/input.rs",
+            "crates/repo-com-cli-messaging/src/handlers/draft.rs",
+            "crates/repo-com-cli-messaging/src/handlers/send.rs",
+            "crates/repo-com-cli-messaging/src/handlers/inbox.rs",
+            "crates/repo-com-cli-messaging/src/handlers/reply.rs",
+            "crates/repo-com-cli-messaging/tests/cli_messaging_contract.rs"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(cli_messaging_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "REL-FR-02: Expose config, policy, draft, send, inbox, reply, audit, state, and purge command groups with explicit identifiers, stdin JSON where structured input is needed, and no command that implies a default destination.",
+              "REL-FR-03: Render every command in labeled human or protocol JSON mode, map domain outcomes to stable exit categories, prohibit prompts in non-TTY mode, and preserve complete security and approval information at 80 columns without color."
+            ],
+            "acceptanceCriteria": [
+              "Handler tests cover every messaging command with protocol version 1, unknown-field rejection, and one valid JSON stdout object for failures",
+              "Boundary tests require exact draft and revision identifiers, reject a fetch without exactly one cursor or time source, and expose no default destination",
+              "TTY tests prove approval and secret override require the outbound UI and cannot be created in non-TTY mode",
+              "Dispatch tests prove send, fetch, and reply services retain eligibility, delivery idempotency, inbound trust, and target authorization rules"
+            ],
+            "constraints": [
+              "Messaging handlers validate and route but do not reimplement draft or delivery safety logic",
+              "FOUND-CON-02: Keep machine-mode stdout valid JSON even for operational errors; reserve stderr for opt-in diagnostics and never mix prompts into protocol output.",
+              "RC-SEC-05: Bind human approval to one immutable draft revision hash containing text, metadata, destination alias, resolved destination, and expiry; any change invalidates approval.",
+              "RC-SEC-07: Treat every inbound message, mention, edit, and deletion as untrusted data that cannot grant permission, approve a draft, or trigger a send."
+            ],
+            "references": [
+              "docs/PRD.md#6. Concept",
+              "docs/PRD.md#7. Technical Architecture",
+              "docs/PRD.md#12. User Interface / Interaction Design",
+              "docs/features/release-readiness.md#REL-FR-02",
+              "docs/features/release-readiness.md#REL-FR-03",
+              "docs/features/cli-foundation.md#FOUND-CON-02",
+              "docs/PRD.md#RC-SEC-05",
+              "docs/PRD.md#RC-SEC-07"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.rel-msg-cmd-1",
+          "inputs": [
+            "work.plat-1",
+            "work.draft-elig-1",
+            "work.disc-client-1",
+            "work.disc-delivery-2",
+            "work.in-fetch-1",
+            "work.in-reply-1",
+            "work.rel-ui-out-1",
+            "work.priv-ret-2",
+            "work.priv-life-1"
+          ],
+          "timeoutMs": 3600000
+        },
+        {
+          "id": "REL-DOC-1",
+          "title": "Publish validated operator and security documentation",
+          "description": "Create the focused repo-com-doc-validation crate and author configuration, Discord setup, operator guide, security model, and threat model documents. Cover installation, exact command and JSON protocol, dedicated bot creation, least-privilege grants, token rotation, preview and approval, narrow policy activation, unknown-delivery recovery, inbound reply, audit, retention, purge, accessibility, unsupported behavior, and residual local-state risk. Validate required topics and prohibit credentials, unsupported claims, telemetry claims, or human sign-off. Do not fabricate live test or compliance evidence.",
+          "ownerAgent": "technical-writer",
+          "dependencies": [
+            "REL-UI-OUT-1",
+            "REL-UI-OPS-1",
+            "REL-OPS-CMD-1",
+            "REL-MSG-CMD-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-doc-validation/Cargo.toml",
+            "crates/repo-com-doc-validation/src/lib.rs",
+            "crates/repo-com-doc-validation/tests/documentation_contract.rs",
+            "docs/configuration.md",
+            "docs/discord-setup.md",
+            "docs/operator-guide.md",
+            "docs/security-model.md",
+            "docs/threat-model.md"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(documentation_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "REL-FR-08: Document installation, configuration, bot creation and least-privilege grants, token rotation, operator commands, recovery from unknown delivery, retention and purge, security boundaries, threat model, and unsupported behavior without embedding a credential."
+            ],
+            "acceptanceCriteria": [
+              "Documentation tests require every listed setup, operation, recovery, retention, accessibility, unsupported behavior, and residual-risk topic in its owning document",
+              "Documentation tests reject token, private-key, authorization-value, and real-message-content patterns",
+              "Security and threat-model tests explicitly state no encryption at rest, user-only filesystem permissions, no telemetry, and exposure to local account, backup, and snapshot compromise",
+              "Operator documentation matches both command-handler crates and protocol version without inventing flags, defaults, or completion claims"
+            ],
+            "constraints": [
+              "Documentation is evidence for review, not human approval",
+              "REL-CON-02: CI, release logs, fixtures, SBOMs, review files, and documentation must contain no bot token, authorization header, private key, or real team message content.",
+              "REL-CON-06: Security and privacy documentation must state that v1 relies on user-only filesystem permissions, performs no telemetry, does not encrypt local state, and cannot protect against local account compromise, backups, or filesystem snapshots.",
+              "REL-CON-04: Human rubric scores, live acceptance, native-language or stakeholder judgment, and final approval may appear only in dependent human-review tasks and their review files; implementation tasks may provide evidence but never approval."
+            ],
+            "references": [
+              "docs/PRD.md#10. Security and Privacy",
+              "docs/PRD.md#17. Acceptance Criteria",
+              "docs/PRD.md#20. Open Questions",
+              "docs/features/release-readiness.md#REL-FR-08",
+              "docs/features/release-readiness.md#REL-CON-02",
+              "docs/features/release-readiness.md#REL-CON-06",
+              "docs/features/release-readiness.md#REL-CON-04"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.rel-doc-1",
+          "inputs": [
+            "work.rel-ui-out-1",
+            "work.rel-ui-ops-1",
+            "work.rel-ops-cmd-1",
+            "work.rel-msg-cmd-1",
+            "work.priv-ret-2",
+            "work.priv-life-1"
+          ],
+          "timeoutMs": 3600000
+        }
+      ]
+    },
+    {
+      "id": "RELEASE-READINESS-2",
+      "title": "Phase 2: Thin Executable",
+      "feature": "Release Readiness",
+      "description": "```forge-task {   \"id\": \"REL-APP-1\",",
+      "ownerAgents": [
+        "cli-engineer"
+      ],
+      "dependencies": [
+        "RELEASE-READINESS-1"
+      ],
+      "approvalRequired": true,
+      "tasks": [
+        {
+          "id": "REL-APP-1",
+          "title": "Compose the final repo-com binary",
+          "description": "Compose the final repo-com-cli crate as a thin executable around the operator, messaging, outbound UI, and operations UI crates. Define the complete command tree and global options, map the package version to --version, propagate stable exit codes, and keep panic output, prompts, diagnostics, and protocol data on their required streams. Do not add domain logic, default destinations, self-update, background work, or human review claims.",
+          "ownerAgent": "cli-engineer",
+          "dependencies": [
+            "REL-UI-OUT-1",
+            "REL-UI-OPS-1",
+            "REL-OPS-CMD-1",
+            "REL-MSG-CMD-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-cli/Cargo.toml",
+            "crates/repo-com-cli/src/main.rs",
+            "crates/repo-com-cli/src/app.rs",
+            "crates/repo-com-cli/tests/command_routing_contract.rs"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(command_routing_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "REL-FR-01: Compose all domain crates into one installed binary named repo-com, expose a semantic version through --version, and resolve the final executable without hidden repository or destination state.",
+              "REL-FR-02: Expose config, policy, draft, send, inbox, reply, audit, state, and purge command groups with explicit identifiers, stdin JSON where structured input is needed, and no command that implies a default destination.",
+              "REL-FR-03: Render every command in labeled human or protocol JSON mode, map domain outcomes to stable exit categories, prohibit prompts in non-TTY mode, and preserve complete security and approval information at 80 columns without color.",
+              "FOUND-FR-01: Install one binary named repo-com on PATH and report its semantic version through repo-com --version.",
+              "FOUND-FR-02: Route configuration, policy, draft, send, inbox, reply, audit, state, and purge commands through one typed command tree with no hidden default destination.",
+              "FOUND-FR-04: Expose an explicit TTY versus non-TTY mode and prohibit interactive prompts whenever stdin or stdout is non-interactive unless the command is an operator-only action that fails closed in automation.",
+              "RC-FR-01: Provide one globally installed, versioned repo-com command on PATH for supported Linux, macOS, and Windows systems.",
+              "RC-FR-02: Support interactive TTY operation for operator decisions and deterministic non-TTY operation for repository skills without prompting or ambient terminal state."
+            ],
+            "acceptanceCriteria": [
+              "Process tests prove repo-com --version prints only the package semantic version and exits successfully",
+              "Routing tests cover every command group, help output, missing identifier, and no hidden default destination",
+              "Stream tests prove JSON mode writes one object to stdout, diagnostics to stderr, and prompts never to stdout",
+              "Exit tests map each domain category to its documented stable process code and preserve the original typed cause for machine output"
+            ],
+            "constraints": [
+              "The final binary contains no self-updater or hidden background process",
+              "REL-CON-03: Release artifacts must not self-update or execute setup mutations; installation and future upgrades remain explicit operator actions."
+            ],
+            "references": [
+              "docs/PRD.md#7. Technical Architecture",
+              "docs/PRD.md#12. User Interface / Interaction Design",
+              "docs/features/release-readiness.md#REL-FR-01",
+              "docs/features/release-readiness.md#REL-FR-02",
+              "docs/features/release-readiness.md#REL-FR-03",
+              "docs/features/cli-foundation.md#FOUND-FR-01",
+              "docs/features/cli-foundation.md#FOUND-FR-02",
+              "docs/features/cli-foundation.md#FOUND-FR-04",
+              "docs/PRD.md#RC-FR-01",
+              "docs/PRD.md#RC-FR-02",
+              "docs/features/release-readiness.md#REL-CON-03"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.rel-app-1",
+          "inputs": [
+            "work.rel-ui-out-1",
+            "work.rel-ui-ops-1",
+            "work.rel-ops-cmd-1",
+            "work.rel-msg-cmd-1",
+            "work.rel-doc-1"
+          ],
+          "timeoutMs": 3600000
+        }
+      ]
+    },
+    {
+      "id": "RELEASE-READINESS-3",
+      "title": "Phase 3: Performance, Infrastructure, and End-to-End Evidence",
+      "feature": "Release Readiness",
+      "description": "```forge-task {   \"id\": \"REL-PERF-1\",",
+      "ownerAgents": [
+        "quality-engineer",
+        "release-engineer"
+      ],
+      "dependencies": [
+        "RELEASE-READINESS-2"
+      ],
+      "approvalRequired": true,
+      "tasks": [
+        {
+          "id": "REL-PERF-1",
+          "title": "Measure the local command performance budget",
+          "description": "Implement the focused repo-com-performance harness for 100 complete warm invocations of each documented no-network command class against the final binary on the pinned CI reference runner. Measure end-to-end process wall time while excluding first compilation and network activity; record machine, OS, toolchain, sample count, p50, p95, and maximum, and fail when any class exceeds 500 ms at p95. Use a fixed temporary repository and state, and do not benchmark Discord latency or claim results on unrecorded hardware.",
+          "ownerAgent": "quality-engineer",
+          "dependencies": [
+            "REL-APP-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-performance/Cargo.toml",
+            "crates/repo-com-performance/src/lib.rs",
+            "crates/repo-com-performance/src/main.rs",
+            "crates/repo-com-performance/tests/performance_contract.rs"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(performance_contract)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "REL-FR-05: Measure 100 warm invocations of each documented no-network command class on the CI reference runner and fail when p95 exceeds 500 ms, excluding process start, network, and first-run dependency compilation."
+            ],
+            "acceptanceCriteria": [
+              "Performance tests execute exactly 100 warm samples for each required no-network command class and record environment plus p50, p95, and maximum",
+              "The contract fails when injected p95 exceeds 500 ms and passes at the threshold",
+              "Test setup uses isolated config and state and performs no Discord or other external network request",
+              "The report includes complete process wall time and separately identifies first compilation and network exclusions"
+            ],
+            "constraints": [
+              "Performance evidence is generated by the harness rather than asserted in prose",
+              "RC-NFR-01: A warm local command that performs no network I/O must complete within 500 ms at p95 on the documented CI reference runner."
+            ],
+            "references": [
+              "docs/PRD.md#15. Testing Strategy",
+              "docs/PRD.md#16. Analytics / Success Metrics",
+              "docs/features/release-readiness.md#REL-FR-05",
+              "docs/PRD.md#RC-NFR-01"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.rel-perf-1",
+          "inputs": [
+            "work.rel-app-1"
+          ],
+          "timeoutMs": 3600000
+        },
+        {
+          "id": "REL-CI-1",
+          "title": "Create cross-platform CI policy",
+          "description": "Create the focused repo-com-ci-policy crate plus pinned cargo-deny 0.20.2, cargo-audit 0.22.2, actionlint 1.7.12, dependency update, and continuous-integration configuration. Run formatting, clippy, fail-on-no-tests nextest, performance, RustSec, license, secret, workflow, SQLite-version, and binary smoke checks on Linux, macOS, and Windows with least-privilege workflow permissions and concurrency control. Do not define release artifacts, publish, use a real Discord secret, run a live service, or claim human approval.",
+          "ownerAgent": "release-engineer",
+          "dependencies": [
+            "REL-PERF-1",
+            "REL-APP-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-ci-policy/Cargo.toml",
+            "crates/repo-com-ci-policy/src/lib.rs",
+            "crates/repo-com-ci-policy/tests/ci_policy_contract.rs",
+            "deny.toml",
+            ".github/dependabot.yml",
+            ".github/workflows/ci.yml"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(ci_policy_contract)'",
+            "actionlint .github/workflows/ci.yml"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "REL-FR-06: Run formatting, clippy, fail-on-no-tests nextest, performance, dependency advisory and license checks, secret scanning, workflow linting, and binary smoke tests on Linux, macOS, and Windows."
+            ],
+            "acceptanceCriteria": [
+              "Policy tests require Linux, macOS, and Windows jobs with pinned tools, least-privilege permissions, concurrency control, and no untrusted pull-request secret use",
+              "CI contract requires fmt, clippy, fail-on-no-tests nextest, performance, cargo-deny, cargo-audit, secret scan, actionlint, SQLite runtime assertion, and binary smoke checks",
+              "Actionlint validation succeeds for CI and missing or renamed required checks fail the contract",
+              "No workflow, fixture, generated metadata, or log path contains a real Discord credential or team message"
+            ],
+            "constraints": [
+              "Normal CI remains token-free and does not publish release artifacts",
+              "REL-CON-01: Normal automated tests must not use a real Discord token, workspace, or network; live acceptance is isolated to a dependent human-review task and must use a dedicated disposable bot.",
+              "REL-CON-02: CI, release logs, fixtures, SBOMs, review files, and documentation must contain no bot token, authorization header, private key, or real team message content.",
+              "REL-CON-05: CI must fail on formatting, clippy, selected-test discovery, RustSec advisories, denied or unknown licenses, source or generated secret findings, invalid workflows, stale lockfile, unsupported SQLite runtime, or release-plan drift.",
+              "STATE-CON-02: Release builds must assert SQLite version 3.53.4 or newer at runtime and compile; development may use a newer local SQLite but must never silently test a release artifact against an older engine.",
+              "RC-NFR-03: Pin the toolchain and lock dependencies; release builds must statically link a patched SQLite version at least 3.53.4 and publish dependency and license evidence."
+            ],
+            "references": [
+              "docs/PRD.md#5. Research Findings",
+              "docs/PRD.md#15. Testing Strategy",
+              "docs/PRD.md#18. Dependencies and Risks",
+              "docs/features/release-readiness.md#REL-FR-06",
+              "docs/features/release-readiness.md#REL-CON-01",
+              "docs/features/release-readiness.md#REL-CON-02",
+              "docs/features/release-readiness.md#REL-CON-05",
+              "docs/features/repository-configuration-and-state.md#STATE-CON-02",
+              "docs/PRD.md#RC-NFR-03"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.rel-ci-1",
+          "inputs": [
+            "work.rel-perf-1",
+            "work.rel-app-1"
+          ],
+          "timeoutMs": 3600000
+        },
+        {
+          "id": "REL-PACK-1",
+          "title": "Create versioned release packaging",
+          "description": "Create the focused repo-com-release-policy crate and a tag-driven release workflow using cargo-dist 0.32.0 and cargo-cyclonedx 0.5.9. Build versioned Linux, macOS, and Windows binaries and archives or installers with SQLite 3.53.4 or newer statically linked, SHA-256 or stronger checksums, license evidence, source archive, and CycloneDX SBOM. Keep installation explicit, disable every updater, and require the CI policy, performance budget, release-plan validation, and actionlint. Do not publish during implementation, embed a token, or claim human approval.",
+          "ownerAgent": "release-engineer",
+          "dependencies": [
+            "REL-CI-1",
+            "REL-PERF-1",
+            "REL-APP-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-release-policy/Cargo.toml",
+            "crates/repo-com-release-policy/src/lib.rs",
+            "crates/repo-com-release-policy/tests/release_policy_contract.rs",
+            "dist-workspace.toml",
+            ".github/workflows/release.yml"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(release_policy_contract)'",
+            "actionlint .github/workflows/release.yml"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "REL-FR-07: Publish versioned Linux, macOS, and Windows binaries, archives or installers, SHA-256 or stronger checksums, dependency license evidence, and a CycloneDX SBOM, with no self-updater."
+            ],
+            "acceptanceCriteria": [
+              "Release-plan tests cover required Linux, macOS, and Windows targets, semantic version metadata, source archive, strong checksums, license evidence, and CycloneDX SBOM",
+              "Release contract statically links and asserts SQLite 3.53.4 or newer and fails for an older bundled or system runtime",
+              "Release workflow is tag-driven, invokes the validated CI evidence, uses least-privilege permissions, and contains no updater or setup mutation",
+              "Actionlint validation succeeds and generated release-plan drift fails the contract",
+              "No release configuration, generated manifest, checksum input, or SBOM contains a Discord credential or team message"
+            ],
+            "constraints": [
+              "Release publication is tag-driven and cannot be performed by this task",
+              "REL-CON-01: Normal automated tests must not use a real Discord token, workspace, or network; live acceptance is isolated to a dependent human-review task and must use a dedicated disposable bot.",
+              "REL-CON-02: CI, release logs, fixtures, SBOMs, review files, and documentation must contain no bot token, authorization header, private key, or real team message content.",
+              "REL-CON-03: Release artifacts must not self-update or execute setup mutations; installation and future upgrades remain explicit operator actions.",
+              "REL-CON-05: CI must fail on formatting, clippy, selected-test discovery, RustSec advisories, denied or unknown licenses, source or generated secret findings, invalid workflows, stale lockfile, unsupported SQLite runtime, or release-plan drift.",
+              "STATE-CON-02: Release builds must assert SQLite version 3.53.4 or newer at runtime and compile; development may use a newer local SQLite but must never silently test a release artifact against an older engine.",
+              "RC-NFR-03: Pin the toolchain and lock dependencies; release builds must statically link a patched SQLite version at least 3.53.4 and publish dependency and license evidence."
+            ],
+            "references": [
+              "docs/PRD.md#5. Research Findings",
+              "docs/PRD.md#15. Testing Strategy",
+              "docs/PRD.md#18. Dependencies and Risks",
+              "docs/features/release-readiness.md#REL-FR-07",
+              "docs/features/release-readiness.md#REL-CON-01",
+              "docs/features/release-readiness.md#REL-CON-02",
+              "docs/features/release-readiness.md#REL-CON-03",
+              "docs/features/release-readiness.md#REL-CON-05",
+              "docs/features/repository-configuration-and-state.md#STATE-CON-02",
+              "docs/PRD.md#RC-NFR-03"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.rel-pack-1",
+          "inputs": [
+            "work.rel-ci-1",
+            "work.rel-perf-1",
+            "work.rel-app-1"
+          ],
+          "timeoutMs": 3600000
+        },
+        {
+          "id": "REL-E2E-1",
+          "title": "Prove the complete mocked communication workflow",
+          "description": "Create the final binary's end-to-end contract, support module, and exact non-secret fixtures for a full isolated journey: validate config, activate exact policy or approve, create and preview, send through wiremock, fetch a human reply and mention, create a validated reply draft, acknowledge locally, inspect audit, and execute a purge plan. Also cover concurrent duplicate send and unknown reconciliation branches. Use temp user-data paths and no real credential or network; do not claim live acceptance or human approval.",
+          "ownerAgent": "quality-engineer",
+          "dependencies": [
+            "REL-APP-1"
+          ],
+          "expectedOutputs": [
+            "crates/repo-com-cli/tests/e2e_workflow.rs",
+            "crates/repo-com-cli/tests/support/mod.rs",
+            "crates/repo-com-cli/tests/fixtures/valid-config.toml",
+            "crates/repo-com-cli/tests/fixtures/accepted-message.json",
+            "crates/repo-com-cli/tests/fixtures/human-reply.json"
+          ],
+          "validationCommands": [
+            "cargo fmt --all -- --check",
+            "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+            "cargo nextest run --no-tests fail -E 'binary_id(e2e_workflow)'"
+          ],
+          "contract": {
+            "version": 1,
+            "kind": "implementation",
+            "requirements": [
+              "REL-FR-04: Prove the complete create, approve or activate, send, fetch, reply-draft, acknowledge, audit, and purge journey with isolated temp config/state and a wiremock Discord server without a real token or network.",
+              "RC-FR-06: Treat a teammate noticing an agent-originated request and replying to it as the primary success outcome; do not claim read receipts or response analytics."
+            ],
+            "acceptanceCriteria": [
+              "The happy-path test executes every named command against isolated state and wiremock and verifies durable IDs, correlation, acknowledgement, audit, and purge-plan results",
+              "A 100-invocation concurrent branch proves one Discord create request and one accepted outcome for one revision",
+              "Timeout and matching-message branches prove unknown reconciliation and duplicate prevention without a second unsafe POST",
+              "Fixture and captured-output scans prove no real token, authorization value, or team message content",
+              "The test performs no external network request and fails when wiremock is bypassed"
+            ],
+            "constraints": [
+              "End-to-end evidence is mocked and does not satisfy live acceptance",
+              "REL-CON-01: Normal automated tests must not use a real Discord token, workspace, or network; live acceptance is isolated to a dependent human-review task and must use a dedicated disposable bot.",
+              "REL-CON-02: CI, release logs, fixtures, SBOMs, review files, and documentation must contain no bot token, authorization header, private key, or real team message content.",
+              "RC-NFR-02: A crash or process termination must not create a second remote send for the same draft revision, and an ambiguous send must remain blocked until reconciliation resolves it."
+            ],
+            "references": [
+              "docs/PRD.md#RC-US-01",
+              "docs/PRD.md#6. Concept",
+              "docs/PRD.md#15. Testing Strategy",
+              "docs/PRD.md#17. Acceptance Criteria",
+              "docs/features/release-readiness.md#REL-FR-04",
+              "docs/PRD.md#RC-FR-06",
+              "docs/features/release-readiness.md#REL-CON-01",
+              "docs/features/release-readiness.md#REL-CON-02",
+              "docs/PRD.md#RC-NFR-02"
+            ]
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.rel-e2e-1",
+          "inputs": [
+            "work.rel-app-1"
+          ],
+          "timeoutMs": 3600000
+        }
+      ]
+    },
+    {
+      "id": "RELEASE-READINESS-4",
+      "title": "Phase 4: Human UX and Security Rubrics",
+      "feature": "Release Readiness",
+      "description": "```forge-task {   \"id\": \"REL-UX-HR-1\",",
+      "ownerAgents": [],
+      "dependencies": [
+        "RELEASE-READINESS-3"
+      ],
+      "approvalRequired": true,
+      "tasks": [
+        {
+          "id": "REL-UX-HR-1",
+          "title": "Review terminal UX and accessibility",
+          "description": "Perform the human terminal usability and accessibility review after the implementation, documentation, performance, and mocked end-to-end evidence exists. Use the final binary at 80 columns with color disabled and with a screen reader or linear terminal reader; complete configuration, approval, policy, send outcome, unknown recovery, fetch, reply, acknowledgement, and purge-plan flows by keyboard. Score discoverability, exact preview comprehension, error recovery, linear reading, focus or selection visibility, non-color meaning, and non-TTY safety from 0 through 4 in docs/reviews/terminal-ux.json, record evidence and defects, and do not approve implementation or live compatibility.",
+          "dependencies": [
+            "REL-UI-OUT-1",
+            "REL-UI-OPS-1",
+            "REL-APP-1",
+            "REL-PERF-1",
+            "REL-DOC-1",
+            "REL-E2E-1"
+          ],
+          "expectedOutputs": [],
+          "validationCommands": [],
+          "contract": {
+            "version": 1,
+            "kind": "human-review",
+            "requirements": [
+              "REL-FR-03: Render every command in labeled human or protocol JSON mode, map domain outcomes to stable exit categories, prohibit prompts in non-TTY mode, and preserve complete security and approval information at 80 columns without color."
+            ],
+            "acceptanceCriteria": [
+              "A human reviewer records environment, tested commands, observed evidence, defect references, and a 0-4 score for every named rubric dimension",
+              "Any critical failure in exact preview, keyboard operation, non-TTY safety, or security information visibility is recorded as a release blocker",
+              "The review distinguishes automated implementation evidence from human judgment and does not claim live Discord acceptance"
+            ],
+            "constraints": [
+              "Only a human reviewer may populate the rubric",
+              "RC-ACC-01: Design every interactive command for keyboard operation, linear screen-reader reading, visible focus or selection, and no color-only meaning, following applicable WCAG 2.2 AA principles for terminal software.",
+              "RC-ACC-02: Never prompt in non-TTY mode, honor NO_COLOR and non-color output requests, and provide a complete plain-text rendering at an 80-column minimum without truncating security or approval information.",
+              "RC-ACC-03: Announce state and errors in text, including destination, revision, policy or approval basis, and next action; ANSI styling may supplement but never replace those labels.",
+              "REL-CON-04: Human rubric scores, live acceptance, native-language or stakeholder judgment, and final approval may appear only in dependent human-review tasks and their review files; implementation tasks may provide evidence but never approval."
+            ],
+            "references": [
+              "docs/PRD.md#RC-US-02",
+              "docs/PRD.md#11. Accessibility",
+              "docs/PRD.md#12. User Interface / Interaction Design",
+              "docs/features/release-readiness.md#REL-FR-03",
+              "docs/PRD.md#RC-ACC-01",
+              "docs/PRD.md#RC-ACC-02",
+              "docs/PRD.md#RC-ACC-03",
+              "docs/features/release-readiness.md#REL-CON-04"
+            ],
+            "reviewFile": "docs/reviews/terminal-ux.json"
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.rel-ux-hr-1",
+          "inputs": [
+            "work.rel-ui-out-1",
+            "work.rel-ui-ops-1",
+            "work.rel-app-1",
+            "work.rel-perf-1",
+            "work.rel-doc-1",
+            "work.rel-e2e-1",
+            "work.rel-ci-1",
+            "work.rel-pack-1"
+          ],
+          "timeoutMs": 3600000
+        },
+        {
+          "id": "REL-SEC-HR-1",
+          "title": "Review security and privacy evidence",
+          "description": "Perform the human security and privacy rubric after automated dependency, secret, release, E2E, and documentation evidence exists. Inspect the threat model, permission matrix, token flow, config and state boundaries, approval and policy activation, duplicate protection, unknown recovery, log redaction, retention and purge, dependency policy, artifact evidence, and residual local-account risk. Score threat coverage, least privilege, secret handling, untrusted-input isolation, duplicate safety, privacy enforcement, recovery safety, and residual-risk disclosure from 0 through 4 in docs/reviews/security-privacy.json, record evidence and blockers, and do not sign final release approval.",
+          "dependencies": [
+            "REL-CI-1",
+            "REL-PACK-1",
+            "REL-DOC-1",
+            "REL-E2E-1"
+          ],
+          "expectedOutputs": [],
+          "validationCommands": [],
+          "contract": {
+            "version": 1,
+            "kind": "human-review",
+            "requirements": [
+              "REL-FR-07: Publish versioned Linux, macOS, and Windows binaries, archives or installers, SHA-256 or stronger checksums, dependency license evidence, and a CycloneDX SBOM, with no self-updater.",
+              "REL-FR-08: Document installation, configuration, bot creation and least-privilege grants, token rotation, operator commands, recovery from unknown delivery, retention and purge, security boundaries, threat model, and unsupported behavior without embedding a credential."
+            ],
+            "acceptanceCriteria": [
+              "A human reviewer records scope, evidence reviewed, defect references, and a 0-4 score for every named rubric dimension",
+              "The review verifies bot-only least privilege, no secret persistence, exact approval or policy activation, inbound isolation, and no unsafe unknown resend",
+              "The review verifies retention, purge, no telemetry, artifact checksums and SBOM, and explicit unencrypted-state residual risk",
+              "Any critical security or privacy failure is recorded as a release blocker without autonomous remediation or approval"
+            ],
+            "constraints": [
+              "Only a human reviewer may populate the security and privacy rubric",
+              "RC-SEC-01: Accept the Discord bot token only from the REPO_COM_DISCORD_TOKEN environment variable, keep it out of repository configuration and local state, redact it from errors and diagnostics, and zeroize owned copies on drop.",
+              "RC-SEC-07: Treat every inbound message, mention, edit, and deletion as untrusted data that cannot grant permission, approve a draft, or trigger a send.",
+              "RC-PRIV-01: Store drafts, inbound content, cursors, acknowledgements, and delivery history only in a user-level SQLite database keyed by repository; never upload or synchronize that database.",
+              "RC-PRIV-02: Retain message content for 30 days and non-content audit or delivery metadata for one year by default, allow per-repository overrides, provide explicit purge, and send no product telemetry.",
+              "REL-CON-04: Human rubric scores, live acceptance, native-language or stakeholder judgment, and final approval may appear only in dependent human-review tasks and their review files; implementation tasks may provide evidence but never approval.",
+              "REL-CON-06: Security and privacy documentation must state that v1 relies on user-only filesystem permissions, performs no telemetry, does not encrypt local state, and cannot protect against local account compromise, backups, or filesystem snapshots."
+            ],
+            "references": [
+              "docs/PRD.md#10. Security and Privacy",
+              "docs/features/release-readiness.md#3. Canonical Requirements",
+              "docs/features/release-readiness.md#REL-FR-07",
+              "docs/features/release-readiness.md#REL-FR-08",
+              "docs/PRD.md#RC-SEC-01",
+              "docs/PRD.md#RC-SEC-07",
+              "docs/PRD.md#RC-PRIV-01",
+              "docs/PRD.md#RC-PRIV-02",
+              "docs/features/release-readiness.md#REL-CON-04",
+              "docs/features/release-readiness.md#REL-CON-06"
+            ],
+            "reviewFile": "docs/reviews/security-privacy.json"
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.rel-sec-hr-1",
+          "inputs": [
+            "work.rel-ci-1",
+            "work.rel-pack-1",
+            "work.rel-doc-1",
+            "work.rel-e2e-1",
+            "work.rel-perf-1"
+          ],
+          "timeoutMs": 3600000
+        }
+      ]
+    },
+    {
+      "id": "RELEASE-READINESS-5",
+      "title": "Phase 5: Human Live Discord Acceptance",
+      "feature": "Release Readiness",
+      "description": "```forge-task {   \"id\": \"REL-LIVE-HR-1\",",
+      "ownerAgents": [],
+      "dependencies": [
+        "RELEASE-READINESS-4"
+      ],
+      "approvalRequired": true,
+      "tasks": [
+        {
+          "id": "REL-LIVE-HR-1",
+          "title": "Perform the real Discord round trip",
+          "description": "Perform the human-controlled live acceptance in a disposable Discord workspace using a dedicated least-privilege bot and no production team content. Validate setup, create and preview a unique test request, use explicit approval or an exact activated policy, confirm one send, have a teammate reply, fetch and correlate that reply, create and deliver a validated reply draft, acknowledge locally, inspect audit and purge-plan behavior, and exercise the documented unknown-outcome recovery without creating a duplicate. Record environment, timestamps, stable IDs with secret-safe redaction, observed outcomes, defects, and pass or fail in docs/reviews/discord-live-acceptance.json. Rotate or revoke the test token after the session and do not write implementation code.",
+          "dependencies": [
+            "REL-UX-HR-1",
+            "REL-SEC-HR-1",
+            "REL-CI-1",
+            "REL-PACK-1",
+            "REL-DOC-1"
+          ],
+          "expectedOutputs": [],
+          "validationCommands": [],
+          "contract": {
+            "version": 1,
+            "kind": "human-review",
+            "requirements": [
+              "REL-FR-09: Require a human-controlled disposable Discord workspace round trip in which a teammate notices a repo-com request, replies, the reply is fetched and correlated, and a validated reply draft is approved or policy-authorized without duplicate delivery.",
+              "RC-FR-06: Treat a teammate noticing an agent-originated request and replying to it as the primary success outcome; do not claim read receipts or response analytics."
+            ],
+            "acceptanceCriteria": [
+              "A human reviewer records disposable workspace, bot permission evidence, test timing, stable redacted IDs, teammate participation, and token revocation or rotation confirmation",
+              "The live record proves one outbound message, one fetched human reply with correlation, one accepted validated reply draft, local acknowledgement, and usable audit evidence",
+              "The live record includes the unknown-recovery observation and proves no duplicate remote message or unsafe automatic resend",
+              "Any permission, delivery, correlation, recovery, privacy, or usability defect is recorded as a release blocker"
+            ],
+            "constraints": [
+              "Live acceptance uses a dedicated disposable bot and never records the token",
+              "REL-CON-01: Normal automated tests must not use a real Discord token, workspace, or network; live acceptance is isolated to a dependent human-review task and must use a dedicated disposable bot.",
+              "REL-CON-02: CI, release logs, fixtures, SBOMs, review files, and documentation must contain no bot token, authorization header, private key, or real team message content.",
+              "REL-CON-04: Human rubric scores, live acceptance, native-language or stakeholder judgment, and final approval may appear only in dependent human-review tasks and their review files; implementation tasks may provide evidence but never approval."
+            ],
+            "references": [
+              "docs/PRD.md#6. Concept",
+              "docs/PRD.md#17. Acceptance Criteria",
+              "docs/features/release-readiness.md#3. Canonical Requirements",
+              "docs/features/release-readiness.md#REL-FR-09",
+              "docs/PRD.md#RC-FR-06",
+              "docs/features/release-readiness.md#REL-CON-01",
+              "docs/features/release-readiness.md#REL-CON-02",
+              "docs/features/release-readiness.md#REL-CON-04"
+            ],
+            "reviewFile": "docs/reviews/discord-live-acceptance.json"
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.rel-live-hr-1",
+          "inputs": [
+            "work.rel-ux-hr-1",
+            "work.rel-sec-hr-1",
+            "work.rel-ci-1",
+            "work.rel-pack-1",
+            "work.rel-doc-1"
+          ],
+          "timeoutMs": 3600000
+        }
+      ]
+    },
+    {
+      "id": "RELEASE-READINESS-6",
+      "title": "Phase 6: Human Release Sign-Off",
+      "feature": "Release Readiness",
+      "description": "```forge-task {   \"id\": \"REL-SIGN-HR-1\",",
+      "ownerAgents": [],
+      "dependencies": [
+        "RELEASE-READINESS-5"
+      ],
+      "approvalRequired": true,
+      "tasks": [
+        {
+          "id": "REL-SIGN-HR-1",
+          "title": "Record final release sign-off",
+          "description": "Perform the final human release decision only after automated validation, performance, cross-platform CI, documentation, UX rubric, security/privacy rubric, and live Discord acceptance are available. Verify that every referenced evidence item exists, every blocker is resolved or explicitly rejected, the SQLite and dependency gates passed, no secret or unsupported claim is present, and the primary teammate-reply outcome was demonstrated. Record reviewers, evidence hashes, decision, conditions, and date in docs/reviews/release-signoff.json. Do not modify code, rerun human judgments, or approve on behalf of any absent reviewer.",
+          "dependencies": [
+            "REL-UX-HR-1",
+            "REL-SEC-HR-1",
+            "REL-LIVE-HR-1",
+            "REL-CI-1",
+            "REL-PACK-1",
+            "REL-E2E-1",
+            "REL-PERF-1"
+          ],
+          "expectedOutputs": [],
+          "validationCommands": [],
+          "contract": {
+            "version": 1,
+            "kind": "human-review",
+            "requirements": [
+              "RC-FR-06: Treat a teammate noticing an agent-originated request and replying to it as the primary success outcome; do not claim read receipts or response analytics."
+            ],
+            "acceptanceCriteria": [
+              "Named human reviewers record an explicit approve, approve with conditions, or reject decision and no absent reviewer is represented",
+              "The sign-off links evidence hashes for automated validation, performance, cross-platform artifacts, UX rubric, security rubric, and live acceptance",
+              "Any unresolved critical blocker or missing required evidence results in reject rather than implicit approval",
+              "The sign-off confirms the release is not self-updating and makes no unsupported privacy, compliance, read-receipt, or Discord compatibility claim"
+            ],
+            "constraints": [
+              "Final approval is human-only and follows all dependent reviews",
+              "REL-CON-03: Release artifacts must not self-update or execute setup mutations; installation and future upgrades remain explicit operator actions.",
+              "REL-CON-04: Human rubric scores, live acceptance, native-language or stakeholder judgment, and final approval may appear only in dependent human-review tasks and their review files; implementation tasks may provide evidence but never approval.",
+              "RC-NFR-02: A crash or process termination must not create a second remote send for the same draft revision, and an ambiguous send must remain blocked until reconciliation resolves it.",
+              "RC-NFR-03: Pin the toolchain and lock dependencies; release builds must statically link a patched SQLite version at least 3.53.4 and publish dependency and license evidence."
+            ],
+            "references": [
+              "docs/PRD.md#17. Acceptance Criteria",
+              "docs/PRD.md#18. Dependencies and Risks",
+              "docs/PRD.md#RC-FR-06",
+              "docs/features/release-readiness.md#REL-CON-03",
+              "docs/features/release-readiness.md#REL-CON-04",
+              "docs/PRD.md#RC-NFR-02",
+              "docs/PRD.md#RC-NFR-03"
+            ],
+            "reviewFile": "docs/reviews/release-signoff.json"
+          },
+          "requiredCapabilities": [
+            "repository-tools"
+          ],
+          "approvalRequired": false,
+          "sourceLines": [],
+          "produces": "work.rel-sign-hr-1",
+          "inputs": [
+            "work.rel-ux-hr-1",
+            "work.rel-sec-hr-1",
+            "work.rel-live-hr-1",
+            "work.rel-ci-1",
+            "work.rel-pack-1",
+            "work.rel-e2e-1",
+            "work.rel-perf-1"
+          ],
+          "timeoutMs": 3600000
+        }
+      ]
+    }
+  ],
+  "warnings": [],
+  "responsibilityMatrixPath": "/home/mcfuzzysquirrel/Projects/repo-com/docs/agent-responsibility-matrix.md"
+}

@@ -1,0 +1,11 @@
+# The workspace requires the nextest version used by the foundation contract.
+# PLAT-1 compiles tests/foundation_contract.rs into the library test binary, whose
+# stable nextest binary ID is the Cargo package name `foundation_contract`.
+# PLAT-1's exact selection is:
+# cargo nextest run --no-tests fail -E 'binary_id(foundation_contract)'
+# Later tasks replace only <test-target> with their exact stable binary ID.
+nextest-version = "0.9.146"
+
+[profile.default]
+default-filter = "all()"
+fail-fast = false
