@@ -3,7 +3,7 @@
 ## Current State
 **Phase**: PRIVACY-AND-LIFECYCLE-OPERATIONS-2
 **Status**: In Progress
-**Last Updated**: 2026-09-24T17:24:30.665Z
+**Last Updated**: 2026-09-24T18:01:48.584Z
 **Run ID**: 7acb4fd7-13bc-4f05-aa63-f810395058df
 **Harness**: opencode
 **Execution Mode**: auto
@@ -49,12 +49,13 @@
   - Files: crates/repo-com-retention/Cargo.toml, crates/repo-com-retention/src/lib.rs, crates/repo-com-retention/src/policy.rs, crates/repo-com-retention/src/sweep.rs, crates/repo-com-retention/tests/retention_contract.rs, Cargo.lock
 - [x] Phase PRIVACY-AND-LIFECYCLE-OPERATIONS-2, Task PRIV-RET-2: Implement hashed dry-run and confirmed purge (@security-engineer)
   - Files: crates/repo-com-purge/Cargo.toml, crates/repo-com-purge/src/lib.rs, crates/repo-com-purge/src/plan.rs, crates/repo-com-purge/src/execute.rs, crates/repo-com-purge/tests/purge_contract.rs, Cargo.lock
+- [x] Phase PRIVACY-AND-LIFECYCLE-OPERATIONS-2, Task PRIV-LIFE-1: Expose read-only lifecycle and state verification (@operations-engineer)
+  - Files: crates/repo-com-lifecycle/Cargo.toml, crates/repo-com-lifecycle/src/lib.rs, crates/repo-com-lifecycle/src/inspect.rs, crates/repo-com-lifecycle/src/verify.rs, crates/repo-com-lifecycle/tests/lifecycle_contract.rs, Cargo.lock
 
 ## Current Task
 - None currently running
 
 ## Remaining
-- [ ] Phase PRIVACY-AND-LIFECYCLE-OPERATIONS-2: Phase 2: Purge and Read-Only Lifecycle
 - [ ] Phase RELEASE-READINESS-1: Phase 1: Presentation, Handler, and Documentation Boundaries
 - [ ] Phase RELEASE-READINESS-2: Phase 2: Thin Executable
 - [ ] Phase RELEASE-READINESS-3: Phase 3: Performance, Infrastructure, and End-to-End Evidence
