@@ -3,7 +3,7 @@
 ## Current State
 **Phase**: INBOUND-RETRIEVAL-AND-REPLY-2
 **Status**: In Progress
-**Last Updated**: 2026-09-24T15:10:40.989Z
+**Last Updated**: 2026-09-24T15:25:01.079Z
 **Run ID**: 7acb4fd7-13bc-4f05-aa63-f810395058df
 **Harness**: opencode
 **Execution Mode**: auto
@@ -43,12 +43,13 @@
   - Files: crates/repo-com-inbox-state/Cargo.toml, crates/repo-com-inbox-state/src/lib.rs, crates/repo-com-inbox-state/src/item.rs, crates/repo-com-inbox-state/src/store.rs, crates/repo-com-inbox-state/src/cursor.rs, crates/repo-com-inbox-state/tests/inbox_state_contract.rs, Cargo.lock
 - [x] Phase INBOUND-RETRIEVAL-AND-REPLY-2, Task IN-FETCH-1: Fetch and reconcile bounded untrusted replies (@discord-engineer)
   - Files: crates/repo-com-inbox-fetch/Cargo.toml, crates/repo-com-inbox-fetch/src/lib.rs, crates/repo-com-inbox-fetch/src/boundary.rs, crates/repo-com-inbox-fetch/src/filter.rs, crates/repo-com-inbox-fetch/src/fetch.rs, crates/repo-com-inbox-fetch/src/reconcile.rs, crates/repo-com-inbox-fetch/tests/inbox_fetch_contract.rs, Cargo.lock
+- [x] Phase INBOUND-RETRIEVAL-AND-REPLY-2, Task IN-REPLY-1: Create validated threaded reply drafts (@messaging-engineer)
+  - Files: crates/repo-com-reply/Cargo.toml, crates/repo-com-reply/src/lib.rs, crates/repo-com-reply/src/target.rs, crates/repo-com-reply/src/draft.rs, crates/repo-com-reply/src/link.rs, crates/repo-com-reply/tests/reply_contract.rs, Cargo.lock
 
 ## Current Task
 - None currently running
 
 ## Remaining
-- [ ] Phase INBOUND-RETRIEVAL-AND-REPLY-2: Phase 2: Bounded Fetch and Reply Drafting
 - [ ] Phase PRIVACY-AND-LIFECYCLE-OPERATIONS-1: Phase 1: Automatic Retention
 - [ ] Phase PRIVACY-AND-LIFECYCLE-OPERATIONS-2: Phase 2: Purge and Read-Only Lifecycle
 - [ ] Phase RELEASE-READINESS-1: Phase 1: Presentation, Handler, and Documentation Boundaries
