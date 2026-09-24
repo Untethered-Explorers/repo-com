@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "models": {
+    "prd": "opencode/space-bunny-free",
+    "team": "opencode/space-bunny-free",
+    "skills": "opencode/space-bunny-free"
+  }
+}
