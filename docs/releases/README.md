@@ -3,18 +3,22 @@
 This directory holds release communication for `repo-com`.
 
 The workspace version is `0.1.0`, but there are no Git tags, packaged artifacts,
-or installable `repo-com` binaries. The current release boundary is therefore
-[Unreleased](unreleased.md), which documents the four implemented Rust libraries
-and the remaining product work.
+or installable `repo-com` binary. The current release boundary is therefore
+[Unreleased](unreleased.md), which documents the 19 implemented Rust library
+packages and the remaining product work.
 
 ## Current status
 
 - The current source is a Rust 2024 library workspace.
-- Local validation is documented in the [Unreleased notes](unreleased.md).
-- The product vision and feature documents describe planned Discord and CLI
+- The full local validation run is documented in the [Unreleased notes](unreleased.md).
+- Discord REST v10, message, and inbound adapters exist as focused libraries;
+  automated evidence uses token-free WireMock fixtures, not a live Discord
+  workspace.
+- The product vision and feature documents describe planned CLI and human-facing
   behavior; they are not release evidence.
-- No live Discord, human UX/security acceptance, cross-platform package, or
-  release sign-off has been performed.
+- No final command tree, terminal UI, packaged cross-platform release, purge or
+  lifecycle command layer, performance result, live Discord acceptance, or human
+  release sign-off has been recorded.
 
 ## When a release is tagged
 
