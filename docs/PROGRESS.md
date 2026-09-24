@@ -1,9 +1,9 @@
 # Project Progress
 
 ## Current State
-**Phase**: INBOUND-RETRIEVAL-AND-REPLY-1
+**Phase**: INBOUND-RETRIEVAL-AND-REPLY-2
 **Status**: In Progress
-**Last Updated**: 2026-09-24T14:40:55.980Z
+**Last Updated**: 2026-09-24T15:10:40.989Z
 **Run ID**: 7acb4fd7-13bc-4f05-aa63-f810395058df
 **Harness**: opencode
 **Execution Mode**: auto
@@ -41,6 +41,8 @@
   - Files: crates/repo-com-delivery-retry/Cargo.toml, crates/repo-com-delivery-retry/src/lib.rs, crates/repo-com-delivery-retry/src/policy.rs, crates/repo-com-delivery-retry/src/reconcile.rs, crates/repo-com-delivery-retry/tests/delivery_retry_contract.rs, Cargo.lock
 - [x] Phase INBOUND-RETRIEVAL-AND-REPLY-1, Task IN-STATE-1: Persist inbound snapshots and local lifecycle (@persistence-engineer)
   - Files: crates/repo-com-inbox-state/Cargo.toml, crates/repo-com-inbox-state/src/lib.rs, crates/repo-com-inbox-state/src/item.rs, crates/repo-com-inbox-state/src/store.rs, crates/repo-com-inbox-state/src/cursor.rs, crates/repo-com-inbox-state/tests/inbox_state_contract.rs, Cargo.lock
+- [x] Phase INBOUND-RETRIEVAL-AND-REPLY-2, Task IN-FETCH-1: Fetch and reconcile bounded untrusted replies (@discord-engineer)
+  - Files: crates/repo-com-inbox-fetch/Cargo.toml, crates/repo-com-inbox-fetch/src/lib.rs, crates/repo-com-inbox-fetch/src/boundary.rs, crates/repo-com-inbox-fetch/src/filter.rs, crates/repo-com-inbox-fetch/src/fetch.rs, crates/repo-com-inbox-fetch/src/reconcile.rs, crates/repo-com-inbox-fetch/tests/inbox_fetch_contract.rs, Cargo.lock
 
 ## Current Task
 - None currently running

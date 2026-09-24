@@ -1,0 +1,29 @@
+[package]
+# The package name is the stable nextest binary ID selected by IN-FETCH-1.
+name = "inbox_fetch_contract"
+autotests = false
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "Bounded, read-only, untrusted Discord inbound retrieval for repo-com"
+
+[lib]
+name = "repo_com_inbox_fetch"
+path = "src/lib.rs"
+
+[dependencies]
+repo-com-config = { package = "config_contract", path = "../repo-com-config" }
+repo-com-delivery = { package = "delivery_contract", path = "../repo-com-delivery" }
+repo-com-discord-client = { package = "discord_client_contract", path = "../repo-com-discord-client" }
+repo-com-foundation = { package = "foundation_contract", path = "../repo-com-foundation" }
+repo-com-inbox-state = { package = "inbox_state_contract", path = "../repo-com-inbox-state" }
+reqwest = { version = "=0.13.5", default-features = false, features = ["json", "rustls"] }
+serde = { workspace = true }
+serde_json.workspace = true
+zeroize = "=1.9.0"
+
+[dev-dependencies]
+tokio = { version = "=1.53.1", features = ["macros", "rt-multi-thread"] }
+wiremock = "=0.6.5"
