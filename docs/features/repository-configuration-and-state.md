@@ -8,8 +8,6 @@
 
 This feature establishes strict committed configuration, explicit local policy activation, the repository-keyed SQLite store, append-only audit writes, and local audit queries. These interfaces are prerequisites for every send and inbound workflow.
 
-> **Current implementation:** `REPO-CFG-1`, `REPO-STATE-1`, and `REPO-POLICY-1` are implemented as tested Rust libraries. The dedicated audit query surface, Discord setup, delivery, inbound transport, retention, and purge integrations remain future work; this document continues to own the planned requirements and task contract.
-
 ### In Scope
 
 - `.repo-com.toml` schema version 1 and repository-root discovery.

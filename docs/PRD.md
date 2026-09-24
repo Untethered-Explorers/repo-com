@@ -9,13 +9,6 @@
 
 The authoritative executable requirements and tasks are decomposed into the feature documents listed in section 14. `docs/IDEA.md` is historical source material and is not an execution source.
 
-> **Implementation boundary:** this document is the canonical future product
-> contract, not a statement that the complete workflow is currently shipped.
-> The current workspace implements the foundation, configuration, state, and
-> policy libraries described in the [Library Consumer Guide](user-guide.md).
-> Feature checklists remain requirements and plans unless current source and
-> tests confirm implementation.
-
 ---
 
 ## 2. Version History

@@ -8,8 +8,6 @@
 
 This feature establishes the reproducible Rust workspace, typed global arguments, versioned machine protocol, stable error categories, and test-selection convention used by every later feature. It deliberately does not implement repository configuration, storage, Discord, or feature-specific commands.
 
-> **Current implementation:** `PLAT-1` is implemented in the four-package workspace. The final executable, process output routing, and human terminal renderer remain future work; this document continues to own the planned requirements and task contract.
-
 ### In Scope
 
 - Rust 2024 workspace and pinned toolchain.
