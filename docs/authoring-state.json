@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "stages": {
+    "prd": {
+      "status": "complete",
+      "inputFingerprint": "4ca30ec941d0b20e6ab9db5972dd01c431ebb6b8de774993932e72d2d5fdde2c",
+      "outputs": [
+        "docs/PRD.md",
+        "docs/features/cli-foundation.md",
+        "docs/features/discord-delivery-and-reconciliation.md",
+        "docs/features/draft-and-approval-workflow.md",
+        "docs/features/inbound-retrieval-and-reply.md",
+        "docs/features/privacy-and-lifecycle-operations.md",
+        "docs/features/release-readiness.md",
+        "docs/features/repository-configuration-and-state.md"
+      ],
+      "startedAt": "2026-09-24T07:20:49.835Z",
+      "invocation": {
+        "runner": "opencode",
+        "requestedModel": "opencode/space-bunny-free",
+        "source": "project",
+        "effectiveModel": "opencode/space-bunny-free",
+        "inventoryVerifiedAt": "2026-09-24T06:57:42.226Z",
+        "runnerSource": "inherit",
+        "argv": [
+          "run",
+          "--auto",
+          "--dir",
+          "/home/mcfuzzysquirrel/Projects/repo-com",
+          "--model",
+          "opencode/space-bunny-free",
+          "/forge-auto-build-prd Use docs/IDEA.md as the project idea. Use docs/IDEA.md and any docs/requirements-source.md as source material. Headless mode: auto-proceed with explicit assumptions. Author docs/PRD.md plus docs/features/*.md directly for every solution, including a one-feature project. Keep shared requirements in the vision and feature requirements and executable tasks in their owning feature only. Use canonical IDs and compact version-2 task contracts; do not duplicate requirements in traceability tables. Do not create a monolithic PRD or a second task catalogue. Validate coverage, acceptance criteria, technology stack, security, privacy, accessibility and feature dependencies before approval. Run validate-prd. Do not generate agents or project skills, compile a manifest, or start execution; the launcher invokes those stages separately. Author bounded executable tasks inside Phase N headings, not one task per roadmap increment. Separate independently testable behaviors and ownership boundaries; retain atomic safety invariants together. Name concrete output files and validation commands covering every touched surface, including UI and infrastructure. Separate human rubric scores and sign-off into dependent human-review tasks. References and outputs must not overlap. Review each task against forge-build-prd/references/task-contract.md. Repair existing canonical feature documents in place. Preserve accepted requirements and completed task IDs. Convert legacy source documents into the vision and features without modifying the historical originals; never treat them as active execution sources."
+        ],
+        "skill": "forge-auto-build-prd"
+      },
+      "outputFingerprint": "c7fd425d2be4786e81533974175783e8ddb7d9dc15f4d2624014003311d69f14",
+      "completedAt": "2026-09-24T07:48:41.900Z"
+    }
+  }
+}

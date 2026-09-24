@@ -10,6 +10,6 @@
   "attach": "",
   "autoCommit": true,
   "logHarnessActivity": false,
-  "executionMode": "auto",
+  "executionMode": "manual",
   "selectedTaskIds": []
 }
