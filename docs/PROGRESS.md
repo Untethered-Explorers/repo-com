@@ -1,9 +1,9 @@
 # Project Progress
 
 ## Current State
-**Phase**: REPOSITORY-CONFIGURATION-AND-STATE-1
+**Phase**: DRAFT-AND-APPROVAL-WORKFLOW-1
 **Status**: In Progress
-**Last Updated**: 2026-09-24T11:32:37.025Z
+**Last Updated**: 2026-09-24T11:44:49.791Z
 **Run ID**: 7acb4fd7-13bc-4f05-aa63-f810395058df
 **Harness**: opencode
 **Execution Mode**: auto
@@ -21,6 +21,8 @@
   - Files: crates/repo-com-audit/Cargo.toml, crates/repo-com-audit/src/lib.rs, crates/repo-com-audit/src/event.rs, crates/repo-com-audit/src/redact.rs, crates/repo-com-audit/src/writer.rs, crates/repo-com-audit/tests/audit_contract.rs, Cargo.lock
 - [x] Phase REPOSITORY-CONFIGURATION-AND-STATE-1, Task REPO-AUDIT-2: Query local audit evidence (@audit-engineer)
   - Files: crates/repo-com-audit-query/Cargo.toml, crates/repo-com-audit-query/src/lib.rs, crates/repo-com-audit-query/src/filter.rs, crates/repo-com-audit-query/src/query.rs, crates/repo-com-audit-query/tests/audit_query_contract.rs, Cargo.lock
+- [x] Phase DRAFT-AND-APPROVAL-WORKFLOW-1, Task DRAFT-MODEL-1: Model immutable draft revisions and previews (@messaging-engineer)
+  - Files: crates/repo-com-draft-model/Cargo.toml, crates/repo-com-draft-model/src/lib.rs, crates/repo-com-draft-model/src/model.rs, crates/repo-com-draft-model/src/canonical.rs, crates/repo-com-draft-model/src/preview.rs, crates/repo-com-draft-model/tests/draft_model_contract.rs, Cargo.lock
 
 ## Current Task
 - None currently running

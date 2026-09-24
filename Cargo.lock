@@ -202,6 +202,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "draft_model_contract"
+version = "0.1.0"
+dependencies = [
+ "config_contract",
+ "serde",
+ "serde_json",
+ "sha2",
+]
+
+[[package]]
 name = "equivalent"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"

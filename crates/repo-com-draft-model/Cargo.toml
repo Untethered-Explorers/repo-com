@@ -1,0 +1,20 @@
+[package]
+# The package name is the stable nextest binary ID selected by DRAFT-MODEL-1.
+name = "draft_model_contract"
+autotests = false
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "Immutable draft revision and preview model for repo-com"
+
+[lib]
+name = "repo_com_draft_model"
+path = "src/lib.rs"
+
+[dependencies]
+repo-com-config = { package = "config_contract", path = "../repo-com-config" }
+serde.workspace = true
+serde_json.workspace = true
+sha2 = "=0.10.9"

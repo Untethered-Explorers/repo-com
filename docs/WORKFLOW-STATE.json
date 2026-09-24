@@ -1,12 +1,12 @@
 {
   "runId": "7acb4fd7-13bc-4f05-aa63-f810395058df",
   "startedAt": "2026-09-24T08:46:22.421Z",
-  "lastUpdatedAt": "2026-09-24T11:32:37.017Z",
+  "lastUpdatedAt": "2026-09-24T11:44:49.788Z",
   "manifestPath": "/home/mcfuzzysquirrel/Projects/repo-com/docs/EXECUTION-MANIFEST.json",
   "manifestVersion": "1.0",
   "harness": "opencode",
   "status": "running",
-  "currentPhase": "REPOSITORY-CONFIGURATION-AND-STATE-1",
+  "currentPhase": "DRAFT-AND-APPROVAL-WORKFLOW-1",
   "tasks": {
     "PLAT-1": {
       "taskId": "PLAT-1",
@@ -2321,10 +2321,42 @@
     },
     "DRAFT-MODEL-1": {
       "taskId": "DRAFT-MODEL-1",
-      "status": "pending",
+      "status": "complete",
       "ownerAgent": "messaging-engineer",
-      "attempt": 0,
-      "outputFiles": []
+      "attempt": 2,
+      "outputFiles": [
+        "crates/repo-com-draft-model/Cargo.toml",
+        "crates/repo-com-draft-model/src/lib.rs",
+        "crates/repo-com-draft-model/src/model.rs",
+        "crates/repo-com-draft-model/src/canonical.rs",
+        "crates/repo-com-draft-model/src/preview.rs",
+        "crates/repo-com-draft-model/tests/draft_model_contract.rs",
+        "Cargo.lock"
+      ],
+      "startedAt": "2026-09-24T11:42:36.179Z",
+      "attemptHistory": [
+        {
+          "attempt": 1,
+          "outcome": "failed",
+          "reason": "Missing fenced forge-result JSON report.",
+          "resultPath": "docs/artifacts/DRAFT-MODEL-1.2026-09-24T11-42-31-169Z.attempt-1.result.json"
+        },
+        {
+          "attempt": 2,
+          "outcome": "passed",
+          "resultPath": "docs/artifacts/DRAFT-MODEL-1.2026-09-24T11-44-49-785Z.attempt-2.result.json"
+        }
+      ],
+      "completedAt": "2026-09-24T11:44:49.788Z",
+      "agentOutput": "## DRAFT-MODEL-1 complete\n\nThe immutable draft revision model and side-effect-free preview contract were preserved from attempt 1 and revalidated. No source corrections were required during this retry.\n\n### Validation\n\n- `cargo fmt --all -- --check` — passed\n- `cargo clippy --workspace --all-targets --all-features -- -D warnings` — passed\n- `cargo nextest run --no-tests fail -E 'binary_id(draft_model_contract)'` — **6 passed, 0 skipped**\n\n### Task files\n\n- `crates/repo-com-draft-model/Cargo.toml`\n- `crates/repo-com-draft-model/src/lib.rs`\n- `crates/repo-com-draft-model/src/model.rs`\n- `crates/repo-com-draft-model/src/canonical.rs`\n- `crates/repo-com-draft-model/src/preview.rs`\n- `crates/repo-com-draft-model/tests/draft_model_contract.rs`\n\n`docs/artifacts/DRAFT-MODEL-1.md` was not modified. Pre-existing workflow-state modifications were left untouched. Mapped documentation was not changed because this task’s exact output boundary is limited to the draft-model crate and contract test.\n\n```forge-result\n{\"summary\":\"Implemented immutable draft revisions, canonical hashes, strict validation, expiry, and side-effect-free unresolved previews; all required checks passed with 6 contract tests.\",\"unresolved\":[]}\n```\n",
+      "artifactId": "work-draft-model-1-001",
+      "inputArtifactIds": [
+        "work-repo-cfg-1-001",
+        "work-repo-state-1-001",
+        "work-repo-policy-1-001",
+        "work-repo-audit-1-001",
+        "work-repo-audit-2-001"
+      ]
     },
     "DRAFT-CONTENT-1": {
       "taskId": "DRAFT-CONTENT-1",
