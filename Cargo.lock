@@ -439,6 +439,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "send_eligibility_contract"
+version = "0.1.0"
+dependencies = [
+ "approval_contract",
+ "config_contract",
+ "draft_content_contract",
+ "draft_model_contract",
+ "draft_safety_contract",
+ "foundation_contract",
+ "policy_contract",
+ "serde",
+ "serde_json",
+ "sha2",
+ "state_contract",
+]
+
+[[package]]
 name = "serde"
 version = "1.0.229"
 source = "registry+https://github.com/rust-lang/crates.io-index"

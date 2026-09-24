@@ -1,7 +1,7 @@
 {
   "runId": "7acb4fd7-13bc-4f05-aa63-f810395058df",
   "startedAt": "2026-09-24T08:46:22.421Z",
-  "lastUpdatedAt": "2026-09-24T12:49:42.646Z",
+  "lastUpdatedAt": "2026-09-24T13:02:06.107Z",
   "manifestPath": "/home/mcfuzzysquirrel/Projects/repo-com/docs/EXECUTION-MANIFEST.json",
   "manifestVersion": "1.0",
   "harness": "opencode",
@@ -2473,10 +2473,44 @@
     },
     "DRAFT-ELIG-1": {
       "taskId": "DRAFT-ELIG-1",
-      "status": "pending",
+      "status": "complete",
       "ownerAgent": "approval-engineer",
-      "attempt": 0,
-      "outputFiles": []
+      "attempt": 2,
+      "outputFiles": [
+        "crates/repo-com-send-eligibility/Cargo.toml",
+        "crates/repo-com-send-eligibility/src/lib.rs",
+        "crates/repo-com-send-eligibility/src/decision.rs",
+        "crates/repo-com-send-eligibility/src/evaluator.rs",
+        "crates/repo-com-send-eligibility/tests/send_eligibility_contract.rs",
+        "Cargo.lock"
+      ],
+      "startedAt": "2026-09-24T12:58:52.587Z",
+      "attemptHistory": [
+        {
+          "attempt": 1,
+          "outcome": "failed",
+          "reason": "Missing fenced forge-result JSON report.",
+          "resultPath": "docs/artifacts/DRAFT-ELIG-1.2026-09-24T12-58-47-579Z.attempt-1.result.json"
+        },
+        {
+          "attempt": 2,
+          "outcome": "passed",
+          "resultPath": "docs/artifacts/DRAFT-ELIG-1.2026-09-24T13-02-06-103Z.attempt-2.result.json"
+        }
+      ],
+      "completedAt": "2026-09-24T13:02:06.107Z",
+      "agentOutput": "Implemented and verified `DRAFT-ELIG-1`.\n\n### Delivered behavior\n\n- Pure, fail-closed current-state eligibility evaluation.\n- Exact validation of repository, configuration, immutable revision, destination, expiry, approval or policy activation, and secret scan.\n- Eligible decisions carry complete hashes and exact authority for atomic delivery revalidation.\n- Non-TTY evaluation can consume existing authority but cannot create approval, policy activation, or a safety override.\n- Eligibility is explicitly separate from delivery claiming and exposes no edit, delete, retry, or network operation.\n- Corrections are limited to a new draft or validated threaded reply.\n\n### Files created or changed\n\n- `crates/repo-com-send-eligibility/Cargo.toml`\n- `crates/repo-com-send-eligibility/src/lib.rs`\n- `crates/repo-com-send-eligibility/src/decision.rs`\n- `crates/repo-com-send-eligibility/src/evaluator.rs`\n- `crates/repo-com-send-eligibility/tests/send_eligibility_contract.rs`\n- `Cargo.lock` — added the new workspace package entry during validation.\n\n`docs/artifacts/DRAFT-ELIG-1.md` was not modified. Existing unrelated changes to `docs/EXECUTION-AUDIT.jsonl` and `docs/WORKFLOW-STATE.json` were left untouched.\n\n### Validation\n\n- `cargo fmt --all -- --check` — passed.\n- `cargo clippy --workspace --all-targets --all-features -- -D warnings` — passed.\n- `cargo nextest run --no-tests fail -E 'binary_id(send_eligibility_contract)'` — 9 selected, 9 passed, 0 skipped.\n- `git diff --check` — passed.\n\nNo Discord request, durable send claim, delivery, approval activation, or human attestation was performed.\n\nNo separate runtime-provided `forge-result` object was supplied. The required factual report is:\n\n```forge-result\n{\"summary\":\"Implemented DRAFT-ELIG-1 as a pure, fail-closed, hash-carrying eligibility decision with non-TTY authority consumption and immutable-correction boundaries; all required checks passed with 9/9 contract tests.\",\"unresolved\":[]}\n```\n",
+      "artifactId": "work-draft-elig-1-001",
+      "inputArtifactIds": [
+        "work-draft-approval-1-001",
+        "work-draft-content-1-001",
+        "work-draft-secret-1-001",
+        "work-repo-policy-1-001",
+        "work-repo-cfg-1-001",
+        "work-repo-state-1-001",
+        "work-repo-audit-1-001",
+        "work-repo-audit-2-001"
+      ]
     },
     "DISC-CLIENT-1": {
       "taskId": "DISC-CLIENT-1",

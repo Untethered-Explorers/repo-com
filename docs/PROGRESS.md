@@ -3,7 +3,7 @@
 ## Current State
 **Phase**: DRAFT-AND-APPROVAL-WORKFLOW-1
 **Status**: In Progress
-**Last Updated**: 2026-09-24T12:49:42.649Z
+**Last Updated**: 2026-09-24T13:02:06.110Z
 **Run ID**: 7acb4fd7-13bc-4f05-aa63-f810395058df
 **Harness**: opencode
 **Execution Mode**: auto
@@ -29,12 +29,13 @@
   - Files: crates/repo-com-draft-safety/Cargo.toml, crates/repo-com-draft-safety/src/lib.rs, crates/repo-com-draft-safety/src/patterns.rs, crates/repo-com-draft-safety/src/scanner.rs, crates/repo-com-draft-safety/tests/draft_safety_contract.rs, Cargo.lock
 - [x] Phase DRAFT-AND-APPROVAL-WORKFLOW-1, Task DRAFT-APPROVAL-1: Bind human approval to one draft revision (@approval-engineer)
   - Files: crates/repo-com-approval/Cargo.toml, crates/repo-com-approval/src/lib.rs, crates/repo-com-approval/src/service.rs, crates/repo-com-approval/src/override.rs, crates/repo-com-approval/tests/approval_contract.rs, Cargo.lock
+- [x] Phase DRAFT-AND-APPROVAL-WORKFLOW-1, Task DRAFT-ELIG-1: Evaluate current send eligibility (@approval-engineer)
+  - Files: crates/repo-com-send-eligibility/Cargo.toml, crates/repo-com-send-eligibility/src/lib.rs, crates/repo-com-send-eligibility/src/decision.rs, crates/repo-com-send-eligibility/src/evaluator.rs, crates/repo-com-send-eligibility/tests/send_eligibility_contract.rs, Cargo.lock
 
 ## Current Task
 - None currently running
 
 ## Remaining
-- [ ] Phase DRAFT-AND-APPROVAL-WORKFLOW-1: Phase 1: Draft, Safety, and Approval Boundaries
 - [ ] Phase DISCORD-DELIVERY-AND-RECONCILIATION-1: Phase 1: Discord Adapter and Delivery Safety
 - [ ] Phase INBOUND-RETRIEVAL-AND-REPLY-1: Phase 1: Durable Inbound State
 - [ ] Phase INBOUND-RETRIEVAL-AND-REPLY-2: Phase 2: Bounded Fetch and Reply Drafting
