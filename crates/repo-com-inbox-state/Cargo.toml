@@ -1,0 +1,18 @@
+[package]
+# The package name is the stable nextest binary ID selected by IN-STATE-1.
+name = "inbox_state_contract"
+autotests = false
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "Repository-scoped transactional inbound snapshot and lifecycle state for repo-com"
+
+[lib]
+name = "repo_com_inbox_state"
+path = "src/lib.rs"
+
+[dependencies]
+repo-com-audit = { package = "audit_contract", path = "../repo-com-audit" }
+repo-com-state = { package = "state_contract", path = "../repo-com-state" }

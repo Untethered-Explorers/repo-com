@@ -915,6 +915,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "inbox_state_contract"
+version = "0.1.0"
+dependencies = [
+ "audit_contract",
+ "state_contract",
+]
+
+[[package]]
 name = "indexmap"
 version = "2.14.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"

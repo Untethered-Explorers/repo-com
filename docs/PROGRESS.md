@@ -1,9 +1,9 @@
 # Project Progress
 
 ## Current State
-**Phase**: DISCORD-DELIVERY-AND-RECONCILIATION-1
+**Phase**: INBOUND-RETRIEVAL-AND-REPLY-1
 **Status**: In Progress
-**Last Updated**: 2026-09-24T14:28:18.193Z
+**Last Updated**: 2026-09-24T14:40:55.980Z
 **Run ID**: 7acb4fd7-13bc-4f05-aa63-f810395058df
 **Harness**: opencode
 **Execution Mode**: auto
@@ -39,12 +39,13 @@
   - Files: crates/repo-com-delivery/Cargo.toml, crates/repo-com-delivery/src/lib.rs, crates/repo-com-delivery/src/model.rs, crates/repo-com-delivery/src/claim.rs, crates/repo-com-delivery/src/transition.rs, crates/repo-com-delivery/tests/delivery_contract.rs, Cargo.lock
 - [x] Phase DISCORD-DELIVERY-AND-RECONCILIATION-1, Task DISC-DELIVERY-2: Implement bounded retry and unknown reconciliation (@delivery-engineer)
   - Files: crates/repo-com-delivery-retry/Cargo.toml, crates/repo-com-delivery-retry/src/lib.rs, crates/repo-com-delivery-retry/src/policy.rs, crates/repo-com-delivery-retry/src/reconcile.rs, crates/repo-com-delivery-retry/tests/delivery_retry_contract.rs, Cargo.lock
+- [x] Phase INBOUND-RETRIEVAL-AND-REPLY-1, Task IN-STATE-1: Persist inbound snapshots and local lifecycle (@persistence-engineer)
+  - Files: crates/repo-com-inbox-state/Cargo.toml, crates/repo-com-inbox-state/src/lib.rs, crates/repo-com-inbox-state/src/item.rs, crates/repo-com-inbox-state/src/store.rs, crates/repo-com-inbox-state/src/cursor.rs, crates/repo-com-inbox-state/tests/inbox_state_contract.rs, Cargo.lock
 
 ## Current Task
 - None currently running
 
 ## Remaining
-- [ ] Phase INBOUND-RETRIEVAL-AND-REPLY-1: Phase 1: Durable Inbound State
 - [ ] Phase INBOUND-RETRIEVAL-AND-REPLY-2: Phase 2: Bounded Fetch and Reply Drafting
 - [ ] Phase PRIVACY-AND-LIFECYCLE-OPERATIONS-1: Phase 1: Automatic Retention
 - [ ] Phase PRIVACY-AND-LIFECYCLE-OPERATIONS-2: Phase 2: Purge and Read-Only Lifecycle
