@@ -1,0 +1,29 @@
+[package]
+# The package name is the stable nextest binary ID selected by DISC-MSG-1.
+name = "discord_message_contract"
+autotests = false
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "One-attempt Discord REST v10 text message operation for repo-com"
+
+[lib]
+name = "repo_com_discord_message"
+path = "src/lib.rs"
+
+[dependencies]
+repo-com-config = { package = "config_contract", path = "../repo-com-config" }
+repo-com-discord-client = { package = "discord_client_contract", path = "../repo-com-discord-client" }
+repo-com-draft-content = { package = "draft_content_contract", path = "../repo-com-draft-content" }
+repo-com-foundation = { package = "foundation_contract", path = "../repo-com-foundation" }
+reqwest = { version = "=0.13.5", default-features = false, features = ["json", "rustls"] }
+serde = { workspace = true }
+serde_json.workspace = true
+zeroize = "=1.9.0"
+
+[dev-dependencies]
+repo-com-draft-model = { package = "draft_model_contract", path = "../repo-com-draft-model" }
+tokio = { version = "=1.53.1", features = ["macros", "rt-multi-thread"] }
+wiremock = "=0.6.5"

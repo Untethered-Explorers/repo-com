@@ -396,6 +396,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "discord_message_contract"
+version = "0.1.0"
+dependencies = [
+ "config_contract",
+ "discord_client_contract",
+ "draft_content_contract",
+ "draft_model_contract",
+ "foundation_contract",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "tokio",
+ "wiremock",
+ "zeroize",
+]
+
+[[package]]
 name = "displaydoc"
 version = "0.2.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
