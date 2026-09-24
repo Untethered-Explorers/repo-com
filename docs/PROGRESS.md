@@ -3,7 +3,7 @@
 ## Current State
 **Phase**: RELEASE-READINESS-1
 **Status**: In Progress
-**Last Updated**: 2026-09-24T20:18:40.347Z
+**Last Updated**: 2026-09-24T20:55:48.774Z
 **Run ID**: 7acb4fd7-13bc-4f05-aa63-f810395058df
 **Harness**: opencode
 **Execution Mode**: auto
@@ -59,12 +59,13 @@
   - Files: crates/repo-com-cli-operations/Cargo.toml, crates/repo-com-cli-operations/src/lib.rs, crates/repo-com-cli-operations/src/input.rs, crates/repo-com-cli-operations/src/handlers/config.rs, crates/repo-com-cli-operations/src/handlers/policy.rs, crates/repo-com-cli-operations/src/handlers/state.rs, crates/repo-com-cli-operations/src/handlers/audit.rs, crates/repo-com-cli-operations/src/handlers/purge.rs, crates/repo-com-cli-operations/tests/cli_operations_contract.rs, Cargo.lock, crates/repo-com-cli-operations/src/handlers/mod.rs
 - [x] Phase RELEASE-READINESS-1, Task REL-MSG-CMD-1: Implement messaging command handlers (@cli-engineer)
   - Files: crates/repo-com-cli-messaging/Cargo.toml, crates/repo-com-cli-messaging/src/lib.rs, crates/repo-com-cli-messaging/src/input.rs, crates/repo-com-cli-messaging/src/handlers/draft.rs, crates/repo-com-cli-messaging/src/handlers/send.rs, crates/repo-com-cli-messaging/src/handlers/inbox.rs, crates/repo-com-cli-messaging/src/handlers/reply.rs, crates/repo-com-cli-messaging/tests/cli_messaging_contract.rs, Cargo.lock, crates/repo-com-cli-messaging/src/handlers/mod.rs
+- [x] Phase RELEASE-READINESS-1, Task REL-DOC-1: Publish validated operator and security documentation (@technical-writer)
+  - Files: crates/repo-com-doc-validation/Cargo.toml, crates/repo-com-doc-validation/src/lib.rs, crates/repo-com-doc-validation/tests/documentation_contract.rs, docs/configuration.md, docs/discord-setup.md, docs/operator-guide.md, docs/security-model.md, docs/threat-model.md, Cargo.lock
 
 ## Current Task
 - None currently running
 
 ## Remaining
-- [ ] Phase RELEASE-READINESS-1: Phase 1: Presentation, Handler, and Documentation Boundaries
 - [ ] Phase RELEASE-READINESS-2: Phase 2: Thin Executable
 - [ ] Phase RELEASE-READINESS-3: Phase 3: Performance, Infrastructure, and End-to-End Evidence
 - [ ] Phase RELEASE-READINESS-4: Phase 4: Human UX and Security Rubrics
