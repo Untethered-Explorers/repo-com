@@ -1376,6 +1376,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "retention_contract"
+version = "0.1.0"
+dependencies = [
+ "config_contract",
+ "rusqlite",
+ "serde",
+ "serde_json",
+ "sha2",
+ "state_contract",
+]
+
+[[package]]
 name = "ring"
 version = "0.17.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"

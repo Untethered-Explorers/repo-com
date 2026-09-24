@@ -1,12 +1,12 @@
 {
   "runId": "7acb4fd7-13bc-4f05-aa63-f810395058df",
   "startedAt": "2026-09-24T08:46:22.421Z",
-  "lastUpdatedAt": "2026-09-24T15:25:01.073Z",
+  "lastUpdatedAt": "2026-09-24T15:50:02.068Z",
   "manifestPath": "/home/mcfuzzysquirrel/Projects/repo-com/docs/EXECUTION-MANIFEST.json",
   "manifestVersion": "1.0",
   "harness": "opencode",
   "status": "running",
-  "currentPhase": "INBOUND-RETRIEVAL-AND-REPLY-2",
+  "currentPhase": "PRIVACY-AND-LIFECYCLE-OPERATIONS-1",
   "tasks": {
     "PLAT-1": {
       "taskId": "PLAT-1",
@@ -2751,10 +2751,43 @@
     },
     "PRIV-RET-1": {
       "taskId": "PRIV-RET-1",
-      "status": "pending",
+      "status": "complete",
       "ownerAgent": "privacy-engineer",
-      "attempt": 0,
-      "outputFiles": []
+      "attempt": 2,
+      "outputFiles": [
+        "crates/repo-com-retention/Cargo.toml",
+        "crates/repo-com-retention/src/lib.rs",
+        "crates/repo-com-retention/src/policy.rs",
+        "crates/repo-com-retention/src/sweep.rs",
+        "crates/repo-com-retention/tests/retention_contract.rs",
+        "Cargo.lock"
+      ],
+      "startedAt": "2026-09-24T15:45:29.048Z",
+      "attemptHistory": [
+        {
+          "attempt": 1,
+          "outcome": "failed",
+          "reason": "Missing fenced forge-result JSON report.",
+          "resultPath": "docs/artifacts/PRIV-RET-1.2026-09-24T15-45-24-038Z.attempt-1.result.json"
+        },
+        {
+          "attempt": 2,
+          "outcome": "passed",
+          "resultPath": "docs/artifacts/PRIV-RET-1.2026-09-24T15-50-02-064Z.attempt-2.result.json"
+        }
+      ],
+      "completedAt": "2026-09-24T15:50:02.068Z",
+      "agentOutput": "Implemented and verified `PRIV-RET-1`.\n\n### Delivered behavior\n\n- Added validated retention policy support:\n  - Content: 30-day default, 1–365 day overrides.\n  - Metadata: 365-day default, 30–3,650 day overrides.\n  - Metadata retention must be at least content retention.\n- Added injected clocks and deterministic UTC cutoff calculation.\n- Added repository-scoped transactional sweeps:\n  - Expired draft and inbound text is replaced with `[content-expired]`.\n  - IDs, hashes, timestamps, lifecycle state, links, and audit evidence are preserved at content expiry.\n  - Expired metadata is removed only at the later metadata cutoff.\n  - Retention audit summaries contain counts and cutoff data, not message content.\n- Added typed blocking storage-integrity errors and pre-mutation sweep execution.\n- Added failure-injection rollback coverage and repository-isolation coverage.\n- No Discord, telemetry, remote audit, scheduler, backup, or network capability is linked into the retention crate.\n- The implementation remains local and unencrypted; user-only filesystem permissions do not protect against local account access, backups, or filesystem snapshots.\n\n### Validation\n\nAll required commands passed:\n\n```text\ncargo fmt --all -- --check\ncargo clippy --workspace --all-targets --all-features -- -D warnings\ncargo nextest run --no-tests fail -E 'binary_id(retention_contract)'\n```\n\nThe retention contract discovered and executed **7 tests**, with **7 passed and 0 skipped**.\n\n### Files created or changed\n\n- `Cargo.lock`\n- `crates/repo-com-retention/Cargo.toml`\n- `crates/repo-com-retention/src/lib.rs`\n- `crates/repo-com-retention/src/policy.rs`\n- `crates/repo-com-retention/src/sweep.rs`\n- `crates/repo-com-retention/tests/retention_contract.rs`\n\n`docs/artifacts/PRIV-RET-1.md` was not modified. The pre-existing changes to `docs/EXECUTION-AUDIT.jsonl` and `docs/WORKFLOW-STATE.json` were not touched.\n\n```forge-result\n{\"summary\":\"Implemented PRIV-RET-1 retention policy validation, deterministic UTC cutoffs, transactional repository-scoped retention sweeps, preservation of non-content evidence, and blocking storage-integrity handling. Required formatting, clippy, and retention contract checks passed with 7 tests passing.\",\"unresolved\":[]}\n```\n",
+      "artifactId": "work-priv-ret-1-001",
+      "inputArtifactIds": [
+        "work-repo-cfg-1-001",
+        "work-repo-state-1-001",
+        "work-repo-audit-1-001",
+        "work-in-state-1-001",
+        "work-disc-delivery-1-001",
+        "work-in-fetch-1-001",
+        "work-in-reply-1-001"
+      ]
     },
     "PRIV-RET-2": {
       "taskId": "PRIV-RET-2",

@@ -1,9 +1,9 @@
 # Project Progress
 
 ## Current State
-**Phase**: INBOUND-RETRIEVAL-AND-REPLY-2
+**Phase**: PRIVACY-AND-LIFECYCLE-OPERATIONS-1
 **Status**: In Progress
-**Last Updated**: 2026-09-24T15:25:01.079Z
+**Last Updated**: 2026-09-24T15:50:02.071Z
 **Run ID**: 7acb4fd7-13bc-4f05-aa63-f810395058df
 **Harness**: opencode
 **Execution Mode**: auto
@@ -45,12 +45,13 @@
   - Files: crates/repo-com-inbox-fetch/Cargo.toml, crates/repo-com-inbox-fetch/src/lib.rs, crates/repo-com-inbox-fetch/src/boundary.rs, crates/repo-com-inbox-fetch/src/filter.rs, crates/repo-com-inbox-fetch/src/fetch.rs, crates/repo-com-inbox-fetch/src/reconcile.rs, crates/repo-com-inbox-fetch/tests/inbox_fetch_contract.rs, Cargo.lock
 - [x] Phase INBOUND-RETRIEVAL-AND-REPLY-2, Task IN-REPLY-1: Create validated threaded reply drafts (@messaging-engineer)
   - Files: crates/repo-com-reply/Cargo.toml, crates/repo-com-reply/src/lib.rs, crates/repo-com-reply/src/target.rs, crates/repo-com-reply/src/draft.rs, crates/repo-com-reply/src/link.rs, crates/repo-com-reply/tests/reply_contract.rs, Cargo.lock
+- [x] Phase PRIVACY-AND-LIFECYCLE-OPERATIONS-1, Task PRIV-RET-1: Enforce content and metadata retention (@privacy-engineer)
+  - Files: crates/repo-com-retention/Cargo.toml, crates/repo-com-retention/src/lib.rs, crates/repo-com-retention/src/policy.rs, crates/repo-com-retention/src/sweep.rs, crates/repo-com-retention/tests/retention_contract.rs, Cargo.lock
 
 ## Current Task
 - None currently running
 
 ## Remaining
-- [ ] Phase PRIVACY-AND-LIFECYCLE-OPERATIONS-1: Phase 1: Automatic Retention
 - [ ] Phase PRIVACY-AND-LIFECYCLE-OPERATIONS-2: Phase 2: Purge and Read-Only Lifecycle
 - [ ] Phase RELEASE-READINESS-1: Phase 1: Presentation, Handler, and Documentation Boundaries
 - [ ] Phase RELEASE-READINESS-2: Phase 2: Thin Executable
