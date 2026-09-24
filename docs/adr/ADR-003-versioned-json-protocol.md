@@ -2,46 +2,51 @@
 
 - **Status:** Accepted
 - **Date:** 2026-09-24
-- **Decision owners:** repo-com maintainers (canonical v1 plan)
+- **Decision owners:** repo-com maintainers
 
 ## Context
 
-Repository skills call `repo-com` non-interactively and need a stable,
-machine-readable contract. Operators also need human-readable output. Mixing
-prompts, diagnostics, and data on the same stream makes automation unreliable.
+Repository skills need a deterministic machine-readable boundary, while
+operators need human-readable output. Mixing data, prompts, and diagnostics on
+one stream would make automation unsafe and fragile.
 
 ## Decision
 
-Define protocol version 1 as exactly one JSON object on stdout for machine mode,
-with `protocol_version`, `status`, `data`, and `error` fields. Keep diagnostics,
-prompts, and panic output off stdout (diagnostics go to stderr, opt-in only).
-Map errors to stable process categories — usage/schema, approval or operator
-action required, policy blocked, authentication, permission, remote conflict,
-unknown delivery, storage integrity, connectivity/rate limit, and internal
-failure — so callers can branch deterministically. Human mode uses labeled
-sections instead of JSON.
+Define protocol version 1 as exactly one JSON object with four fields:
+`protocol_version`, `status`, `data`, and `error`. A success object contains
+data and no error; an error object contains a typed error and no data. Keep
+optional diagnostics in a separate stderr value. Map errors to stable categories
+and deterministic exit codes: usage/schema, operator action required, policy
+blocked, authentication, permission, remote conflict, unknown delivery, storage
+integrity, connectivity/rate limit, and internal failure.
+
+The foundation crate implements the typed envelope, stable categories, JSON
+serialization, validation invariants, and separated `OutputStreams`. The final
+executable and human renderer remain future work, so the current library does
+not itself write to stdout or stderr.
 
 ## Alternatives Considered
 
-- **Human text only** — rejected: not safely machine-parseable.
-- **Multiple JSON lines / streaming** — rejected: one object per invocation is
-  simpler and prevents partial-parse ambiguity.
-- **Diagnostics on stdout** — rejected: would corrupt the protocol contract.
+- **Human text only** — rejected because repository skills need a stable parser.
+- **Multiple JSON lines or streaming** — rejected because one object per
+  invocation is easier to validate and prevents partial-parse ambiguity.
+- **Diagnostics or prompts on stdout** — rejected because they would corrupt
+  the protocol contract.
 
 ## Consequences
 
-- Benefits: a stable skill-facing contract, deterministic exit categories, and
-  clean stream separation.
-- Costs and risks: every handler must respect the envelope and category mapping;
-  `FOUND-CON-02` requires machine stdout to stay valid JSON even for
-  operational errors.
+- Benefits: a stable skill-facing value model, deterministic error branches,
+  and explicit stream separation.
+- Costs and risks: every future handler must preserve the envelope and category
+  mapping; adding output fields requires a protocol-version review.
+- A current library consumer must write `OutputStreams` itself; no process-level
+  behavior can be inferred from serialization alone.
 
 ## Implementation References
 
-- [cli-foundation.md](../features/cli-foundation.md) `FOUND-FR-03` through
-  `FOUND-FR-05`, `FOUND-CON-02`
-- [release-readiness.md](../features/release-readiness.md) `REL-FR-02`,
-  `REL-FR-03`
-- Planned outputs: `crates/repo-com-foundation/src/protocol.rs`,
-  `src/error.rs`, `crates/repo-com-cli/src/main.rs`
-- Owning tasks: `PLAT-1`, `REL-APP-1`
+- [`crates/repo-com-foundation/src/protocol.rs`](../../crates/repo-com-foundation/src/protocol.rs)
+- [`crates/repo-com-foundation/src/error.rs`](../../crates/repo-com-foundation/src/error.rs)
+- [`crates/repo-com-foundation/src/args.rs`](../../crates/repo-com-foundation/src/args.rs)
+- [`crates/repo-com-foundation/tests/foundation_contract.rs`](../../crates/repo-com-foundation/tests/foundation_contract.rs)
+- [Library Consumer Guide](../user-guide.md)
+- Planned CLI and terminal output: [`release-readiness.md`](../features/release-readiness.md)

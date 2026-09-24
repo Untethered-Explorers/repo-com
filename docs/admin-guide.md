@@ -1,178 +1,170 @@
-# repo-com Administrator Guide
+# Administrator Guide
 
-> **Status: pre-release specification (2026-09-24).** `repo-com` is specified
-> but **not implemented**. There is no installable binary, release artifact,
-> CI workflow, or packaged database. This guide documents the canonical v1
-> operating contract from [`docs/PRD.md`](PRD.md) and
-> [`docs/features/`](features/); treat every command and path as **planned**.
-> Exact flags and file paths may change before release. See
-> [Unreleased release notes](releases/unreleased.md).
+> **Status:** workspace `0.1.0`, pre-release. The repository currently provides Rust libraries and contract tests, not an installable CLI, Discord client, or packaged release. This guide covers the current local development and state operations without presenting planned product commands as available.
 
-## Responsibilities and Architecture
+## Responsibilities and architecture
 
-An administrator (often the same person as the operator) is responsible for:
+A repository maintainer or embedding application is responsible for:
 
-- Creating a **dedicated Discord bot** and granting least-privilege permissions.
-- Supplying the bot token through the environment, never through configuration.
-- Committing a valid, non-secret `.repo-com.toml` per repository.
-- Protecting the local SQLite state file and its containing directory.
-- Planning and executing retention and purge operations.
+- keeping the Rust toolchain and workspace dependencies pinned;
+- providing a secret-free, schema-version-1 `.repo-com.toml`;
+- registering repository scopes before writing state;
+- protecting the local SQLite state and its parent directory;
+- passing an explicit TTY decision for any authority-creating policy activation; and
+- preserving state during upgrades and backups.
 
-Architecture in one line: one globally installed `repo-com` binary per machine
-composes focused Rust crates and stores repository-scoped state in a single
-user-level SQLite database; it talks only to Discord REST API v10 as a bot. See
-[ADR-001](adr/ADR-001-rust-workspace-and-patched-sqlite.md),
-[ADR-002](adr/ADR-002-repository-scoped-local-state.md), and
-[ADR-006](adr/ADR-006-dedicated-discord-bot-rest-v10.md).
+The current workspace is a Cargo workspace with four library packages. The state crate owns one local SQLite connection boundary; separate processes or threads can open additional connections against the same path. SQLite WAL, foreign-key enforcement, and a bounded busy timeout provide the current concurrency boundary. No server, daemon, telemetry service, or Discord network client exists in the current workspace.
+
+See [ADR-001](adr/ADR-001-rust-workspace-and-patched-sqlite.md), [ADR-002](adr/ADR-002-repository-scoped-local-state.md), and [ADR-005](adr/ADR-005-operator-activated-exact-policy.md) for the implemented foundations and remaining release work.
 
 ## Prerequisites
 
-- **Planned platform support:** Linux, macOS, and Windows (x86_64 and platform
-  targets defined by `REL-PACK-1`, not yet published).
-- **Discord:** a workspace where the administrator can create a bot and grant
-  channel permissions.
-- **Runtime database:** SQLite **3.53.4 or newer**, statically linked in release
-  artifacts with a runtime version assertion. An older bundled or system SQLite
-  is not acceptable.
-- **No daemon:** there is no server, gateway, or background service to run.
+For local development and validation:
+
+- a Rust installation managed by `rustup` or an equivalent toolchain manager;
+- Rust `1.98.1`, as pinned in [`rust-toolchain.toml`](../rust-toolchain.toml);
+- Cargo and the dependencies recorded in [`Cargo.lock`](../Cargo.lock);
+- a writable OS user-data directory; and
+- `cargo-nextest` for the declared test command.
+
+The release boundary requires linked SQLite `3.53.4` or newer. Development opens and contract tests can use the locally available SQLite engine; release-oriented opens use `StateStore::open_for_release` and fail before creating or mutating state if the runtime is older.
+
+A Discord bot, token, workspace, channel, or network connection is not required to build or test the current four-crate workspace. Those are prerequisites for the future product surface, not current commands.
 
 ## Installation
 
-No install path exists yet. The planned release publishes versioned binaries,
-archives or installers, SHA-256-or-stronger checksums, dependency-license
-evidence, and a CycloneDX SBOM, with **no self-updater**. Installation will be an
-explicit operator action:
+There is no published install artifact, installer, or `repo-com` executable. For a local checkout:
 
-1. Download the artifact for the platform from the release.
-2. Verify the SHA-256 checksum against the published value.
-3. Place the `repo-com` binary on `PATH`.
-4. Confirm `repo-com --version` prints the package semantic version.
+```bash
+cargo metadata --no-deps --format-version 1
+cargo fmt --all -- --check
+cargo clippy --workspace --all-targets --all-features -- -D warnings
+cargo nextest run --no-tests fail
+```
 
-Do not treat a development build as a release artifact; release builds must
-assert the patched SQLite version at compile and run time.
+The current nextest run executes 42 tests across four binaries. A release package must be built and verified separately once the remaining CLI, adapter, packaging, and release-policy crates are implemented.
 
 ## Configuration
 
-Repository configuration is a committed, reviewable `.repo-com.toml` (schema
-version 1). It defines the workspace, destination and mention aliases, inbound
-aliases, retention, and exact auto-send policy entries — and **never** a secret.
-See the [user guide configuration section](user-guide.md#configuration) for a
-minimal example.
+The configuration crate discovers `.repo-com.toml` relative to a supplied repository root. With no explicit path it searches the current directory and ancestors up to the inclusive root, selecting exactly one candidate. An explicit path is canonicalized and must remain inside that root. A missing or ambiguous candidate is an error.
 
-Resolution rules:
+The strict schema requires:
 
-- Prefer an explicit normalized path; otherwise search the current directory and
-  ancestors up to the repository root for exactly one `.repo-com.toml`.
-- Fail with a typed error on zero or multiple candidates.
-- Reject unknown keys, duplicate aliases, unsafe schema versions, cross-workspace
-  references, invalid mention prefixes, and secret-like fields.
-- Report path-aware errors without logging file contents or secret-like values.
+- `schema_version = 1`;
+- a valid `repository_id`;
+- one `[discord]` workspace ID;
+- named destination, mention, and inbound alias tables; and
+- positive content and metadata retention day values.
 
-A skill may propose configuration changes, but activating a new permission
-requires a separate interactive operator action (see
-[ADR-005](adr/ADR-005-operator-activated-exact-policy.md)).
+Destination channels are named by aliases. Mention targets use only `role:<id>` or `user:<id>`. Inbound aliases must refer to a configured destination. Unknown fields, duplicate aliases, wildcard policy values, secret-like keys, raw destination fields, malformed IDs, and known cross-workspace references are rejected without retaining the offending scalar values.
 
-## Identity, Secrets, and TLS
+The example [`examples/repo-com.example.toml`](../examples/repo-com.example.toml) is synthetic and safe to review. The configuration format is intended to remain secret-free. The future product's `REPO_COM_DISCORD_TOKEN` is not read by any current crate.
 
-- **Identity:** a dedicated Discord **bot** only. User tokens, Bearer user
-  authentication, and self-bots are rejected.
-- **Token source:** `REPO_COM_DISCORD_TOKEN` environment variable only. The
-  token is never written to config or state, is redacted from errors and
-  diagnostics, and owned copies are zeroized on drop.
-- **Authorization scheme:** the Discord Bot scheme, sent only to
-  `https://discord.com/api/v10`.
-- **TLS:** the planned HTTP client uses rustls, avoiding an OpenSSL runtime
-  dependency.
-- **Least privilege:** request `VIEW_CHANNEL`, `SEND_MESSAGES`, and
-  `READ_MESSAGE_HISTORY`. Mention capability is validated against the resolved
-  role or user and guild rules, never mutated automatically.
-- **Rotation:** on authentication failure, the product returns a token-rotation
-  instruction. Rotate the token in the Discord developer portal and update the
-  environment variable; no local state needs migration.
+The normalized configuration is serialized deterministically and hashed with SHA-256. The hash is used by the current policy crate to invalidate an activation after relevant configuration changes.
 
-## Storage and Backups
+## Identity, secrets, and TLS
 
-- **Location:** one user-level SQLite database in the OS application-data
-  location (resolved with `dirs`). Operational state is **never** stored beneath
-  the repository.
-- **Protection:** created with user-only filesystem permissions; foreign keys,
-  WAL, and a bounded busy timeout are enabled.
-- **Schema:** forward-only migrations. Corruption, unsupported schema, lock
-  timeout, or migration failure is reported with a typed error; the database is
-  never deleted or recreated automatically.
-- **Backups:** there is no built-in backup, export, or synchronization. If you
-  copy the database, protect the copy with equivalent permissions and remember
-  it contains unencrypted retained content.
-- **Retention defaults:** content 30 days; non-content delivery/audit metadata
-  365 days; both overridable per repository within validated bounds.
+The current workspace has no Discord client and therefore has no token or TLS implementation to operate. Do not add a token, authorization header, bot credential, or private URL to `.repo-com.toml`, examples, fixtures, logs, or documentation.
 
-## Health Checks and Monitoring
+The future Discord contract reserves `REPO_COM_DISCORD_TOKEN` for a dedicated bot identity. That variable, its bot-only authentication scheme, and its Discord permission requirements are documented as planned product requirements in the [Product Vision](PRD.md) and [ADR-006](adr/ADR-006-dedicated-discord-bot-rest-v10.md); they are not current runtime instructions.
 
-- **Setup check:** a guided, read-only command validates bot identity, workspace
-  membership, channel visibility, required channel permissions, and resolved
-  mention access. It makes no mutations.
-- **State verification:** a read-only command reports SQLite `quick_check`,
-  foreign keys, expected migration version, repository scope, and filesystem
-  permissions without modifying or recreating the database.
-- **Audit query:** bounded, repository-scoped local audit lookup. There is no
-  remote history or read receipt.
-- **No monitoring service, no telemetry.** There is no crash upload, analytics,
-  or remote audit synchronization to configure.
+The current configuration validator checks key names for secret-like terms and does not echo the associated values in typed errors. This is a defense against accidental configuration mistakes, not complete data-loss prevention.
 
-## Upgrades and Rollback
+## Storage and backups
 
-Planned behavior:
+### Location
 
-- Upgrades are explicit: install a new binary over the old one. There is no
-  self-updater.
-- Migrations are forward-only. Before upgrading, back up the state database
-  under protection equivalent to the original.
-- Preserve the previous binary to roll back the executable if needed; note that
-  a forward schema migration cannot be automatically reverted by reinstalling an
-  older binary. Test upgrades on a disposable workspace first.
+The default database path is:
+
+```text
+<dirs::data_local_dir()>/repo-com/state.sqlite3
+```
+
+`database_path_in(root)` provides the same `repo-com/state.sqlite3` layout below an explicit test or deployment root. The default operational path is outside the repository; an explicit `open_path` call is caller-controlled and must not place live state in the repository.
+
+### Protection
+
+On Unix, the state crate creates the parent directory with mode `0700` and the database with mode `0600`, and it refuses a symbolic-link database path. On Windows, the implementation documents the inherited Known Folder ACL as the boundary; it does not claim to rewrite Windows ACLs through portable permission bits.
+
+The database is not encrypted by this implementation. Local account access, backups, filesystem snapshots, and other copies of the database can expose retained content. Protect copies with equivalent access controls and avoid uploading them to shared or remote storage.
+
+### Schema and migrations
+
+The current schema version is `1`. Migration 1 creates repository, draft/revision, approval, policy, delivery-attempt, inbound, acknowledgement, archive, reply-link, and append-only audit tables. Database triggers protect immutable draft revisions, first inbound snapshots, and audit events.
+
+Migrations are forward-only. The state store rejects a newer schema, preserves corrupt or migration-conflicting bytes, and never automatically deletes or recreates a database. SQLite `user_version`, required tables, triggers, and foreign keys are verified after opening.
+
+SQLite WAL mode creates `-wal` and `-shm` sidecar files while a database is active. Do not treat the main file alone as a complete live backup. Coordinate a safe copy with the embedding application and SQLite's backup/checkpoint semantics; this repository does not provide a backup command.
+
+## Health checks and monitoring
+
+The current local validation gates are:
+
+```bash
+cargo fmt --all -- --check
+cargo clippy --workspace --all-targets --all-features -- -D warnings
+cargo nextest run --no-tests fail
+```
+
+The `StateStore` API also exposes read-only checks for:
+
+- `schema_version()`;
+- `foreign_keys_enabled()`;
+- `journal_mode()`;
+- `quick_check()`;
+- the linked runtime and release requirement through `sqlite_runtime()` and `assert_sqlite_runtime()`; and
+- user-only file protection through `inspect_user_only_database()`.
+
+There is no monitoring daemon, crash upload, analytics, remote audit synchronization, or Discord health check in the current workspace. The state store's convenience mutations use explicit transactions and roll back on typed failures.
+
+## Upgrades and rollback
+
+There is no packaged upgrade or rollback procedure in version `0.1.0`. When changing the workspace:
+
+1. Back up the database while the embedding application is in a safe state.
+2. Run formatting, lint, and all current contract tests.
+3. Verify the migration and linked SQLite version before opening operational state.
+4. Keep the previous source or binary available for diagnosis, but do not assume an older implementation can open a newer schema.
+
+The release artifact, checksum, SBOM, cross-platform matrix, and migration compatibility policy remain future release work.
 
 ## Troubleshooting
 
-| Planned symptom | Likely cause | Next action |
+| Symptom | Likely cause | Next action |
 |---|---|---|
-| `--version` fails or no binary found | No release/install performed | Confirm the release artifact and `PATH` entry |
-| Authentication failure | Missing, invalid, or revoked token | Rotate the token; set `REPO_COM_DISCORD_TOKEN` |
-| Permission or not-found errors | Missing channel permissions or wrong channel/workspace | Run the read-only setup check; grant the documented permissions |
-| Configuration rejected | Unknown key, unsafe schema version, duplicate alias, secret-like field | Correct `.repo-com.toml`; validation never echoes secret values |
-| `operator-action-required` | Activation/approval/purge attempted in a non-TTY shell | Re-run interactively in a TTY |
-| `unknown` delivery | Post-dispatch timeout, reset, or 5xx | Reconcile read-only; never resend until resolved |
-| `storage-integrity` error | Failed retention sweep, corruption, unsupported schema, lock timeout | Inspect with `state verify`; database bytes are preserved |
-| Repeated duplicate-send concern | Concurrent invocations of one revision | Confirm the atomic claim returned the recorded outcome |
+| `config-not-found` | No configuration in the bounded repository search | Add a valid `.repo-com.toml` or pass a path inside the repository root. |
+| `multiple-config-candidates` | More than one configuration in the ancestor range | Remove the extra file or use an explicit path. |
+| `unsupported-schema-version` | Configuration is not version 1 | Update the document using the [example](../examples/repo-com.example.toml). |
+| `secret-field` or `raw-destination-field` | A forbidden key or raw destination field was supplied | Remove the key and use a named alias; do not paste the value into an error report. |
+| `operator-action-required` | A caller requested authority creation without a TTY | Supply an explicit interactive confirmation in the embedding application; do not bypass it in automation. |
+| `policy-blocked` | Policy is not exact, current, or uniquely activated | Inspect the current config and tuple hashes, then perform a fresh operator activation if appropriate. |
+| `storage-integrity` | SQLite is busy, corrupt, unsupported, or migration failed | Preserve the bytes, inspect the typed error and path, and do not delete the database. |
+| `UnsupportedSqliteRuntime` | Linked SQLite is below `3.53.4` for a release open | Use an approved release runtime or remain in development mode for contract tests. |
+| Permission failure | User-data parent or database cannot be secured | Check ownership, parent permissions, and symbolic-link status; do not weaken access controls. |
 
-## Security and Privacy Checklist
+## Security and privacy checklist
 
-- [ ] The token exists only in `REPO_COM_DISCORD_TOKEN`, never in config, state,
-      logs, CI, fixtures, SBOMs, or documentation.
-- [ ] Only a dedicated bot identity is used; no user tokens or self-bots.
-- [ ] `/api/v10` is pinned; rate limits are read from response headers.
-- [ ] Setup and validation are read-only; no application, role, channel, or
-      permission mutation occurs.
-- [ ] `.repo-com.toml` contains no secrets and is safe to commit and review.
-- [ ] State is protected by user-only filesystem permissions and never uploaded
-      or synchronized.
-- [ ] Retention defaults are in place and purge requires a plan plus TTY
-      confirmation.
-- [ ] There is no telemetry, crash upload, or remote audit synchronization.
-- [ ] The residual risk is understood: **unencrypted** local state is readable by
-      anyone with local account access, and by backups and filesystem snapshots.
+- [ ] Keep `.repo-com.toml` free of tokens, passwords, private keys, authorization values, and credential-bearing URLs.
+- [ ] Treat the current workspace as offline: it contains no Discord client or token consumer.
+- [ ] Keep the state database and sidecars outside the repository and out of shared storage.
+- [ ] On Unix, verify owner-only directory and file permissions; on Windows, verify the inherited user-profile ACL.
+- [ ] Back up unencrypted state only to locations with equivalent access control.
+- [ ] Never upload state, audit records, or configuration to telemetry or synchronization services.
+- [ ] Treat policy activation as authority creation; require a real operator confirmation and do not infer approval from automation.
+- [ ] Keep future approvals, policy changes, retention, and purge revalidation requirements separate from the current policy gate.
+- [ ] Remember that no current implementation provides encryption at rest, automatic repair, or a human release sign-off.
 
-## Recovery and Support
+## Recovery and support
 
-- **Unknown delivery:** follow the read-only reconciliation path in
-  [ADR-007](adr/ADR-007-atomic-claim-and-nonce-reconciliation.md). Do not resend
-  while an outcome is unknown or unresolved.
-- **Corrupt or unsupported state:** inspect with read-only state verification. Do
-  not delete or recreate the database; preserve the bytes for diagnosis.
-- **Incident containment:** rotate the bot token and revoke the Discord
-  application's access; review the local audit trail.
-- **Documentation:** the product's own operator and security documentation is a
-  planned deliverable (`REL-DOC-1`): `docs/operator-guide.md`,
-  `docs/configuration.md`, `docs/discord-setup.md`, `docs/security-model.md`, and
-  `docs/threat-model.md`. Until then, this guide, the [user guide](user-guide.md),
-  the [Product Vision](PRD.md), and the [ADRs](adr/README.md) are the canonical
-  references.
+- **Unknown or stale policy:** inspect the activation snapshot and current hashes. A stale activation does not grant eligibility; deactivate it if needed and activate only after review.
+- **Ambiguous policy:** do not choose one row automatically. Resolve the duplicate or malformed active records under operator control.
+- **Corrupt or unsupported state:** preserve the database and sidecars, inspect the typed state error, and avoid deletion or recreation.
+- **Configuration mistake:** use the safe error code and field path; do not include the original scalar values in logs or issue reports.
+- **Future Discord setup:** the bot, token, permissions, and read-only setup behavior are planned surfaces documented in [ADR-006](adr/ADR-006-dedicated-discord-bot-rest-v10.md), not current executable behavior.
+
+## Further documentation
+
+- [Library Consumer Guide](user-guide.md)
+- [Architecture Decision Records](adr/README.md)
+- [Changelog](../CHANGELOG.md)
+- [Unreleased release notes](releases/unreleased.md)

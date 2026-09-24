@@ -2,44 +2,57 @@
 
 - **Status:** Accepted
 - **Date:** 2026-09-24
-- **Decision owners:** repo-com maintainers (canonical v1 plan)
+- **Decision owners:** repo-com maintainers
 
 ## Context
 
-Some pre-approved notification classes should send without per-message human
-approval, but a skill must never be able to widen its own permissions. Broad
-matching rules would let a skill send content the operator never authorized.
+A repository may want a narrow class of notifications to proceed without a new
+human approval for every message. Broad matching would let a skill widen its
+own authority, and an edited configuration must not silently inherit old
+permission.
 
 ## Decision
 
-Permit automatic sending only when one committed policy entry **exactly** equals
-the draft's event type, destination alias, and severity. A wildcard, prefix, or
-broader severity match is ineligible. Activate a policy only through an
-interactive TTY operator confirmation that records the canonical configuration
-hash and the policy-tuple hash in user state. Any relevant config or tuple change
-marks the activation stale automatically, and non-TTY callers may inspect status
-or deactivate but may never activate.
+Match only an exact tuple of event type, destination alias, and severity.
+Reject wildcards, prefixes, broader severity labels, duplicate configuration
+entries, and ambiguous active records. Bind an activation to the SHA-256 hash
+of the complete normalized configuration and the hash of the exact tuple.
+Changing either hash makes the activation stale.
+
+Activation requires an explicit TTY confirmation supplied by the caller.
+Read-only status and permission-reducing deactivation are available without a
+TTY. A policy decision is only one gate; the future send path must separately
+revalidate approval, destination, revision, safety, and delivery state.
+
+The current policy crate implements exact matching, canonical hashes, previews,
+TTY-confirmed activation, status classification, stale detection, ambiguity
+denial, idempotent replay, and deactivation. It does not send messages.
 
 ## Alternatives Considered
 
-- **Wildcard, prefix, or severity-threshold matching** — rejected: silently
-  expands authority beyond the reviewed intent.
-- **Environment-variable or config-file activation** — rejected: a skill or
-  edited config could enable sending without an operator action.
-- **Always require per-message approval** — retained as the default for all
-  non-policy messages.
+- **Wildcard, prefix, or severity-threshold matching** — rejected because it
+  expands authority beyond the reviewed tuple.
+- **Environment-variable or config-file activation** — rejected because a
+  skill or edited file could create authority without an operator action.
+- **Always require per-message approval** — retained as the future default for
+  messages without a current exact activation.
 
 ## Consequences
 
-- Benefits: a skill cannot widen its own send authority; authority is bound to
-  an exact, hashed tuple that the operator saw.
-- Costs and risks: operators must reactivate policy after any relevant config
-  edit; status output must clearly signal stale activations.
+- Benefits: a skill cannot widen policy authority; current eligibility is tied
+  to hashes and an explicit operator action.
+- Costs and risks: an operator must reactivate after relevant configuration
+  changes, and callers must display stale or ambiguous status clearly.
+- Policy eligibility must not be described as proof that a message was sent or
+  that final approval and delivery checks passed.
 
 ## Implementation References
 
-- [repository-configuration-and-state.md](../features/repository-configuration-and-state.md)
-  `POLICY-FR-01` through `POLICY-FR-03`, `POLICY-CON-01`
-- [PRD §10 Security and Privacy](../PRD.md#10-security-and-privacy) `RC-SEC-04`
-- Planned outputs: `crates/repo-com-policy/`
-- Owning task: `REPO-POLICY-1`
+- [`crates/repo-com-policy/src/hash.rs`](../../crates/repo-com-policy/src/hash.rs)
+- [`crates/repo-com-policy/src/evaluate.rs`](../../crates/repo-com-policy/src/evaluate.rs)
+- [`crates/repo-com-policy/src/activation.rs`](../../crates/repo-com-policy/src/activation.rs)
+- [`crates/repo-com-policy/tests/policy_contract.rs`](../../crates/repo-com-policy/tests/policy_contract.rs)
+- [`crates/repo-com-state/src/store.rs`](../../crates/repo-com-state/src/store.rs)
+  (policy activation persistence)
+- [Library Consumer Guide](../user-guide.md)
+- Future delivery gates: [`discord-delivery-and-reconciliation.md`](../features/discord-delivery-and-reconciliation.md)

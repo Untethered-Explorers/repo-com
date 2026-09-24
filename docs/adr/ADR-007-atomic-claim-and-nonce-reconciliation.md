@@ -2,7 +2,8 @@
 
 - **Status:** Accepted
 - **Date:** 2026-09-24
-- **Decision owners:** repo-com maintainers (canonical v1 plan)
+- **Decision owners:** repo-com maintainers
+- **Implementation status:** Partially implemented; state persistence and atomic claim primitives exist, but Discord delivery and reconciliation do not.
 
 ## Context
 

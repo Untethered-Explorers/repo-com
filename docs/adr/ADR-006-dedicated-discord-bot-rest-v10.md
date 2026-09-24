@@ -2,7 +2,8 @@
 
 - **Status:** Accepted
 - **Date:** 2026-09-24
-- **Decision owners:** repo-com maintainers (canonical v1 plan)
+- **Decision owners:** repo-com maintainers
+- **Implementation status:** Not implemented in the current workspace; no Discord client or token consumer exists.
 
 ## Context
 

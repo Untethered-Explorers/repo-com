@@ -2,7 +2,8 @@
 
 - **Status:** Accepted
 - **Date:** 2026-09-24
-- **Decision owners:** repo-com maintainers (canonical v1 plan)
+- **Decision owners:** repo-com maintainers
+- **Implementation status:** Partially implemented; retention settings are validated and stored, but retention sweeps and confirmed purge are not implemented.
 
 ## Context
 

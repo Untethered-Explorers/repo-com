@@ -1,93 +1,110 @@
 # repo-com (Unreleased)
 
-**Release date:** not yet released
+**Workspace version:** `0.1.0`
+**Release date:** not released
 
-> Draft release notes for the eventual v1.0.0. No release has been cut and no
-> installable artifact exists. These notes describe the intended release; they
-> are **not** a record of completed work and contain no validation evidence.
+The `1.0` version recorded in the Product Vision is a planned product target,
+not an authoritative release version. The current release source is the Cargo
+workspace manifest.
 
 ## Summary
 
-`repo-com` is a single-user, local command-line transport and approval workflow
-that lets a repository skill request a teammate's attention or decision through
-Discord, and lets the operator preview, approve, deliver, retrieve, and audit the
-exchange. It is Discord-only in v1. The primary success signal is a real
-teammate noticing an agent-originated request and replying to it.
+`repo-com` currently provides a tested Rust library foundation for a future
+single-user Discord communication workflow. The implemented crates cover
+versioned outcomes and safety categories, strict repository configuration,
+repository-scoped SQLite state, and exact operator-activated policy matching.
+There is no installable CLI, Discord client, or complete end-to-end transport in
+this release candidate.
 
 ## Highlights
 
-- One globally installed, versioned `repo-com` binary for Linux, macOS, and
-  Windows.
-- Strict, secret-free `.repo-com.toml` (schema version 1) with local destination
-  and mention aliases.
-- Immutable draft revisions with exact preview and exact-revision human approval.
-- Narrow, operator-activated exact-tuple auto-send policy.
-- Duplicate-safe delivery with an atomic claim and read-only reconciliation of
-  ambiguous outcomes.
-- On-demand, bounded retrieval of replies and mentions, treated as untrusted
-  data, with local acknowledgement and archival.
-- Validated threaded reply drafts that pass the same safety gates.
-- Bounded retention (30 days content / 365 days metadata) and operator-confirmed
-  local purge.
-- Versioned JSON protocol (version 1) for non-TTY skill callers.
-- Accessible, keyboard-operable, 80-column, `NO_COLOR`-aware terminal output.
+- Rust 2024 workspace pinned to Rust `1.98.1` with a committed `Cargo.lock`.
+- Protocol version 1 success/error values with four stable envelope fields and
+  separated stdout/stderr values.
+- Strict, secret-free schema-version-1 TOML configuration with bounded
+  repository-root discovery, alias resolution, and deterministic SHA-256 hashes.
+- Repository-scoped SQLite schema version 1 with forward-only migration, WAL,
+  foreign keys, a bounded busy timeout, user-only file handling on Unix, and
+  immutable audit/inbound/revision evidence.
+- Exact event-type, destination-alias, and severity policy matching with
+  TTY-confirmed activation, stale-hash invalidation, ambiguity denial, and
+  permission-reducing deactivation.
+- 42 passing contract tests across four current test binaries.
 
-## Compatibility and Prerequisites
+## Compatibility and prerequisites
 
-- **Platforms (planned):** Linux, macOS, and Windows release targets.
-- **Runtime database:** SQLite 3.53.4 or newer, statically linked in release
-  artifacts.
-- **Discord:** a dedicated least-privilege bot with `VIEW_CHANNEL`,
-  `SEND_MESSAGES`, and `READ_MESSAGE_HISTORY`.
-- **Local:** a user-level SQLite database; no server or daemon.
+- Rust `1.98.1` and Cargo are required for local development.
+- Release-oriented state opens require linked SQLite `3.53.4` or newer.
+- Development and contract-test opens can use the locally available SQLite
+  runtime and should not be treated as release-package evidence.
+- A Discord bot, token, workspace, network connection, and installed package
+  are not required for the current library tests.
 
-## Installation or Upgrade
+## Installation or upgrade
 
-No installation or upgrade path is available because no artifact has been
-published. The planned path is: download the platform artifact, verify its
-checksum, place the binary on `PATH`, confirm `repo-com --version`, set
-`REPO_COM_DISCORD_TOKEN`, add `.repo-com.toml`, and run the read-only setup
-check. There is no self-updater; upgrades are explicit, and database migrations
-are forward-only (back up the state file first).
+There is no published `repo-com` artifact or installation path. From a local
+checkout, use:
 
-## Known Limitations
+```bash
+cargo fmt --all -- --check
+cargo clippy --workspace --all-targets --all-features -- -D warnings
+cargo nextest run --no-tests fail
+```
 
-- The entire v1 contract is **unimplemented** as of this draft. No automated,
-  mocked, cross-platform, or live Discord validation has been produced.
-- v1 is Discord-only; email and other providers are planned for v2.
-- No encryption at rest or OS-keychain integration; local state is protected by
-  user-only filesystem permissions and is exposed to local account access,
-  backups, and filesystem snapshots.
-- No telemetry, read receipts, response analytics, or full-history search.
-- Automatic sending requires a separately activated exact policy; all other
-  messages require interactive approval.
-- No attachments, embeds, reactions, scheduled sends, or arbitrary destinations.
-- Live Discord acceptance is a dependent human review and has not been performed.
+There is no self-updater. Future schema changes are forward-only; preserve the
+state database before any future upgrade and do not assume an older binary can
+open a newer schema.
+
+## Known limitations
+
+- No `repo-com` executable, CLI command tree, terminal renderer, or installed
+  package exists yet.
+- No Discord REST v10 client, bot authentication, setup check, delivery,
+  reconciliation, inbound fetch, or reply transport exists yet.
+- Draft-content generation, secret scanning, exact approval, and final send
+  eligibility are not implemented.
+- Retention, purge, lifecycle inspection commands, cross-platform CI,
+  packaging, checksums, SBOM generation, and release automation are not
+  implemented.
+- Local state is not encrypted at rest. Unix file modes protect the current
+  implementation, while Windows relies on inherited user-profile ACLs; backups,
+  snapshots, and local-account compromise remain disclosure risks.
+- No live Discord compatibility, human UX/security acceptance, or release
+  sign-off has been performed.
 
 ## Validation
 
-**None.** Planned validation includes unit and property tests, storage and CLI
-integration tests, token-free WireMock Discord contracts pinned to REST v10,
-a mocked end-to-end workflow, cross-platform CI, advisory/license/secret gates,
-a warm-command performance budget, and human UX, security/privacy, live Discord,
-and release sign-off reviews. None of these has run because no implementation
-exists.
+The following checks passed for the current workspace:
 
-## Security and Privacy
+```bash
+cargo fmt --all -- --check
+cargo clippy --workspace --all-targets --all-features -- -D warnings
+cargo nextest run --no-tests fail
+```
 
-- Bot token only from `REPO_COM_DISCORD_TOKEN`, redacted and zeroized.
-- Dedicated bot identity only; no user-token impersonation.
-- No secrets in configuration or state; pre-send credential detection with an
-  audited, TTY-only exact-revision override (defense in depth, not complete DLP).
-- Inbound messages are untrusted and cannot grant permission or trigger sends.
-- Local audit trail with append-only evidence; retention is bounded and purge is
-  operator-confirmed and local-only.
-- No telemetry; residual risk of unencrypted local state is explicitly disclosed.
+The nextest run completed with **42 passed, 0 skipped** across
+`foundation_contract`, `config_contract`, `state_contract`, and
+`policy_contract`. These are automated library checks; they do not prove
+operator usability, live Discord behavior, packaging readiness, or release
+approval.
+
+## Security and privacy
+
+- Configuration examples contain synthetic IDs and no credentials.
+- Secret-like configuration keys and raw destination fields fail closed, and
+  typed errors do not echo offending values.
+- State is repository-scoped, transactional, and append-only for audit evidence.
+- The current crates do not read `REPO_COM_DISCORD_TOKEN`, call Discord, send
+  messages, fetch remote data, or provide telemetry.
+- Policy activation requires an explicitly supplied TTY confirmation; the
+  library never infers operator approval from a non-TTY caller.
+- State is not encrypted at rest. Copies must receive equivalent local access
+  controls.
 
 ## Documentation
 
-- [Product Vision](../PRD.md) and [feature specifications](../features/)
-- [User Guide](../user-guide.md)
+- [Library Consumer Guide](../user-guide.md)
 - [Administrator Guide](../admin-guide.md)
 - [Architecture Decision Records](../adr/README.md)
+- [Product Vision](../PRD.md) and [feature specifications](../features/)
 - [Changelog](../../CHANGELOG.md)

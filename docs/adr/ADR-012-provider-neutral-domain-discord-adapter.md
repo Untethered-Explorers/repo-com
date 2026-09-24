@@ -2,7 +2,8 @@
 
 - **Status:** Accepted
 - **Date:** 2026-09-24
-- **Decision owners:** repo-com maintainers (canonical v1 plan)
+- **Decision owners:** repo-com maintainers
+- **Implementation status:** Not implemented; the current workspace contains foundation, configuration, state, and policy libraries only.
 
 ## Context
 

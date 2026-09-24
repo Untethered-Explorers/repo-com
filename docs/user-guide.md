@@ -1,124 +1,168 @@
-# repo-com User Guide
+# Library Consumer Guide
 
-> **Status: pre-release specification (2026-09-24).** `repo-com` is specified
-> but **not implemented**. There is no installable binary, no tagged release, and
-> none of the commands below has been executed. This guide documents the
-> canonical v1 contract from [`docs/PRD.md`](PRD.md) and
-> [`docs/features/`](features/). Treat every command as **planned behavior**.
-> Exact subcommand names, flags, and JSON fields are **not yet frozen**; they
-> will be defined by task `REL-APP-1` and documented in the future
-> `docs/operator-guide.md`. See [Unreleased release notes](releases/unreleased.md).
+> **Status:** workspace `0.1.0`, pre-release. This guide documents the currently implemented Rust library surface. `repo-com` does not currently ship a CLI or perform Discord requests; planned command behavior is kept separate below.
 
 ## Overview
 
-`repo-com` is a single-user, local command-line transport and approval layer
-that lets a repository skill ask a teammate a focused question through Discord,
-then retrieve and reply to the answer on demand. It is not a general-purpose
-chat client: it keeps explicit destinations, exact-review approval, durable
-local state, and duplicate-safe delivery. See the
-[Product Vision](PRD.md) and the [ADRs](adr/README.md) for rationale.
+The current workspace provides four libraries for building the safety and state foundation of a repository communication workflow:
 
-Audiences:
+- protocol, error, stream, and explicit TTY contracts;
+- strict repository-local configuration discovery and validation;
+- repository-scoped transactional SQLite state; and
+- exact operator-activated policy matching.
 
-- **Repository skill** — a programmatic, non-TTY caller that creates drafts and
-  fetches inbound replies using the versioned JSON protocol.
-- **Operator** — the person who owns credentials, approves exact revisions, and
-  controls retention and purge.
-- **Teammate** — a Discord recipient who does not use `repo-com` and simply
-  replies in channel.
+The canonical future product is a single-user CLI for agent-originated Discord communication. The [Product Vision](PRD.md) and [feature specifications](features/) describe that planned product, but they are not current installation or runtime instructions.
 
-## Install and first use
+### Current audiences
 
-There is **no install path yet**. The planned release publishes versioned
-Linux, macOS, and Windows binaries with checksums and a CycloneDX SBOM. Until a
-release exists, no install, first-run, or `--version` output can be shown. The
-planned first-run sequence is:
+- **Library consumer:** a Rust developer embedding one of the current crates.
+- **Repository maintainer:** a developer reviewing configuration, state, and policy invariants.
+- **Operator:** the future human who will approve or activate actions. The current policy library accepts an explicit TTY confirmation supplied by its caller; it does not prompt or detect a terminal itself.
 
-1. Create a dedicated Discord bot and set `REPO_COM_DISCORD_TOKEN` in the
-   environment (see the [Administrator Guide](admin-guide.md)).
-2. Add a committed `.repo-com.toml` (see [Configuration](#configuration)).
-3. Run the read-only Discord setup check to validate identity, workspace
-   membership, channels, permissions, and mention access.
-4. Create a draft, preview it, approve the exact revision, and send.
+There is no current end-user command workflow. A teammate-facing Discord workflow and installed command surface are not available yet.
 
-## Core workflow
+## Build and verify
 
-The planned happy path, mirroring [PRD §6.1](PRD.md#61-core-loop):
+The repository pins Rust `1.98.1` in [`rust-toolchain.toml`](../rust-toolchain.toml). From the repository root:
 
-1. **Create a draft.** A skill or operator submits one draft targeting one
-   configured destination alias with text and bounded metadata (event type,
-   severity, optional repository label, branch, commit, optional inbound reply
-   reference). Broadcasts and multiple destinations are rejected.
-2. **Preview.** The exact resolved destination, final text, metadata, expiry,
-   approval or policy basis, secret-scan status, and a typed send decision are
-   shown without mutating state or Discord.
-3. **Approve or match policy.** In an interactive TTY, an operator approves the
-   exact revision, or a previously activated exact policy makes it eligible.
-   Approval is bound to the revision hash and expires at the earlier of draft
-   expiry or 15 minutes.
-4. **Send.** Delivery is claimed atomically, the message is sent through the
-   dedicated bot, and the outcome is recorded as `accepted`, `failed`,
-   `retry_wait`, or `unknown`.
-5. **Fetch replies.** A later invocation reads enabled inbound channels from an
-   explicit cursor or time boundary and stores replies and mentions as untrusted
-   items.
-6. **Reply.** The skill creates a validated threaded reply draft, which then
-   passes the same approval, policy, safety, and delivery gates as any draft.
-7. **Acknowledge or archive** inbound items locally, and inspect the audit trail.
+```bash
+cargo fmt --all -- --check
+cargo clippy --workspace --all-targets --all-features -- -D warnings
+cargo nextest run --no-tests fail
+```
 
-## Command reference
+The current nextest run executes 42 tests across `foundation_contract`, `config_contract`, `state_contract`, and `policy_contract`.
 
-The planned v1 command groups (exact syntax not frozen) are:
+## Core library workflow
 
-| Group | Purpose | Notable operations |
+The following sequence uses synthetic configuration from [`examples/repo-com.example.toml`](../examples/repo-com.example.toml). Paths and timestamps are supplied by the embedding application; the libraries do not read a Discord token or contact Discord.
+
+### 1. Parse and resolve configuration
+
+Use `ConfigResolver` or the `parse_config`/`resolve_path` functions. Discovery searches from the current directory through ancestors, stops at the nearest `.git` marker, and rejects zero or multiple `.repo-com.toml` candidates.
+
+```rust
+use std::path::Path;
+
+let resolved = repo_com_config::resolve_path(Path::new(
+    "examples/repo-com.example.toml",
+))?;
+
+let repository_id = resolved.config.repository_id.clone();
+let workspace_id = resolved.config.discord.workspace_id.clone();
+let config_hash = resolved.canonical_hash();
+```
+
+When repository-bounded discovery is used, an explicit path is normalized and must remain inside the supplied repository root. The resolver never creates a configuration file.
+
+### 2. Open and register local state
+
+`StateStore::open()` uses the OS user-data path. `open_path()` is useful for an explicit application-controlled path and for isolated tests. A file-backed store creates the parent and database with the platform's user-only protection model, enables foreign keys and WAL, applies the forward migration, and verifies the resulting schema.
+
+```rust
+use repo_com_state::{RepositoryInput, StateStore};
+
+let mut store = StateStore::open()?;
+store.upsert_repository(&RepositoryInput::new(
+    repository_id,
+    workspace_id,
+    config_hash,
+    "2026-01-01T00:00:00Z",
+))?;
+```
+
+Register the repository before writing repository-scoped state. All state records are keyed by the configured repository ID, so two repositories may safely use the same local database without cross-scope reads.
+
+### 3. Preview and activate one exact policy
+
+A policy is only eligible when its `event_type`, destination alias, and severity exactly equal the configured tuple. Wildcards, prefixes, broader severity labels, and duplicate configuration entries are rejected; ambiguous active rows deny evaluation rather than selecting one. Configuration and tuple hashes are canonical SHA-256 values.
+
+```rust
+use repo_com_foundation::TtyMode;
+use repo_com_policy::{
+    OperatorConfirmation, PolicyRegistry, PolicyTuple,
+};
+
+let mut registry = PolicyRegistry::new(&mut store);
+let tuple = PolicyTuple::from_entry(&resolved.config.auto_send[0]);
+let preview = registry.preview(&resolved.config, &tuple, None)?;
+
+let receipt = registry.activate(
+    &resolved.config,
+    &tuple,
+    OperatorConfirmation::confirmed(TtyMode::Tty)?,
+    "2026-01-01T00:00:01Z",
+)?;
+
+assert_eq!(preview.config_hash, receipt.config_hash);
+assert_eq!(preview.tuple_hash, receipt.tuple_hash);
+```
+
+`PolicyRegistry` never probes stdin or stdout. The caller must collect and pass the operator confirmation. A non-TTY caller receives `PolicyError::TtyRequired` before activation is attempted.
+
+### 4. Inspect, evaluate, and deactivate
+
+Status and evaluation are read-only and do not require a TTY. A matching activation is eligible only when its stored configuration and tuple hashes still match the current values.
+
+```rust
+let status = registry.status(&resolved.config, &tuple)?;
+let decision = registry.evaluate(&resolved.config, &tuple)?;
+
+let _policy_gate_satisfied = decision.is_eligible();
+
+let deactivated = registry.deactivate(
+    &resolved.config.repository_id,
+    &receipt.activation_id,
+    "2026-01-01T00:00:02Z",
+)?;
+assert!(!deactivated.active);
+```
+
+Deactivation is permission-reducing and does not require a TTY. A changed configuration, destination, mention list, retention value, or policy tuple makes an old activation stale. Multiple current matching activations produce an ambiguous result rather than expanding authority.
+
+### 5. Prepare a future protocol result
+
+The foundation crate creates protocol-version-1 values; it does not write to process streams. A future executable must own stdout and stderr and must keep the streams separate.
+
+```rust
+use repo_com_foundation::CommandOutcome;
+
+let outcome = CommandOutcome::success("configured");
+let streams = outcome.output_streams(None)?;
+assert_eq!(streams.stdout(), r#"{"protocol_version":1,"status":"success","data":"configured","error":null}"#);
+assert_eq!(streams.stderr(), "");
+```
+
+Machine output is exactly one JSON object with `protocol_version`, `status`, `data`, and `error`. `GlobalArgs::output_format` can be set to `OutputFormat::Json`; the foundation still does not write to process streams. Human output, prompts, and the final executable are not implemented yet.
+
+The current typed error categories and their deterministic exit codes are:
+
+| Category | Exit code |
+|---|---:|
+| `usage-schema` | 2 |
+| `operator-action-required` | 3 |
+| `policy-blocked` | 4 |
+| `authentication` | 5 |
+| `permission` | 6 |
+| `remote-conflict` | 7 |
+| `unknown-delivery` | 8 |
+| `storage-integrity` | 9 |
+| `connectivity-rate-limit` | 10 |
+| `internal-failure` | 1 |
+
+## Current feature reference
+
+| Area | Current API or behavior | Not implemented |
 |---|---|---|
-| `config` | Validate committed repository configuration | validate, show resolved aliases |
-| `policy` | Exact auto-send policy status and activation | status, activate (TTY only), deactivate |
-| `draft` | Immutable draft revisions | create, show, update, preview |
-| `send` | Approval and delivery | approve (TTY only), send |
-| `inbox` | Inbound retrieval and local lifecycle | fetch, show, acknowledge, archive |
-| `reply` | Create threaded reply drafts from stored items | create |
-| `audit` | Bounded local audit queries | query |
-| `state` | Read-only database and lifecycle verification | verify, inspect |
-| `purge` | Retention and purge planning/execution | plan, execute (TTY only) |
-
-Every command that requires operator confirmation returns an
-operator-action-required outcome instead of prompting in a non-TTY shell.
-Machine mode emits exactly one JSON protocol object on stdout; diagnostics go to
-stderr. See [ADR-003](adr/ADR-003-versioned-json-protocol.md).
-
-### Machine protocol (protocol version 1)
-
-Planned envelope fields: `protocol_version`, `status`, `data`, and `error`.
-Stable error categories map to process exit codes: usage/schema, approval or
-operator action required, policy blocked, authentication, permission, remote
-conflict, unknown delivery, storage integrity, connectivity/rate limit, and
-internal failure.
-
-### Delivery outcomes
-
-| Outcome | Meaning |
-|---|---|
-| `accepted` | Discord acknowledged the message; immutable remote message exists |
-| `failed` | Definitive rejection; no message created |
-| `retry_wait` | Proven pre-dispatch failure or HTTP 429; a bounded retry may follow |
-| `unknown` | Ambiguous post-dispatch result; blocked until reconciled, never auto-resent |
-| `accepted` (via reconciliation) | An `unknown` outcome was matched to an existing bot message |
-| `reconciled_absent` | An `unknown` outcome was proven absent within a five-minute, three-read window |
-| `unresolved` | Conflicting or insufficient evidence; remains blocked |
-
-`repo-com` guarantees **at most one remote message per immutable draft
-revision** via a local atomic claim before network I/O. This is duplicate-safe
-delivery with an idempotent local effect, **not** a transport-level exactly-once
-guarantee from Discord.
+| Foundation | `GlobalArgs`, `TtyMode`, `CommandOutcome`, `ErrorCategory`, `OutputStreams` | CLI parsing, process I/O, terminal rendering |
+| Configuration | `parse_config`, `ConfigResolver`, `ResolvedConfig`, canonical SHA-256 hash | Discord workspace discovery and remote validation |
+| State | `StateStore`, schema version 1, repository-scoped repositories, drafts, approvals, policy rows, delivery attempts, inbound records, audit rows, transactions | Remote delivery, inbound fetching, retention, purge, lifecycle commands |
+| Policy | `PolicyTuple`, `PolicyRegistry::preview`, `activate`, `status`, `evaluate`, `deactivate` | Final send eligibility, approval, and Discord transport |
+| Protocol | Protocol version 1 success/error envelopes and deterministic category exit codes | Executable output routing and handler wiring |
 
 ## Configuration
 
-A committed, non-secret `.repo-com.toml` (schema version 1) is discovered by
-searching the current directory and ancestors up to the repository root. Unknown
-keys, duplicate aliases, unsafe schema versions, cross-workspace references,
-invalid mention prefixes, and secret-like fields fail validation. The smallest
-valid example:
+The current schema is strict and versioned. All of these top-level sections are required:
 
 ```toml
 schema_version = 1
@@ -147,46 +191,52 @@ destination = "release"
 severity = "high"
 ```
 
-The bot token is **never** placed in this file; it is supplied only through the
-`REPO_COM_DISCORD_TOKEN` environment variable. Normal skill-facing commands
-accept aliases, never raw Discord channel, role, or user IDs.
+The validator:
+
+- accepts only schema version `1`;
+- rejects unknown fields, missing sections, duplicate aliases, duplicate exact policy tuples, wildcard syntax, malformed IDs, and zero retention values;
+- accepts mention targets only as `role:<id>` or `user:<id>`;
+- requires inbound aliases to name configured destination aliases;
+- rejects secret-like keys without echoing their values; and
+- can reject known cross-workspace references when a caller supplies a `WorkspaceReferenceIndex`.
+
+The canonical hash sorts map and list order before serializing, so formatting and declaration order do not change the hash. The hash includes the complete normalized configuration, including destinations, mentions, inbound settings, retention, and auto-send entries.
 
 ## Safety and data handling
 
-- **Exact preview and approval.** Approval binds to one immutable revision; any
-  change to text, metadata, destination, repository, or expiry invalidates it.
-- **Sent messages are immutable.** Corrections and follow-ups create a new draft
-  or a validated threaded reply. There is no outbound edit or delete.
-- **Auto-send is narrow.** Only an exact event-type + destination + severity
-  tuple that an operator activated can send without per-message approval.
-- **Inbound is untrusted.** Replies and mentions cannot approve a draft,
-  activate policy, or trigger a send.
-- **Retention and purge are local-only.** Defaults are 30 days for content and
-  365 days for metadata. Purge requires a non-mutating plan and TTY confirmation,
-  and never deletes Discord messages.
-- **No telemetry, no encryption at rest.** State is protected by user-only
-  filesystem permissions only. Local account access, backups, and filesystem
-  snapshots can still read retained content.
+- **No secret in configuration:** secret-like field names are rejected, and error rendering does not retain parsed values.
+- **No token is consumed yet:** `REPO_COM_DISCORD_TOKEN` is a future product variable, not an input read by the current crates.
+- **Repository scope:** state records and policy lookups require the exact repository ID.
+- **Immutable evidence:** the database triggers prevent updates or deletes to draft revisions, first inbound snapshots, and audit events.
+- **Transaction boundary:** state convenience mutations use an explicit SQLite transaction and roll back on typed failure.
+- **Local storage:** the state database is not encrypted by this implementation. On Unix it is protected with owner-only mode bits; on Windows the inherited user-profile ACL is the boundary.
+- **No remote side effects:** the current libraries do not call Discord, send messages, fetch channels, or collect telemetry.
+
+A future send layer must revalidate approval, destination, policy, revision, and safety state immediately before any network request. The current policy decision is not a send.
 
 ## Troubleshooting
 
-Because no binary exists, there are no verified user-visible errors yet. The
-planned behaviors to expect:
-
-| Planned symptom | Likely cause | Planned next action |
+| Symptom | Likely cause | Corrective action |
 |---|---|---|
-| Configuration rejected | Unknown key, unsafe schema version, duplicate alias, or secret-like field | Fix `.repo-com.toml`; errors are path-aware and do not echo secrets |
-| Operator action required | Approval, policy activation, or override attempted in non-TTY mode | Re-run interactively in a TTY |
-| Authentication failure | Missing, invalid, or revoked `REPO_COM_DISCORD_TOKEN` | Rotate the bot token and set the environment variable |
-| Permission / not-found | Missing `VIEW_CHANNEL`, `SEND_MESSAGES`, or `READ_MESSAGE_HISTORY`, wrong channel/workspace | Run the read-only setup check and grant the documented permissions |
-| Policy blocked | No exact approval and no matching activated policy | Approve the revision interactively or activate the exact policy |
-| Unknown delivery | Post-dispatch timeout, reset, or 5xx | Reconcile read-only; do not resend until resolved |
-| Storage integrity error | Failed retention sweep, corruption, or unsupported schema | Inspect with `state verify`; the database is never auto-deleted |
+| `config-not-found` | No `.repo-com.toml` exists between the start directory and repository root | Place one valid file in the repository or pass an explicit path within the root. |
+| `multiple-config-candidates` | More than one configuration exists in the bounded ancestor path | Remove or explicitly select the intended file. |
+| `unsupported-schema-version` | The document is not schema version 1 | Update the configuration to the supported schema. |
+| `secret-field` or `raw-destination-field` | A forbidden key or raw destination field was supplied | Move the value to the future operator-controlled environment boundary and use aliases in configuration. |
+| `operator-action-required` / `TtyRequired` | An authority-creating action was requested without a TTY confirmation | Re-run through an interactive caller that supplies `TtyMode::Tty`; automation must not self-approve. |
+| `policy-blocked` | The tuple is not configured, is stale, or is ambiguous | Inspect status, correct the exact tuple/configuration, or deactivate ambiguous rows before a fresh operator activation. |
+| `storage-integrity` | Migration, SQLite, lock, or runtime-boundary failure | Preserve the database, inspect the typed state error, and do not delete or recreate it automatically. |
+| JSON serialization failure | A caller supplied a payload that cannot be serialized | Use a serializable payload and keep diagnostics in the separate stderr value. |
+
+There is no current executable error display; library errors expose typed categories, paths, and safe messages according to their crate APIs.
+
+## Planned product workflow
+
+The intended command-level workflow—draft, preview, approve or activate policy, send, fetch, reply, acknowledge, audit, retain, and purge—remains specified in the [Product Vision](PRD.md) and [feature documents](features/). Do not treat those command names or transport claims as available in version `0.1.0`.
 
 ## Further help
 
-- [README](../README.md) — documentation index
-- [Product Vision](PRD.md) and [feature specifications](features/)
-- [Architecture Decision Records](adr/README.md)
 - [Administrator Guide](admin-guide.md)
-- [Changelog](../CHANGELOG.md) and [release notes](releases/)
+- [Architecture Decision Records](adr/README.md)
+- [Changelog](../CHANGELOG.md)
+- [Unreleased release notes](releases/unreleased.md)
+- [Configuration example](../examples/repo-com.example.toml)
