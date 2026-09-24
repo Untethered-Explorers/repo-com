@@ -1,7 +1,7 @@
 {
   "runId": "7acb4fd7-13bc-4f05-aa63-f810395058df",
   "startedAt": "2026-09-24T08:46:22.421Z",
-  "lastUpdatedAt": "2026-09-24T13:28:15.665Z",
+  "lastUpdatedAt": "2026-09-24T14:09:39.241Z",
   "manifestPath": "/home/mcfuzzysquirrel/Projects/repo-com/docs/EXECUTION-MANIFEST.json",
   "manifestVersion": "1.0",
   "harness": "opencode",
@@ -2583,10 +2583,39 @@
     },
     "DISC-DELIVERY-1": {
       "taskId": "DISC-DELIVERY-1",
-      "status": "pending",
+      "status": "complete",
       "ownerAgent": "delivery-engineer",
-      "attempt": 0,
-      "outputFiles": []
+      "attempt": 1,
+      "outputFiles": [
+        "crates/repo-com-delivery/Cargo.toml",
+        "crates/repo-com-delivery/src/lib.rs",
+        "crates/repo-com-delivery/src/model.rs",
+        "crates/repo-com-delivery/src/claim.rs",
+        "crates/repo-com-delivery/src/transition.rs",
+        "crates/repo-com-delivery/tests/delivery_contract.rs",
+        "Cargo.lock"
+      ],
+      "startedAt": "2026-09-24T13:28:15.715Z",
+      "attemptHistory": [
+        {
+          "attempt": 1,
+          "outcome": "passed",
+          "resultPath": "docs/artifacts/DISC-DELIVERY-1.2026-09-24T14-09-39-237Z.attempt-1.result.json"
+        }
+      ],
+      "completedAt": "2026-09-24T14:09:39.241Z",
+      "agentOutput": "Implemented `DISC-DELIVERY-1` with atomic, duplicate-safe delivery claims.\n\n### Validation\n- `cargo fmt --all -- --check` — passed\n- `cargo clippy --workspace --all-targets --all-features -- -D warnings` — passed\n- `cargo nextest run --no-tests fail -E 'binary_id(delivery_contract)'` — **10 passed**\n- 100-way concurrency test: one claim and one network permit; 99 duplicate callers received the same recorded attempt.\n- Actual Discord HTTP requests: **0**; this crate intentionally performs no network I/O.\n- Covered stale-input rollback, approval/policy revalidation, secret overrides, crash boundaries, terminal transitions, audit rollback, retry-wait recording, and immutable outbound behavior.\n\n### Files created or changed\n- `Cargo.lock`\n- `crates/repo-com-delivery/Cargo.toml`\n- `crates/repo-com-delivery/src/lib.rs`\n- `crates/repo-com-delivery/src/model.rs`\n- `crates/repo-com-delivery/src/claim.rs`\n- `crates/repo-com-delivery/src/transition.rs`\n- `crates/repo-com-delivery/tests/delivery_contract.rs`\n\n`docs/artifacts/DISC-DELIVERY-1.md` was not modified. Pre-existing changes under `docs/` were left untouched.\n\n```forge-result\n{\"summary\":\"Implemented atomic duplicate-safe delivery claims and verified all required checks; 10 delivery contract tests passed.\",\"unresolved\":[]}\n```\n## Objective\n- Implement `DISC-DELIVERY-1` as an atomic, duplicate-safe delivery state machine for one exact draft revision.\n- Follow `docs/artifacts/DISC-DELIVERY-1.md`, validate the focused crate, and report created/changed files without modifying artifacts or committing `docs/artifacts/`.\n\n## Important Details\n- Execution file was read first. Required outputs are the six files under `crates/repo-com-delivery/` plus `tests/delivery_contract.rs`; required validation commands are:\n  - `cargo fmt --all -- --check`\n  - `cargo clippy --workspace --all-targets --all-features -- -D warnings`\n  - `cargo nextest run --no-tests fail -E 'binary_id(delivery_contract)'`\n- Workspace uses Rust `1.98.1`, edition `2024`; package name is `delivery_contract`, library name is `repo_com_delivery`.\n- Scope excludes network I/O, retry timing, reconciliation implementation, outbound edit/delete APIs, and claim bypasses.\n- State schema’s native `delivery_attempts.state` only supports `unclaimed/claimed/accepted/failed/unknown`; logical `retry_wait` and future reconciled outcomes are reconstructed from transactional audit metadata.\n- Initial claims use the state repository’s uniqueness/claim primitive; claim audit IDs are scoped by repository, draft, revision, and attempt number as an additional concurrency boundary.\n- First-attempt request nonce equals the rendered content nonce; retry attempts use deterministic per-attempt nonce suffixes while retaining the same content nonce/content.\n- `ClaimPermit` is single-use and non-cloneable; only the transaction winner receives it, and it is returned only after commit.\n- Debug/audit projections redact exact content and do not store credentials or response bodies.\n- Pre-existing modifications remain in `docs/EXECUTION-AUDIT.jsonl` and `docs/WORKFLOW-STATE.json`; they were not changed. An accidental root `delivery/` directory was removed.\n- No real Discord request was made; concurrency/crash tests model the single permitted transport call locally.\n\n## Work State\n### Completed\n- Created:\n  - `crates/repo-com-delivery/Cargo.toml`\n  - `crates/repo-com-delivery/src/lib.rs`\n  - `crates/repo-com-delivery/src/model.rs`\n  - `crates/repo-com-delivery/src/claim.rs`\n  - `crates/repo-com-delivery/src/transition.rs`\n  - `crates/repo-com-delivery/tests/delivery_contract.rs`\n- `Cargo.lock` was updated automatically with the new package/dependencies.\n- Implemented:\n  - `DeliveryCoordinator::{claim, claim_input, claim_retry, claim_retry_input}`\n  - `DeliveryCoordinator::{record_transition, record_accepted, record_definitive_failed, record_retry_wait, record_unknown, read_attempt, read_revision_outcome}`\n  - `DeliveryState`, `DeliveryAttempt`, `ClaimRequest`, `ClaimInput`, `ClaimResult`, `ClaimPermit`, `TransitionRequest`, and `DeliveryError`\n  - Transactional current-state revalidation for repository/config hashes, immutable revision, expiry, destination/mention allowlist, exact approval or activated policy, and secret scan\n  - Transactional claim attempt plus matching audit event before permit issuance\n  - Duplicate/concurrent outcome replay with no second permit\n  - Accepted/failed/retry-wait/unknown transitions with attempt metadata and audit rollback\n  - Terminal-state protection, accepted-message-ID conflict detection, and explicit retry-wait claim boundary\n  - Approval evidence, policy activation, and secret-override hash revalidation\n- Contract coverage now includes:\n  - Valid claim and duplicate replay\n  - 100-way concurrency: one claim, one permit, one attempt, one claim audit\n  - Stale config, revision, expiry, destination, approval, activation, and scan cases\n  - Accepted/failed/retry-wait/unknown transitions\n  - Explicit retry only from `retry_wait`\n  - Crash before local completion with no second authorization\n  - Terminal replay and no second accepted audit\n  - Audit failure rollback\n  - Secret-finding policy blocking\n  - Exact secret override revalidation\n  - Source check rejecting edit/delete APIs\n- Last recorded `cargo fmt --all` completed; last recorded clippy and nextest runs passed with `10` delivery contract tests.\n\n### Active\n- Final exact validation and diff review remain.\n- Todo state:\n  - Inspection: completed\n  - Implementation: in progress/essentially complete\n  - Formatting/clippy/contract validation: pending final rerun\n  - Final diff/report: pending\n\n### Blocked\n- (none)\n\n## Next Move\n1. Run the three exact validation commands, especially `cargo fmt --all -- --check`, then inspect `git diff --check`, `git status --short`, and the final delivery-crate diff.\n2. Produce the final report with actual local results, clarify that no live HTTP request occurred, list the seven changed files, and include the required `forge-result` JSON with `unresolved: []`.\n\n## Relevant Files\n- `docs/artifacts/DISC-DELIVERY-1.md`: authoritative task contract; must remain unmodified.\n- `docs/features/discord-delivery-and-reconciliation.md`: delivery state machine and `DEL-FR-01`–`DEL-FR-07` requirements.\n- `docs/adr/ADR-007-atomic-claim-and-nonce-reconciliation.md`: claim-before-network and nonce/reconciliation decision.\n- `crates/repo-com-delivery/src/claim.rs`: transaction coordinator, revalidation, claim insertion, audit events, policy/approval/scan checks, and permit issuance.\n- `crates/repo-com-delivery/src/model.rs`: public delivery state, request, attempt, permit, and transition types.\n- `crates/repo-com-delivery/src/transition.rs`: post-claim state transitions and transactional audit/remote-ID checks.\n- `crates/repo-com-delivery/tests/delivery_contract.rs`: contract tests and observed acceptance evidence.\n- `crates/repo-com-state/migrations/0001_initial.sql`: existing repository-scoped tables and state/audit schema.\n- `Cargo.lock`: updated workspace lockfile for `delivery_contract`.\nContinue if you have next steps, or stop and ask for clarification if you are unsure how to proceed.\nNo further next steps remain for `DISC-DELIVERY-1`; implementation, validation, and reporting are complete. I’m stopping here. If you want to continue with `DISC-DELIVERY-2` (bounded retry and reconciliation), assign that task separately.\n",
+      "artifactId": "work-disc-delivery-1-001",
+      "inputArtifactIds": [
+        "work-disc-msg-1-001",
+        "work-draft-elig-1-001",
+        "work-repo-state-1-001",
+        "work-repo-audit-1-001",
+        "work-draft-model-1-001",
+        "work-draft-content-1-001",
+        "work-draft-secret-1-001",
+        "work-draft-approval-1-001"
+      ]
     },
     "DISC-DELIVERY-2": {
       "taskId": "DISC-DELIVERY-2",
