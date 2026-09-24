@@ -1,0 +1,24 @@
+schema_version = 1
+repository_id = "acme/widgets"
+
+[discord]
+workspace_id = "123456789012345678"
+
+[destinations.release]
+channel_id = "234567890123456789"
+allowed_mentions = ["oncall"]
+
+[mentions.oncall]
+target = "role:345678901234567890"
+
+[inbound.release]
+enabled = true
+
+[retention]
+content_days = 30
+metadata_days = 365
+
+[[auto_send]]
+event_type = "build_failed"
+destination = "release"
+severity = "high"

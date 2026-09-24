@@ -1,0 +1,21 @@
+[package]
+# The package name is the stable nextest binary ID selected by REPO-CFG-1.
+name = "config_contract"
+autotests = false
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "Strict repository-local configuration discovery and resolution for repo-com"
+
+[lib]
+name = "repo_com_config"
+path = "src/lib.rs"
+
+[dependencies]
+repo-com-foundation = { package = "foundation_contract", path = "../repo-com-foundation" }
+serde.workspace = true
+serde_json.workspace = true
+sha2 = "=0.10.9"
+toml = "=1.1.6"
