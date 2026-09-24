@@ -3,7 +3,7 @@
 ## Current State
 **Phase**: RELEASE-READINESS-1
 **Status**: In Progress
-**Last Updated**: 2026-09-24T19:26:46.020Z
+**Last Updated**: 2026-09-24T19:56:07.134Z
 **Run ID**: 7acb4fd7-13bc-4f05-aa63-f810395058df
 **Harness**: opencode
 **Execution Mode**: auto
@@ -55,6 +55,8 @@
   - Files: crates/repo-com-terminal-outbound/Cargo.toml, crates/repo-com-terminal-outbound/src/lib.rs, crates/repo-com-terminal-outbound/src/render.rs, crates/repo-com-terminal-outbound/src/preview.rs, crates/repo-com-terminal-outbound/src/prompt.rs, crates/repo-com-terminal-outbound/src/width.rs, crates/repo-com-terminal-outbound/tests/terminal_outbound_contract.rs, crates/repo-com-terminal-outbound/tests/snapshots/terminal_outbound_contract.snap, Cargo.lock
 - [x] Phase RELEASE-READINESS-1, Task REL-UI-OPS-1: Implement accessible operations terminal presentation (@cli-ux-engineer)
   - Files: crates/repo-com-terminal-operations/Cargo.toml, crates/repo-com-terminal-operations/src/lib.rs, crates/repo-com-terminal-operations/src/render.rs, crates/repo-com-terminal-operations/src/purge.rs, crates/repo-com-terminal-operations/src/prompt.rs, crates/repo-com-terminal-operations/src/width.rs, crates/repo-com-terminal-operations/tests/terminal_operations_contract.rs, crates/repo-com-terminal-operations/tests/snapshots/terminal_operations_contract.snap, Cargo.lock
+- [x] Phase RELEASE-READINESS-1, Task REL-MSG-CMD-1: Implement messaging command handlers (@cli-engineer)
+  - Files: crates/repo-com-cli-messaging/Cargo.toml, crates/repo-com-cli-messaging/src/lib.rs, crates/repo-com-cli-messaging/src/input.rs, crates/repo-com-cli-messaging/src/handlers/draft.rs, crates/repo-com-cli-messaging/src/handlers/send.rs, crates/repo-com-cli-messaging/src/handlers/inbox.rs, crates/repo-com-cli-messaging/src/handlers/reply.rs, crates/repo-com-cli-messaging/tests/cli_messaging_contract.rs, Cargo.lock, crates/repo-com-cli-messaging/src/handlers/mod.rs
 
 ## Current Task
 - None currently running

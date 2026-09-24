@@ -1,7 +1,7 @@
 {
   "runId": "7acb4fd7-13bc-4f05-aa63-f810395058df",
   "startedAt": "2026-09-24T08:46:22.421Z",
-  "lastUpdatedAt": "2026-09-24T19:26:46.015Z",
+  "lastUpdatedAt": "2026-09-24T19:56:07.130Z",
   "manifestPath": "/home/mcfuzzysquirrel/Projects/repo-com/docs/EXECUTION-MANIFEST.json",
   "manifestVersion": "1.0",
   "harness": "opencode",
@@ -2933,10 +2933,43 @@
     },
     "REL-MSG-CMD-1": {
       "taskId": "REL-MSG-CMD-1",
-      "status": "pending",
+      "status": "complete",
       "ownerAgent": "cli-engineer",
-      "attempt": 0,
-      "outputFiles": []
+      "attempt": 1,
+      "outputFiles": [
+        "crates/repo-com-cli-messaging/Cargo.toml",
+        "crates/repo-com-cli-messaging/src/lib.rs",
+        "crates/repo-com-cli-messaging/src/input.rs",
+        "crates/repo-com-cli-messaging/src/handlers/draft.rs",
+        "crates/repo-com-cli-messaging/src/handlers/send.rs",
+        "crates/repo-com-cli-messaging/src/handlers/inbox.rs",
+        "crates/repo-com-cli-messaging/src/handlers/reply.rs",
+        "crates/repo-com-cli-messaging/tests/cli_messaging_contract.rs",
+        "Cargo.lock",
+        "crates/repo-com-cli-messaging/src/handlers/mod.rs"
+      ],
+      "startedAt": "2026-09-24T19:26:46.072Z",
+      "attemptHistory": [
+        {
+          "attempt": 1,
+          "outcome": "passed",
+          "resultPath": "docs/artifacts/REL-MSG-CMD-1.2026-09-24T19-56-07-119Z.attempt-1.result.json"
+        }
+      ],
+      "completedAt": "2026-09-24T19:56:07.130Z",
+      "agentOutput": "## Objective\n- Implement `REL-MSG-CMD-1`: validated protocol-version-1 messaging command handlers for drafts, approval/override, send/setup-check, bounded inbox operations, and reply-draft creation.\n- Return the required result report and list created/changed files without modifying or committing `docs/artifacts/`.\n\n## Important Details\n- Owned outputs only: `crates/repo-com-cli-messaging/Cargo.toml`, `crates/repo-com-cli-messaging/src/lib.rs`, additional `src/**` handler modules, and `tests/cli_messaging_contract.rs`.\n- Package/test binary ID must be `cli_messaging_contract`; library name is `repo_com_cli_messaging`.\n- Preserve Rust `1.98.1`, edition 2024, workspace dependency pins, and existing domain safety logic.\n- Protocol must reject wrong versions and unknown envelope/input fields.\n- Require explicit repository/draft/revision/destination/inbound identifiers; no default destination.\n- Fetch requires exactly one cursor or RFC 3339 time boundary.\n- Inbound content must remain explicitly untrusted.\n- Non-TTY approval/secret override must return `operator-action-required` exit 3 without invoking UI/domain authority.\n- TTY approval/override must route exact-preview confirmation through `repo-com-terminal-outbound`, then delegate revalidation to domain services.\n- Machine mode must emit exactly one JSON object, including failures; diagnostics belong on stderr.\n- Human output must be labeled and fit the 80-column minimum.\n- Preexisting modified engine files—`docs/EXECUTION-AUDIT.jsonl` and `docs/WORKFLOW-STATE.json`—must not be touched.\n- Required validation is expected to include:\n  - `cargo fmt --all -- --check`\n  - `cargo clippy --workspace --all-targets --all-features -- -D warnings`\n  - `cargo nextest run --no-tests fail -E 'binary_id(cli_messaging_contract)'`\n\n## Work State\n### Completed\n- Read `docs/artifacts/REL-MSG-CMD-1.md` and relevant feature/contract documentation.\n- Loaded `implement-rust-contract-crate` guidance and task/test map.\n- Inspected existing foundation, config, draft, approval, eligibility, delivery, retry, Discord, inbound, reply, and outbound UI APIs.\n- Created:\n  - `crates/repo-com-cli-messaging/Cargo.toml`\n  - `crates/repo-com-cli-messaging/src/lib.rs`\n  - `crates/repo-com-cli-messaging/src/input.rs`\n  - `crates/repo-com-cli-messaging/src/handlers/mod.rs`\n  - `crates/repo-com-cli-messaging/src/handlers/draft.rs`\n  - `crates/repo-com-cli-messaging/src/handlers/send.rs`\n  - `crates/repo-com-cli-messaging/src/handlers/inbox.rs`\n  - `crates/repo-com-cli-messaging/src/handlers/reply.rs`\n  - `crates/repo-com-cli-messaging/tests/cli_messaging_contract.rs`\n- `cargo check -p cli_messaging_contract` passed before the contract test file was written.\n- Implemented strict parsing, typed ports, explicit configuration passing, TTY UI routing, one-object outcomes, and stream-separated diagnostics.\n\n### Active\n- The newly written `tests/cli_messaging_contract.rs` has not yet been compiled or run.\n- Expected cleanup: remove unused test imports and correct the reply JSON assertion from `\"draft-only\"` to serialized field `\"draft_only\"`.\n- Check whether `cargo check` added the new workspace package to `Cargo.lock`.\n\n### Blocked\n- None; test compilation may reveal API-shape or clippy issues.\n\n## Next Move\n1. Run `cargo test -p cli_messaging_contract --no-run`, then fix compile/runtime/test failures and unused imports.\n2. Run formatting, clippy, exact `cli_messaging_contract` nextest selection, inspect final diff/status, and produce the required report with changed files.\n\n## Relevant Files\n- `docs/artifacts/REL-MSG-CMD-1.md`: authoritative execution contract; read-only.\n- `crates/repo-com-cli-messaging/Cargo.toml`: package `cli_messaging_contract` and dependencies.\n- `crates/repo-com-cli-messaging/src/lib.rs`: aggregate ports, dispatcher, protocol output, and human rendering.\n- `crates/repo-com-cli-messaging/src/input.rs`: strict protocol envelope, command inputs, unknown-field rejection, and boundary validation.\n- `crates/repo-com-cli-messaging/src/handlers/draft.rs`: draft CRUD, preview, exact approval/override UI routing.\n- `crates/repo-com-cli-messaging/src/handlers/send.rs`: send and setup-check routing.\n- `crates/repo-com-cli-messaging/src/handlers/inbox.rs`: bounded fetch, untrusted result projection, and local lifecycle routing.\n- `crates/repo-com-cli-messaging/src/handlers/reply.rs`: reply-draft creation while preserving target authorization.\n- `crates/repo-com-cli-messaging/tests/cli_messaging_contract.rs`: newly added contract coverage; pending execution.\n- `crates/repo-com-terminal-outbound/`: exact-preview prompt and outbound presentation boundary.\n- `crates/repo-com-reply/`: reply target authorization and draft-only creation boundary.\n- `crates/repo-com-delivery/`, `crates/repo-com-send-eligibility/`, `crates/repo-com-discord-message/`: send safety and idempotency boundaries to delegate.\n- `crates/repo-com-inbox-fetch/`, `crates/repo-com-inbox-state/`: bounded untrusted inbound boundaries to delegate.\nContinue if you have next steps, or stop and ask for clarification if you are unsure how to proceed.\nImplemented `REL-MSG-CMD-1` as thin, validated messaging handlers.\n\n### Delivered\n- Strict protocol-version-1 JSON parsing with unknown-field rejection.\n- Explicit draft, revision, destination, cursor/time, and inbound identifiers.\n- TTY-bound approval and secret override through the outbound UI.\n- Fail-closed non-TTY behavior with exit category `operator-action-required`.\n- Delegated send, fetch, acknowledgement/archive, and reply authorization/safety rules.\n- Repository-scoped setup results and stable machine/human output.\n- Ten contract tests covering every messaging command, output streams, boundaries, and failure categories.\n- No network or live Discord action was performed; contract tests use fake services.\n\n### Validation\n- `cargo fmt --all -- --check` — passed.\n- `cargo clippy --workspace --all-targets --all-features -- -D warnings` — passed.\n- `cargo nextest run --no-tests fail -E 'binary_id(cli_messaging_contract)'` — **10 passed, 0 failed**.\n- Supplemental `cargo test -p cli_messaging_contract` — **10 passed**.\n\nObserved handler stream behavior:\n- Machine stdout: exactly one protocol-version-1 JSON object, including failures.\n- Diagnostics: stderr only when explicitly supplied.\n- Tested categories: usage/schema exit `2`, operator action required exit `3`, policy blocked exit `4`.\n\nThis crate has no executable, so no process-level `--version` output was available; that remains owned by `REL-APP-1`.\n\n### Files created\n- `Cargo.lock` — generated workspace entry for the new package.\n- `crates/repo-com-cli-messaging/Cargo.toml`\n- `crates/repo-com-cli-messaging/src/lib.rs`\n- `crates/repo-com-cli-messaging/src/input.rs`\n- `crates/repo-com-cli-messaging/src/handlers/mod.rs`\n- `crates/repo-com-cli-messaging/src/handlers/draft.rs`\n- `crates/repo-com-cli-messaging/src/handlers/send.rs`\n- `crates/repo-com-cli-messaging/src/handlers/inbox.rs`\n- `crates/repo-com-cli-messaging/src/handlers/reply.rs`\n- `crates/repo-com-cli-messaging/tests/cli_messaging_contract.rs`\n\nPre-existing modifications to `docs/EXECUTION-AUDIT.jsonl` and `docs/WORKFLOW-STATE.json` were not touched. No separate runtime-provided `forge-result` object was supplied.\n\n```forge-result\n{\"summary\":\"Implemented REL-MSG-CMD-1 messaging handlers and 10 contract tests; formatting, clippy, and the exact nextest selection passed.\",\"unresolved\":[]}\n```\n",
+      "artifactId": "work-rel-msg-cmd-1-001",
+      "inputArtifactIds": [
+        "work-plat-1-001",
+        "work-draft-elig-1-001",
+        "work-disc-client-1-001",
+        "work-disc-delivery-2-001",
+        "work-in-fetch-1-001",
+        "work-in-reply-1-001",
+        "work-rel-ui-out-1-001",
+        "work-priv-ret-2-001",
+        "work-priv-life-1-001"
+      ]
     },
     "REL-DOC-1": {
       "taskId": "REL-DOC-1",

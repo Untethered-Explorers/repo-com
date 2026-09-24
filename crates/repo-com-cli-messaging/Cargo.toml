@@ -1,0 +1,30 @@
+[package]
+# The package name is the stable nextest binary ID selected by REL-MSG-CMD-1.
+name = "cli_messaging_contract"
+autotests = false
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "Validated messaging command handlers for repo-com"
+
+[lib]
+name = "repo_com_cli_messaging"
+path = "src/lib.rs"
+
+[dependencies]
+repo-com-approval = { package = "approval_contract", path = "../repo-com-approval" }
+repo-com-config = { package = "config_contract", path = "../repo-com-config" }
+repo-com-discord-client = { package = "discord_client_contract", path = "../repo-com-discord-client" }
+repo-com-draft-model = { package = "draft_model_contract", path = "../repo-com-draft-model" }
+repo-com-foundation = { package = "foundation_contract", path = "../repo-com-foundation" }
+repo-com-inbox-fetch = { package = "inbox_fetch_contract", path = "../repo-com-inbox-fetch" }
+repo-com-reply = { package = "reply_contract", path = "../repo-com-reply" }
+repo-com-terminal-outbound = { package = "terminal_outbound_contract", path = "../repo-com-terminal-outbound" }
+serde.workspace = true
+serde_json.workspace = true
+sha2 = "=0.10.9"
+
+[dev-dependencies]
+tokio = { version = "=1.53.1", features = ["macros", "rt-multi-thread"] }

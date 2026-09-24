@@ -253,6 +253,24 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1c133bc6a41be0d194c306b5506d15e6feeea7b1d6604bd3f8310dfb2ca96486"
 
 [[package]]
+name = "cli_messaging_contract"
+version = "0.1.0"
+dependencies = [
+ "approval_contract",
+ "config_contract",
+ "discord_client_contract",
+ "draft_model_contract",
+ "foundation_contract",
+ "inbox_fetch_contract",
+ "reply_contract",
+ "serde",
+ "serde_json",
+ "sha2",
+ "terminal_outbound_contract",
+ "tokio",
+]
+
+[[package]]
 name = "cmake"
 version = "0.1.58"
 source = "registry+https://github.com/rust-lang/crates.io-index"
