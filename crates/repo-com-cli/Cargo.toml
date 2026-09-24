@@ -1,0 +1,52 @@
+[package]
+name = "command_routing_contract"
+autotests = false
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "Thin composed repo-com executable"
+
+[lib]
+name = "command_routing_contract"
+path = "src/lib.rs"
+
+[[bin]]
+name = "repo-com"
+path = "src/main.rs"
+
+[[test]]
+name = "command_routing_contract"
+path = "tests/command_routing_contract.rs"
+
+[dependencies]
+clap.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+rusqlite.workspace = true
+tokio = { version = "=1.53.1", features = ["macros", "rt-multi-thread"] }
+
+repo-com-approval = { package = "approval_contract", path = "../repo-com-approval" }
+repo-com-audit-query = { package = "audit_query_contract", path = "../repo-com-audit-query" }
+repo-com-cli-messaging = { package = "cli_messaging_contract", path = "../repo-com-cli-messaging" }
+repo-com-cli-operations = { package = "cli_operations_contract", path = "../repo-com-cli-operations" }
+repo-com-config = { package = "config_contract", path = "../repo-com-config" }
+repo-com-delivery = { package = "delivery_contract", path = "../repo-com-delivery" }
+repo-com-delivery-retry = { package = "delivery_retry_contract", path = "../repo-com-delivery-retry" }
+repo-com-discord-client = { package = "discord_client_contract", path = "../repo-com-discord-client" }
+repo-com-discord-message = { package = "discord_message_contract", path = "../repo-com-discord-message" }
+repo-com-draft-content = { package = "draft_content_contract", path = "../repo-com-draft-content" }
+repo-com-draft-model = { package = "draft_model_contract", path = "../repo-com-draft-model" }
+repo-com-draft-safety = { package = "draft_safety_contract", path = "../repo-com-draft-safety" }
+repo-com-foundation = { package = "foundation_contract", path = "../repo-com-foundation" }
+repo-com-inbox-fetch = { package = "inbox_fetch_contract", path = "../repo-com-inbox-fetch" }
+repo-com-inbox-state = { package = "inbox_state_contract", path = "../repo-com-inbox-state" }
+repo-com-lifecycle = { package = "lifecycle_contract", path = "../repo-com-lifecycle" }
+repo-com-policy = { package = "policy_contract", path = "../repo-com-policy" }
+repo-com-purge = { package = "purge_contract", path = "../repo-com-purge" }
+repo-com-reply = { package = "reply_contract", path = "../repo-com-reply" }
+repo-com-send-eligibility = { package = "send_eligibility_contract", path = "../repo-com-send-eligibility" }
+repo-com-state = { package = "state_contract", path = "../repo-com-state" }
+repo-com-terminal-operations = { package = "terminal_operations_contract", path = "../repo-com-terminal-operations" }
+repo-com-terminal-outbound = { package = "terminal_outbound_contract", path = "../repo-com-terminal-outbound" }

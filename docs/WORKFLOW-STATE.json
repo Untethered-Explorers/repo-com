@@ -1,12 +1,12 @@
 {
   "runId": "7acb4fd7-13bc-4f05-aa63-f810395058df",
   "startedAt": "2026-09-24T08:46:22.421Z",
-  "lastUpdatedAt": "2026-09-24T20:55:48.769Z",
+  "lastUpdatedAt": "2026-09-24T22:08:55.557Z",
   "manifestPath": "/home/mcfuzzysquirrel/Projects/repo-com/docs/EXECUTION-MANIFEST.json",
   "manifestVersion": "1.0",
   "harness": "opencode",
   "status": "running",
-  "currentPhase": "RELEASE-READINESS-1",
+  "currentPhase": "RELEASE-READINESS-2",
   "tasks": {
     "PLAT-1": {
       "taskId": "PLAT-1",
@@ -3046,10 +3046,41 @@
     },
     "REL-APP-1": {
       "taskId": "REL-APP-1",
-      "status": "pending",
+      "status": "complete",
       "ownerAgent": "cli-engineer",
-      "attempt": 0,
-      "outputFiles": []
+      "attempt": 2,
+      "outputFiles": [
+        "crates/repo-com-cli/Cargo.toml",
+        "crates/repo-com-cli/src/main.rs",
+        "crates/repo-com-cli/src/app.rs",
+        "crates/repo-com-cli/tests/command_routing_contract.rs",
+        "Cargo.lock",
+        "crates/repo-com-cli/src/lib.rs"
+      ],
+      "startedAt": "2026-09-24T21:55:53.892Z",
+      "attemptHistory": [
+        {
+          "attempt": 1,
+          "outcome": "failed",
+          "reason": "timed out after 3600000ms",
+          "resultPath": "docs/artifacts/REL-APP-1.2026-09-24T21-55-48-876Z.attempt-1.result.json"
+        },
+        {
+          "attempt": 2,
+          "outcome": "passed",
+          "resultPath": "docs/artifacts/REL-APP-1.2026-09-24T22-08-55-552Z.attempt-2.result.json"
+        }
+      ],
+      "completedAt": "2026-09-24T22:08:55.557Z",
+      "agentOutput": "Implemented REL-APP-1.\n\n### Files created or changed\n\n- `crates/repo-com-cli/Cargo.toml`\n- `crates/repo-com-cli/src/main.rs`\n- `crates/repo-com-cli/src/lib.rs`\n- `crates/repo-com-cli/src/app.rs`\n- `crates/repo-com-cli/tests/command_routing_contract.rs`\n- `Cargo.lock`\n\nThe execution artifact and `docs/artifacts/` were not modified. Pre-existing harness changes in `docs/EXECUTION-AUDIT.jsonl` and `docs/WORKFLOW-STATE.json` were left untouched.\n\n### Runtime evidence\n\n- Release build succeeded.\n- Installed-binary smoke test: `repo-com --version`\n  - stdout: `0.1.0\\n`\n  - stderr: empty\n  - exit: `0`\n- Machine mode emitted exactly one JSON object on stdout.\n- Diagnostics were emitted only on stderr.\n- Non-TTY approval returned `operator-action-required` without prompting or creating local state.\n- Stable foundation mapping verified for all categories: usage `2`, operator action `3`, policy `4`, authentication `5`, permission `6`, remote conflict `7`, unknown delivery `8`, storage integrity `9`, connectivity/rate limit `10`, internal failure `1`.\n\n### Required validation\n\n- `cargo fmt --all -- --check` — passed\n- `cargo clippy --workspace --all-targets --all-features -- -D warnings` — passed\n- `cargo nextest run --no-tests fail -E 'binary_id(command_routing_contract)'` — **10 passed, 0 skipped**\n\n```forge-result\n{\"summary\":\"Composed the repo-com executable, added strict routing and contract coverage, and verified all required checks.\",\"unresolved\":[]}\n```\n",
+      "artifactId": "work-rel-app-1-001",
+      "inputArtifactIds": [
+        "work-rel-ui-out-1-001",
+        "work-rel-ui-ops-1-001",
+        "work-rel-ops-cmd-1-001",
+        "work-rel-msg-cmd-1-001",
+        "work-rel-doc-1-001"
+      ]
     },
     "REL-PERF-1": {
       "taskId": "REL-PERF-1",

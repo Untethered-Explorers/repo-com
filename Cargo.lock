@@ -312,6 +312,40 @@ dependencies = [
 ]
 
 [[package]]
+name = "command_routing_contract"
+version = "0.1.0"
+dependencies = [
+ "approval_contract",
+ "audit_query_contract",
+ "clap",
+ "cli_messaging_contract",
+ "cli_operations_contract",
+ "config_contract",
+ "delivery_contract",
+ "delivery_retry_contract",
+ "discord_client_contract",
+ "discord_message_contract",
+ "draft_content_contract",
+ "draft_model_contract",
+ "draft_safety_contract",
+ "foundation_contract",
+ "inbox_fetch_contract",
+ "inbox_state_contract",
+ "lifecycle_contract",
+ "policy_contract",
+ "purge_contract",
+ "reply_contract",
+ "rusqlite",
+ "send_eligibility_contract",
+ "serde",
+ "serde_json",
+ "state_contract",
+ "terminal_operations_contract",
+ "terminal_outbound_contract",
+ "tokio",
+]
+
+[[package]]
 name = "config_contract"
 version = "0.1.0"
 dependencies = [

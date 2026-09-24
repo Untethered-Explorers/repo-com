@@ -1,9 +1,9 @@
 # Project Progress
 
 ## Current State
-**Phase**: RELEASE-READINESS-1
+**Phase**: RELEASE-READINESS-2
 **Status**: In Progress
-**Last Updated**: 2026-09-24T20:55:48.774Z
+**Last Updated**: 2026-09-24T22:08:55.560Z
 **Run ID**: 7acb4fd7-13bc-4f05-aa63-f810395058df
 **Harness**: opencode
 **Execution Mode**: auto
@@ -61,12 +61,13 @@
   - Files: crates/repo-com-cli-messaging/Cargo.toml, crates/repo-com-cli-messaging/src/lib.rs, crates/repo-com-cli-messaging/src/input.rs, crates/repo-com-cli-messaging/src/handlers/draft.rs, crates/repo-com-cli-messaging/src/handlers/send.rs, crates/repo-com-cli-messaging/src/handlers/inbox.rs, crates/repo-com-cli-messaging/src/handlers/reply.rs, crates/repo-com-cli-messaging/tests/cli_messaging_contract.rs, Cargo.lock, crates/repo-com-cli-messaging/src/handlers/mod.rs
 - [x] Phase RELEASE-READINESS-1, Task REL-DOC-1: Publish validated operator and security documentation (@technical-writer)
   - Files: crates/repo-com-doc-validation/Cargo.toml, crates/repo-com-doc-validation/src/lib.rs, crates/repo-com-doc-validation/tests/documentation_contract.rs, docs/configuration.md, docs/discord-setup.md, docs/operator-guide.md, docs/security-model.md, docs/threat-model.md, Cargo.lock
+- [x] Phase RELEASE-READINESS-2, Task REL-APP-1: Compose the final repo-com binary (@cli-engineer)
+  - Files: crates/repo-com-cli/Cargo.toml, crates/repo-com-cli/src/main.rs, crates/repo-com-cli/src/app.rs, crates/repo-com-cli/tests/command_routing_contract.rs, Cargo.lock, crates/repo-com-cli/src/lib.rs
 
 ## Current Task
 - None currently running
 
 ## Remaining
-- [ ] Phase RELEASE-READINESS-2: Phase 2: Thin Executable
 - [ ] Phase RELEASE-READINESS-3: Phase 3: Performance, Infrastructure, and End-to-End Evidence
 - [ ] Phase RELEASE-READINESS-4: Phase 4: Human UX and Security Rubrics
 - [ ] Phase RELEASE-READINESS-5: Phase 5: Human Live Discord Acceptance
