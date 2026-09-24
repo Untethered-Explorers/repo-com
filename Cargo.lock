@@ -213,6 +213,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "ci_policy_contract"
+version = "0.1.0"
+
+[[package]]
 name = "clap"
 version = "4.6.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"

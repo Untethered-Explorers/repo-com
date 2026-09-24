@@ -1,0 +1,14 @@
+[package]
+# The package name is the stable nextest binary ID selected by REL-CI-1.
+name = "ci_policy_contract"
+autotests = false
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "Machine-checkable cross-platform continuous-integration policy for repo-com"
+
+[lib]
+name = "repo_com_ci_policy"
+path = "src/lib.rs"

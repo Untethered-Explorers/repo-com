@@ -1,7 +1,7 @@
 {
   "runId": "7acb4fd7-13bc-4f05-aa63-f810395058df",
   "startedAt": "2026-09-24T08:46:22.421Z",
-  "lastUpdatedAt": "2026-09-24T22:25:33.681Z",
+  "lastUpdatedAt": "2026-09-24T23:17:21.037Z",
   "manifestPath": "/home/mcfuzzysquirrel/Projects/repo-com/docs/EXECUTION-MANIFEST.json",
   "manifestVersion": "1.0",
   "harness": "opencode",
@@ -3111,10 +3111,39 @@
     },
     "REL-CI-1": {
       "taskId": "REL-CI-1",
-      "status": "pending",
+      "status": "complete",
       "ownerAgent": "release-engineer",
-      "attempt": 0,
-      "outputFiles": []
+      "attempt": 2,
+      "outputFiles": [
+        "crates/repo-com-ci-policy/Cargo.toml",
+        "crates/repo-com-ci-policy/src/lib.rs",
+        "crates/repo-com-ci-policy/tests/ci_policy_contract.rs",
+        "deny.toml",
+        ".github/dependabot.yml",
+        ".github/workflows/ci.yml",
+        "Cargo.lock"
+      ],
+      "startedAt": "2026-09-24T23:03:48.265Z",
+      "attemptHistory": [
+        {
+          "attempt": 1,
+          "outcome": "failed",
+          "reason": "validation command failed (exit 127): actionlint .github/workflows/ci.yml\n/bin/sh: 1: actionlint: not found",
+          "resultPath": "docs/artifacts/REL-CI-1.2026-09-24T23-03-43-256Z.attempt-1.result.json"
+        },
+        {
+          "attempt": 2,
+          "outcome": "passed",
+          "resultPath": "docs/artifacts/REL-CI-1.2026-09-24T23-17-21-032Z.attempt-2.result.json"
+        }
+      ],
+      "completedAt": "2026-09-24T23:17:21.037Z",
+      "agentOutput": "Implemented and verified REL-CI-1. The prior rejection was addressed by installing the pinned `actionlint` 1.7.12 tool; the exact validation command now succeeds.\n\n### Required validation\n\n- `cargo fmt --all -- --check` — passed\n- `cargo clippy --workspace --all-targets --all-features -- -D warnings` — passed\n- `cargo nextest run --no-tests fail -E 'binary_id(ci_policy_contract)'` — passed, 7/7 tests\n- `actionlint .github/workflows/ci.yml` — passed with actionlint 1.7.12\n\n### Additional observed checks\n\n- `cargo deny check advisories bans licenses sources` — passed; one existing duplicate `base64` warning\n- `cargo audit --file Cargo.lock --deny warnings` — passed with no advisories\n- Gitleaks scans of all task-owned policy surfaces — no leaks found\n- Performance harness — 800 local samples passed; class p95 values were 6–9 ms\n- Binary smoke checks — `--version` returned `0.1.0`; `--help` passed\n- SQLite release-boundary probe — correctly rejected dynamically linked SQLite 3.45.1 because it is below 3.53.4. This task defines the fail-closed gate; it does not provide release packaging linkage.\n- Linux, macOS, and Windows targets are declared in the workflow. No cross-platform CI execution or release evidence is claimed.\n\n### Files created or changed\n\n- `Cargo.lock`\n- `crates/repo-com-ci-policy/Cargo.toml`\n- `crates/repo-com-ci-policy/src/lib.rs`\n- `crates/repo-com-ci-policy/tests/ci_policy_contract.rs`\n- `deny.toml`\n- `.github/dependabot.yml`\n- `.github/workflows/ci.yml`\n\n`docs/artifacts/REL-CI-1.md` was not modified.\n\n```forge-result\n{\"summary\":\"Implemented REL-CI-1 cross-platform CI policy and verified all four required commands; 7/7 policy tests and actionlint 1.7.12 pass.\",\"unresolved\":[]}\n```\n",
+      "artifactId": "work-rel-ci-1-001",
+      "inputArtifactIds": [
+        "work-rel-perf-1-001",
+        "work-rel-app-1-001"
+      ]
     },
     "REL-PACK-1": {
       "taskId": "REL-PACK-1",

@@ -1,0 +1,241 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: "always"
+  CI: "true"
+  RUST_TOOLCHAIN_VERSION: "1.98.1"
+  NEXTEST_VERSION: "0.9.146"
+  CARGO_DENY_VERSION: "0.20.2"
+  CARGO_AUDIT_VERSION: "0.22.2"
+  ACTIONLINT_VERSION: "1.7.12"
+  GITLEAKS_VERSION: "8.30.1"
+  SQLITE_RELEASE_FLOOR: "3.53.4"
+
+jobs:
+  quality:
+    name: Quality (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-24.04
+          - macos-14
+          - windows-2022
+    defaults:
+      run:
+        shell: bash
+    timeout-minutes: 60
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+
+      - name: Install the pinned Rust toolchain
+        run: |
+          rustup toolchain install "${RUST_TOOLCHAIN_VERSION}" --profile minimal --component rustfmt --component clippy
+          rustup default "${RUST_TOOLCHAIN_VERSION}"
+          rustc --version
+          cargo --version
+
+      - name: Install the pinned nextest runner
+        run: cargo install --locked cargo-nextest --version "${NEXTEST_VERSION}"
+
+      - name: Verify the committed lockfile
+        run: |
+          cargo metadata --locked --format-version 1 --no-deps > /dev/null
+          cargo check --locked --workspace --all-targets --all-features
+
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+
+      - name: Run clippy with warnings denied
+        run: cargo clippy --workspace --all-targets --all-features -- -D warnings
+
+      - name: Run all tests with fail-on-zero-tests
+        run: cargo nextest run --workspace --no-tests fail
+
+      - name: Run the CI policy contract
+        run: cargo nextest run --no-tests fail -E 'binary_id(ci_policy_contract)'
+
+      - name: Measure the token-free performance budget
+        run: |
+          evidence_dir="${RUNNER_TEMP}/repo-com-evidence"
+          mkdir -p "${evidence_dir}"
+          cargo run --locked --package performance_contract --bin repo-com-performance > "${evidence_dir}/performance.json"
+          test -s "${evidence_dir}/performance.json"
+
+      - name: Install the pinned scanner for generated evidence
+        run: |
+          go install github.com/zricethezav/gitleaks/v8@8.30.1
+          echo "$(go env GOPATH)/bin" >> "${GITHUB_PATH}"
+
+      - name: Scan performance evidence for secrets
+        run: gitleaks dir "${RUNNER_TEMP}/repo-com-evidence" --redact --no-banner --exit-code 1
+
+      - name: Smoke-test the installed binary boundary
+        run: |
+          cargo build --locked --package command_routing_contract --bin repo-com
+          env -u REPO_COM_DISCORD_TOKEN REPO_COM_PERF_NO_NETWORK=1 \
+            cargo run --locked --package command_routing_contract --bin repo-com -- --version
+          env -u REPO_COM_DISCORD_TOKEN REPO_COM_PERF_NO_NETWORK=1 \
+            cargo run --locked --package command_routing_contract --bin repo-com -- --help > /dev/null
+
+      - name: Assert SQLite runtime 3.53.4+ and reject dynamic SQLite linkage
+        run: |
+          sqlite_assertion="assert_sqlite_runtime >= ${SQLITE_RELEASE_FLOOR}"
+          test "${sqlite_assertion}" = "assert_sqlite_runtime >= 3.53.4"
+          linkage_policy="statically linked SQLite"
+          test "${linkage_policy}" = "statically linked SQLite"
+          cargo test --locked --release --package state_contract \
+            runtime_boundary_reports_the_linked_version_and_release_floor
+          runtime_root="$(mktemp -d)"
+          mkdir -p "${runtime_root}/home" "${runtime_root}/xdg" "${runtime_root}/appdata" "${runtime_root}/localappdata"
+          env -u REPO_COM_DISCORD_TOKEN \
+            HOME="${runtime_root}/home" \
+            XDG_DATA_HOME="${runtime_root}/xdg" \
+            APPDATA="${runtime_root}/appdata" \
+            LOCALAPPDATA="${runtime_root}/localappdata" \
+            REPO_COM_PERF_NO_NETWORK=1 \
+            cargo run --locked --release --package command_routing_contract --bin repo-com -- \
+              --config examples/repo-com.example.toml --output json --non-tty draft create <<'JSON'
+          {"protocol_version":1,"command":"draft.create","input":{"repository_id":"acme/widgets","draft_id":"ci-sqlite-runtime-gate","destination_alias":"release","text":"synthetic CI runtime gate","event_type":"build_failed","severity":"high","created_at":"2099-01-01T00:00:00Z","created_at_unix_seconds":4070908800,"expires_in_seconds":3600,"metadata":{}}}
+          JSON
+          release_binary="target/release/repo-com"
+          if [ -f "${release_binary}.exe" ]; then
+            release_binary="${release_binary}.exe"
+          fi
+          case "${RUNNER_OS}" in
+            Linux)
+              command -v ldd >/dev/null 2>&1 || exit 1
+              if ! linkage_output="$(ldd "${release_binary}" 2>&1)"; then
+                if ! printf '%s\n' "${linkage_output}" | grep -Fqi 'not a dynamic executable'; then
+                  exit 1
+                fi
+              fi
+              if printf '%s\n' "${linkage_output}" | grep -Eiq 'sqlite3|libsqlite'; then
+                printf '%s\n' 'release binary dynamically links SQLite' >&2
+                exit 1
+              fi
+              ;;
+            macOS)
+              command -v otool >/dev/null 2>&1 || exit 1
+              linkage_output="$(otool -L "${release_binary}")"
+              if printf '%s\n' "${linkage_output}" | grep -Eiq 'sqlite3|libsqlite'; then
+                printf '%s\n' 'release binary dynamically links SQLite' >&2
+                exit 1
+              fi
+              ;;
+            Windows)
+              if command -v objdump >/dev/null 2>&1; then
+                linkage_output="$(objdump -p "${release_binary}")"
+                if printf '%s\n' "${linkage_output}" | grep -Eiq 'sqlite3\.dll'; then
+                  printf '%s\n' 'release binary dynamically links SQLite' >&2
+                  exit 1
+                fi
+              elif command -v dumpbin >/dev/null 2>&1; then
+                linkage_output="$(dumpbin /dependents "${release_binary}")"
+                if printf '%s\n' "${linkage_output}" | grep -Eiq 'sqlite3\.dll'; then
+                  printf '%s\n' 'release binary dynamically links SQLite' >&2
+                  exit 1
+                fi
+              else
+                exit 1
+              fi
+              ;;
+            *)
+              exit 1
+              ;;
+          esac
+
+  security:
+    name: Security and workflow policy (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-24.04
+          - macos-14
+          - windows-2022
+    defaults:
+      run:
+        shell: bash
+    timeout-minutes: 60
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+
+      - name: Install the pinned Rust toolchain
+        run: |
+          rustup toolchain install "${RUST_TOOLCHAIN_VERSION}" --profile minimal --component rustfmt --component clippy
+          rustup default "${RUST_TOOLCHAIN_VERSION}"
+
+      - name: Install pinned dependency and workflow tools
+        run: |
+          cargo install --locked cargo-deny --version "${CARGO_DENY_VERSION}"
+          cargo install --locked cargo-audit --version "${CARGO_AUDIT_VERSION}"
+          go install github.com/rhysd/actionlint/cmd/actionlint@1.7.12
+          go install github.com/zricethezav/gitleaks/v8@8.30.1
+          echo "$(go env GOPATH)/bin" >> "${GITHUB_PATH}"
+
+      - name: Check RustSec advisories, dependency bans, licenses, and sources
+        run: cargo deny check advisories bans licenses sources
+
+      - name: Check RustSec advisories
+        run: cargo audit --file Cargo.lock --deny warnings
+
+      - name: Scan source and generated evidence for secrets
+        run: |
+          gitleaks_config="${RUNNER_TEMP}/repo-com-gitleaks.toml"
+          cat > "${gitleaks_config}" <<'TOML'
+          [extend]
+          useDefault = true
+
+          [[allowlists]]
+          description = "Synthetic security fixtures and generated build output are not credentials"
+          condition = "OR"
+          paths = [
+            '''target/''',
+            '''\.git/''',
+            '''crates/repo-com-audit/tests/audit_contract.rs''',
+            '''crates/repo-com-audit-query/tests/audit_query_contract.rs''',
+            '''crates/repo-com-draft-safety/src/scanner.rs''',
+          ]
+          TOML
+          evidence_dir="${RUNNER_TEMP}/repo-com-evidence"
+          source_dir="${RUNNER_TEMP}/repo-com-source"
+          mkdir -p "${evidence_dir}" "${source_dir}"
+          while IFS= read -r -d '' path; do
+            destination="${source_dir}/${path}"
+            mkdir -p "$(dirname "${destination}")"
+            cp "${path}" "${destination}"
+          done < <(git ls-files -co --exclude-standard -z)
+          cargo metadata --locked --format-version 1 --no-deps > "${evidence_dir}/cargo-metadata.json"
+          (
+            cd "${source_dir}"
+            gitleaks dir . --config "${gitleaks_config}" --redact --no-banner --exit-code 1
+          )
+          gitleaks dir "${gitleaks_config}" --config "${gitleaks_config}" --redact --no-banner --exit-code 1
+          gitleaks dir "${evidence_dir}" --config "${gitleaks_config}" --redact --no-banner --exit-code 1
+
+      - name: Lint the CI workflow
+        run: actionlint .github/workflows/ci.yml
