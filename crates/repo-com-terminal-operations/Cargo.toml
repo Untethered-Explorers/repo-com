@@ -1,0 +1,27 @@
+[package]
+# The package name is the stable nextest binary ID selected by REL-UI-OPS-1.
+name = "terminal_operations_contract"
+autotests = false
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "Deterministic accessible operations terminal presentation for repo-com"
+
+[lib]
+name = "repo_com_terminal_operations"
+path = "src/lib.rs"
+
+[dependencies]
+repo-com-audit-query = { package = "audit_query_contract", path = "../repo-com-audit-query" }
+repo-com-config = { package = "config_contract", path = "../repo-com-config" }
+repo-com-foundation = { package = "foundation_contract", path = "../repo-com-foundation" }
+repo-com-inbox-fetch = { package = "inbox_fetch_contract", path = "../repo-com-inbox-fetch" }
+repo-com-inbox-state = { package = "inbox_state_contract", path = "../repo-com-inbox-state" }
+repo-com-lifecycle = { package = "lifecycle_contract", path = "../repo-com-lifecycle" }
+repo-com-policy = { package = "policy_contract", path = "../repo-com-policy" }
+repo-com-purge = { package = "purge_contract", path = "../repo-com-purge" }
+repo-com-retention = { package = "retention_contract", path = "../repo-com-retention" }
+serde.workspace = true
+serde_json.workspace = true

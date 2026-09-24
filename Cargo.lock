@@ -1788,6 +1788,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "terminal_operations_contract"
+version = "0.1.0"
+dependencies = [
+ "audit_query_contract",
+ "config_contract",
+ "foundation_contract",
+ "inbox_fetch_contract",
+ "inbox_state_contract",
+ "lifecycle_contract",
+ "policy_contract",
+ "purge_contract",
+ "retention_contract",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "terminal_outbound_contract"
 version = "0.1.0"
 dependencies = [
