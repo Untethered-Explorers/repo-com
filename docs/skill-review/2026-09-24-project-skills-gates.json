@@ -1,0 +1,145 @@
+{
+  "version": 1,
+  "stage": "project-skills",
+  "mode": "headless",
+  "date": "2026-09-24",
+  "handoff": {
+    "path": "docs/SKILL-CANDIDATES.json",
+    "version": 1,
+    "candidateCount": 10,
+    "createCount": 9,
+    "omitCount": 1,
+    "omitted": [
+      "run-rust-task-checks"
+    ]
+  },
+  "affectedPackages": [
+    "implement-rust-contract-crate",
+    "model-repository-scoped-state",
+    "discord-v10-wiremock-testing",
+    "guard-exact-tty-confirmation",
+    "render-accessible-terminal-flow",
+    "reconcile-unknown-discord-delivery",
+    "validate-cross-platform-release-gates",
+    "validate-canonical-product-documentation",
+    "separate-automated-and-human-evidence"
+  ],
+  "gates": {
+    "structural": {
+      "command": "node .opencode/skills/forge-build-agent-team/scripts/validate-team.mjs --skills-only --fail-structural --min-axis 2 --fail-axis-below with nine --skill-file arguments",
+      "exitCode": 0,
+      "status": "passed",
+      "filesChecked": 9,
+      "structuralIssues": []
+    },
+    "skillReview": {
+      "command": "npm run skill-review -- --files <nine affected SKILL.md paths> --provider stdout --min-score 2 --fail-below --min-axis 2 --fail-axis-below --fail-structural",
+      "exitCode": 0,
+      "status": "passed",
+      "skillsAudited": 9,
+      "minimumAxis": 2,
+      "structuralIssues": []
+    }
+  },
+  "heuristicScores": {
+    "implement-rust-contract-crate": {
+      "contextEconomy": 3,
+      "gotchasCoverage": 3,
+      "proceduralClarity": 3,
+      "progressiveDisclosure": 3,
+      "calibration": 2,
+      "validation": 3,
+      "overall": 2.8,
+      "reviewerStyleProxy": 2
+    },
+    "model-repository-scoped-state": {
+      "contextEconomy": 3,
+      "gotchasCoverage": 3,
+      "proceduralClarity": 3,
+      "progressiveDisclosure": 3,
+      "calibration": 2,
+      "validation": 3,
+      "overall": 2.8,
+      "reviewerStyleProxy": 2
+    },
+    "discord-v10-wiremock-testing": {
+      "contextEconomy": 3,
+      "gotchasCoverage": 3,
+      "proceduralClarity": 3,
+      "progressiveDisclosure": 3,
+      "calibration": 2,
+      "validation": 3,
+      "overall": 2.8,
+      "reviewerStyleProxy": 2
+    },
+    "guard-exact-tty-confirmation": {
+      "contextEconomy": 3,
+      "gotchasCoverage": 3,
+      "proceduralClarity": 3,
+      "progressiveDisclosure": 3,
+      "calibration": 3,
+      "validation": 3,
+      "overall": 3.0,
+      "reviewerStyleProxy": 2
+    },
+    "render-accessible-terminal-flow": {
+      "contextEconomy": 3,
+      "gotchasCoverage": 2,
+      "proceduralClarity": 3,
+      "progressiveDisclosure": 3,
+      "calibration": 2,
+      "validation": 3,
+      "overall": 2.7,
+      "reviewerStyleProxy": 2
+    },
+    "reconcile-unknown-discord-delivery": {
+      "contextEconomy": 3,
+      "gotchasCoverage": 3,
+      "proceduralClarity": 3,
+      "progressiveDisclosure": 3,
+      "calibration": 3,
+      "validation": 3,
+      "overall": 3.0,
+      "reviewerStyleProxy": 2
+    },
+    "validate-cross-platform-release-gates": {
+      "contextEconomy": 3,
+      "gotchasCoverage": 2,
+      "proceduralClarity": 3,
+      "progressiveDisclosure": 3,
+      "calibration": 2,
+      "validation": 3,
+      "overall": 2.7,
+      "reviewerStyleProxy": 2
+    },
+    "validate-canonical-product-documentation": {
+      "contextEconomy": 3,
+      "gotchasCoverage": 3,
+      "proceduralClarity": 3,
+      "progressiveDisclosure": 3,
+      "calibration": 2,
+      "validation": 3,
+      "overall": 2.8,
+      "reviewerStyleProxy": 2
+    },
+    "separate-automated-and-human-evidence": {
+      "contextEconomy": 3,
+      "gotchasCoverage": 3,
+      "proceduralClarity": 3,
+      "progressiveDisclosure": 3,
+      "calibration": 2,
+      "validation": 3,
+      "overall": 2.8,
+      "reviewerStyleProxy": 2
+    }
+  },
+  "behavioralEvidence": {
+    "handoffPreflight": "passed: version 1, 9 create candidates, 1 omit candidate",
+    "packagePreflight": "passed: every non-omit candidate has SKILL.md and a references directory; every frontmatter name matches its parent directory",
+    "omitPreflight": "passed: no run-rust-task-checks package was created",
+    "protectedInputCheck": "passed: docs/SKILL-CANDIDATES.json, docs/PRD.md, and docs/features have no working-tree diff from this stage",
+    "agentBoundary": "no agent files were edited by this stage",
+    "manifestBoundary": "docs/EXECUTION-MANIFEST.json is absent and was not created",
+    "productEvidenceBoundary": "no product implementation, human review, live Discord, or release evidence was claimed"
+  }
+}

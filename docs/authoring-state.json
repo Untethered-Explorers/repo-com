@@ -66,9 +66,41 @@
       "completedAt": "2026-09-24T08:08:05.118Z"
     },
     "skills": {
-      "status": "pending",
+      "status": "complete",
       "inputFingerprint": "03d3a3969f8a201bf2829f76489ec29fa0fc801b0b5155ae8488c6dbeb526255",
-      "outputs": []
+      "outputs": [
+        ".opencode/skills/implement-rust-contract-crate/SKILL.md",
+        ".opencode/skills/model-repository-scoped-state/SKILL.md",
+        ".opencode/skills/discord-v10-wiremock-testing/SKILL.md",
+        ".opencode/skills/guard-exact-tty-confirmation/SKILL.md",
+        ".opencode/skills/render-accessible-terminal-flow/SKILL.md",
+        ".opencode/skills/reconcile-unknown-discord-delivery/SKILL.md",
+        ".opencode/skills/validate-cross-platform-release-gates/SKILL.md",
+        ".opencode/skills/validate-canonical-product-documentation/SKILL.md",
+        ".opencode/skills/separate-automated-and-human-evidence/SKILL.md"
+      ],
+      "startedAt": "2026-09-24T08:14:41.894Z",
+      "invocation": {
+        "runner": "opencode",
+        "requestedModel": "opencode/space-bunny-free",
+        "source": "project",
+        "effectiveModel": "opencode/space-bunny-free",
+        "inventoryVerifiedAt": "2026-09-24T08:12:08.000Z",
+        "runnerSource": "inherit",
+        "argv": [
+          "run",
+          "--auto",
+          "--dir",
+          "/home/mcfuzzysquirrel/Projects/repo-com",
+          "--model",
+          "opencode/space-bunny-free",
+          "/forge-build-project-skills Consume docs/SKILL-CANDIDATES.json. Use .opencode/skills/ and .opencode/agents/. Create or extend only planned skills, reuse unchanged packages, honor omit decisions, and run structural and per-axis review gates. Do not regenerate the team, modify its ownership or handoff, compile a manifest, or start the build. Headless: proceed with authorized defaults."
+        ],
+        "skill": "forge-build-project-skills"
+      },
+      "outputFingerprint": "c54c3bbc761b8e2cbe91146383c1337c8aea8d18f60d8e73847cf2695514e7f2",
+      "completedAt": "2026-09-24T08:32:09.122Z",
+      "noSkillsRequired": false
     }
   }
 }

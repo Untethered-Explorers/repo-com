@@ -1,141 +1,61 @@
 {
+  "schema_version": 2,
+  "last_verified": "2026-09-24T08:12:08.000Z",
+  "scope": "opencode",
   "opencode_cli": {
     "available": true,
-    "last_verified": "2026-09-24T06:57:42.226Z",
+    "command": "opencode models opencode",
     "models": [
       {
-        "id": "opencode/big-pickle"
+        "id": "opencode/big-pickle",
+        "normalized": true,
+        "capabilities": "unverified"
       },
       {
-        "id": "opencode/ling-3.0-flash-fin-free"
+        "id": "opencode/ling-3.0-flash-fin-free",
+        "normalized": true,
+        "capabilities": "unverified"
       },
       {
-        "id": "opencode/mimo-v2.6-flash-free"
+        "id": "opencode/mimo-v2.6-flash-free",
+        "normalized": true,
+        "capabilities": "unverified"
       },
       {
-        "id": "opencode/muse-spark-1.2-contributor-free"
+        "id": "opencode/muse-spark-1.2-contributor-free",
+        "normalized": true,
+        "capabilities": "unverified"
       },
       {
-        "id": "opencode/muse-spark-1.3-contributor-free"
+        "id": "opencode/muse-spark-1.3-contributor-free",
+        "normalized": true,
+        "capabilities": "unverified"
       },
       {
-        "id": "opencode/nemotron-3-ultra-free"
+        "id": "opencode/nemotron-3-ultra-free",
+        "normalized": true,
+        "capabilities": "unverified"
       },
       {
-        "id": "opencode/nemotron-3.5-lightning-free"
+        "id": "opencode/nemotron-3.5-lightning-free",
+        "normalized": true,
+        "capabilities": "unverified"
       },
       {
-        "id": "opencode/space-bunny-free"
-      },
-      {
-        "id": "deepseek/deepseek-flash"
-      },
-      {
-        "id": "deepseek/deepseek-v4-pro"
-      },
-      {
-        "id": "github-copilot/claude-fable-5"
-      },
-      {
-        "id": "github-copilot/claude-fable-5.1"
-      },
-      {
-        "id": "github-copilot/claude-haiku-4.5"
-      },
-      {
-        "id": "github-copilot/claude-opus-4.7"
-      },
-      {
-        "id": "github-copilot/claude-opus-4.7-fast"
-      },
-      {
-        "id": "github-copilot/claude-opus-4.8"
-      },
-      {
-        "id": "github-copilot/claude-opus-4.8-fast"
-      },
-      {
-        "id": "github-copilot/claude-opus-5"
-      },
-      {
-        "id": "github-copilot/claude-opus-5.5"
-      },
-      {
-        "id": "github-copilot/claude-sonnet-5"
-      },
-      {
-        "id": "github-copilot/gemini-3.5-flash"
-      },
-      {
-        "id": "github-copilot/gemini-3.6-flash"
-      },
-      {
-        "id": "github-copilot/gemini-3.7-flash"
-      },
-      {
-        "id": "github-copilot/gemini-3.8-flash"
-      },
-      {
-        "id": "github-copilot/gpt-5-mini"
-      },
-      {
-        "id": "github-copilot/gpt-5.3-codex"
-      },
-      {
-        "id": "github-copilot/gpt-5.4"
-      },
-      {
-        "id": "github-copilot/gpt-5.4-mini"
-      },
-      {
-        "id": "github-copilot/gpt-5.5"
-      },
-      {
-        "id": "github-copilot/gpt-5.6-luna"
-      },
-      {
-        "id": "github-copilot/gpt-5.6-sol"
-      },
-      {
-        "id": "github-copilot/gpt-5.6-terra"
-      },
-      {
-        "id": "github-copilot/gpt-6-astra"
-      },
-      {
-        "id": "github-copilot/gpt-6-luna"
-      },
-      {
-        "id": "github-copilot/gpt-6-sol"
-      },
-      {
-        "id": "github-copilot/grok-4.5"
-      },
-      {
-        "id": "github-copilot/grok-4.6"
-      },
-      {
-        "id": "github-copilot/grok-4.7"
-      },
-      {
-        "id": "github-copilot/kimi-k2.7-code"
-      },
-      {
-        "id": "github-copilot/kimi-k3"
-      },
-      {
-        "id": "github-copilot/mai-code-1.1-flash"
+        "id": "opencode/space-bunny-free",
+        "normalized": true,
+        "capabilities": "unverified"
       }
     ],
     "diagnostics": {
       "command": [
         "opencode",
-        "models"
+        "models",
+        "opencode"
       ],
       "exitCode": 0,
-      "raw_output": "opencode/big-pickle\nopencode/ling-3.0-flash-fin-free\nopencode/mimo-v2.6-flash-free\nopencode/muse-spark-1.2-contributor-free\nopencode/muse-spark-1.3-contributor-free\nopencode/nemotron-3-ultra-free\nopencode/nemotron-3.5-lightning-free\nopencode/space-bunny-free\ndeepseek/deepseek-flash\ndeepseek/deepseek-v4-pro\ngithub-copilot/claude-fable-5\ngithub-copilot/claude-fable-5.1\ngithub-copilot/claude-haiku-4.5\ngithub-copilot/claude-opus-4.7\ngithub-copilot/claude-opus-4.7-fast\ngithub-copilot/claude-opus-4.8\ngithub-copilot/claude-opus-4.8-fast\ngithub-copilot/claude-opus-5\ngithub-copilot/claude-opus-5.5\ngithub-copilot/claude-sonnet-5\ngithub-copilot/gemini-3.5-flash\ngithub-copilot/gemini-3.6-flash\ngithub-copilot/gemini-3.7-flash\ngithub-copilot/gemini-3.8-flash\ngithub-copilot/gpt-5-mini\ngithub-copilot/gpt-5.3-codex\ngithub-copilot/gpt-5.4\ngithub-copilot/gpt-5.4-mini\ngithub-copilot/gpt-5.5\ngithub-copilot/gpt-5.6-luna\ngithub-copilot/gpt-5.6-sol\ngithub-copilot/gpt-5.6-terra\ngithub-copilot/gpt-6-astra\ngithub-copilot/gpt-6-luna\ngithub-copilot/gpt-6-sol\ngithub-copilot/grok-4.5\ngithub-copilot/grok-4.6\ngithub-copilot/grok-4.7\ngithub-copilot/kimi-k2.7-code\ngithub-copilot/kimi-k3\ngithub-copilot/mai-code-1.1-flash\n",
+      "raw_output": "opencode/big-pickle\nopencode/ling-3.0-flash-fin-free\nopencode/mimo-v2.6-flash-free\nopencode/muse-spark-1.2-contributor-free\nopencode/muse-spark-1.3-contributor-free\nopencode/nemotron-3-ultra-free\nopencode/nemotron-3.5-lightning-free\nopencode/space-bunny-free\n",
       "stderr": ""
     }
-  },
-  "last_verified": "2026-09-24T06:57:42.226Z"
+  }
 }

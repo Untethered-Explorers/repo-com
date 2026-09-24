@@ -1,0 +1,82 @@
+{
+  "approval-engineer": {
+    "primary": "opencode/space-bunny-free",
+    "fallback": "opencode/space-bunny-free"
+  },
+  "audit-engineer": {
+    "primary": "opencode/space-bunny-free",
+    "fallback": "opencode/space-bunny-free"
+  },
+  "cli-engineer": {
+    "primary": "opencode/space-bunny-free",
+    "fallback": "opencode/space-bunny-free"
+  },
+  "cli-ux-engineer": {
+    "primary": "opencode/space-bunny-free",
+    "fallback": "opencode/space-bunny-free"
+  },
+  "configuration-engineer": {
+    "primary": "opencode/space-bunny-free",
+    "fallback": "opencode/space-bunny-free"
+  },
+  "delivery-engineer": {
+    "primary": "opencode/space-bunny-free",
+    "fallback": "opencode/space-bunny-free"
+  },
+  "discord-engineer": {
+    "primary": "opencode/space-bunny-free",
+    "fallback": "opencode/space-bunny-free"
+  },
+  "forge-team-builder": {
+    "primary": "opencode/space-bunny-free",
+    "fallback": "opencode/space-bunny-free"
+  },
+  "messaging-engineer": {
+    "primary": "opencode/space-bunny-free",
+    "fallback": "opencode/space-bunny-free"
+  },
+  "operations-engineer": {
+    "primary": "opencode/space-bunny-free",
+    "fallback": "opencode/space-bunny-free"
+  },
+  "persistence-engineer": {
+    "primary": "opencode/space-bunny-free",
+    "fallback": "opencode/space-bunny-free"
+  },
+  "policy-engineer": {
+    "primary": "opencode/space-bunny-free",
+    "fallback": "opencode/space-bunny-free"
+  },
+  "privacy-engineer": {
+    "primary": "opencode/space-bunny-free",
+    "fallback": "opencode/space-bunny-free"
+  },
+  "project-orchestrator": {
+    "primary": "opencode/space-bunny-free",
+    "fallback": "opencode/space-bunny-free"
+  },
+  "quality-engineer": {
+    "primary": "opencode/space-bunny-free",
+    "fallback": "opencode/space-bunny-free"
+  },
+  "release-engineer": {
+    "primary": "opencode/space-bunny-free",
+    "fallback": "opencode/space-bunny-free"
+  },
+  "rust-foundation-engineer": {
+    "primary": "opencode/space-bunny-free",
+    "fallback": "opencode/space-bunny-free"
+  },
+  "security-engineer": {
+    "primary": "opencode/space-bunny-free",
+    "fallback": "opencode/space-bunny-free"
+  },
+  "technical-writer": {
+    "primary": "opencode/space-bunny-free",
+    "fallback": "opencode/space-bunny-free"
+  },
+  "workflow-orchestrator": {
+    "primary": "opencode/space-bunny-free",
+    "fallback": "opencode/space-bunny-free"
+  }
+}
