@@ -1,7 +1,7 @@
 {
   "runId": "7acb4fd7-13bc-4f05-aa63-f810395058df",
   "startedAt": "2026-09-24T08:46:22.421Z",
-  "lastUpdatedAt": "2026-09-24T11:44:49.788Z",
+  "lastUpdatedAt": "2026-09-24T12:00:39.374Z",
   "manifestPath": "/home/mcfuzzysquirrel/Projects/repo-com/docs/EXECUTION-MANIFEST.json",
   "manifestVersion": "1.0",
   "harness": "opencode",
@@ -2360,10 +2360,37 @@
     },
     "DRAFT-CONTENT-1": {
       "taskId": "DRAFT-CONTENT-1",
-      "status": "pending",
+      "status": "complete",
       "ownerAgent": "messaging-engineer",
-      "attempt": 0,
-      "outputFiles": []
+      "attempt": 1,
+      "outputFiles": [
+        "crates/repo-com-draft-content/Cargo.toml",
+        "crates/repo-com-draft-content/src/lib.rs",
+        "crates/repo-com-draft-content/src/normalize.rs",
+        "crates/repo-com-draft-content/src/mentions.rs",
+        "crates/repo-com-draft-content/src/render.rs",
+        "crates/repo-com-draft-content/tests/draft_content_contract.rs",
+        "Cargo.lock"
+      ],
+      "startedAt": "2026-09-24T11:44:49.849Z",
+      "attemptHistory": [
+        {
+          "attempt": 1,
+          "outcome": "passed",
+          "resultPath": "docs/artifacts/DRAFT-CONTENT-1.2026-09-24T12-00-39-370Z.attempt-1.result.json"
+        }
+      ],
+      "completedAt": "2026-09-24T12:00:39.374Z",
+      "agentOutput": "Implemented `DRAFT-CONTENT-1` with deterministic Discord draft rendering:\n\n- Added NFC/line-ending/trailing-whitespace normalization.\n- Added deterministic content-hash delivery-nonce footer and re-render protection.\n- Added allowlisted role/user mention resolution with raw, malformed, unlisted, and bot-target rejection.\n- Preserved validated reply references as request metadata, never body text.\n- Enforced the inclusive 2,000-character final Discord limit.\n- Added side-effect-free preview projection support.\n- Added comprehensive contract tests; no Discord/network I/O, scanning, approval, or delivery behavior was added.\n\nValidation passed:\n\n- `cargo fmt --all -- --check` — exit 0\n- `cargo clippy --workspace --all-targets --all-features -- -D warnings` — exit 0\n- `cargo nextest run --no-tests fail -E 'binary_id(draft_content_contract)'` — 9 passed, 0 skipped\n\nFiles created:\n\n- `crates/repo-com-draft-content/Cargo.toml`\n- `crates/repo-com-draft-content/src/lib.rs`\n- `crates/repo-com-draft-content/src/normalize.rs`\n- `crates/repo-com-draft-content/src/mentions.rs`\n- `crates/repo-com-draft-content/src/render.rs`\n- `crates/repo-com-draft-content/tests/draft_content_contract.rs`\n\nFile changed:\n\n- `Cargo.lock`\n\nPre-existing changes to `docs/EXECUTION-AUDIT.jsonl` and `docs/WORKFLOW-STATE.json` were left untouched. No message was sent.\n\n```forge-result\n{\"summary\":\"Implemented DRAFT-CONTENT-1 deterministic rendering, normalization, allowlisted mentions, nonce protection, reply metadata, Discord length enforcement, and 9 passing contract tests.\",\"unresolved\":[]}\n```\n",
+      "artifactId": "work-draft-content-1-001",
+      "inputArtifactIds": [
+        "work-draft-model-1-001",
+        "work-repo-cfg-1-001",
+        "work-repo-state-1-001",
+        "work-repo-policy-1-001",
+        "work-repo-audit-1-001",
+        "work-repo-audit-2-001"
+      ]
     },
     "DRAFT-SECRET-1": {
       "taskId": "DRAFT-SECRET-1",

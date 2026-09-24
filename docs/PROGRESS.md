@@ -3,7 +3,7 @@
 ## Current State
 **Phase**: DRAFT-AND-APPROVAL-WORKFLOW-1
 **Status**: In Progress
-**Last Updated**: 2026-09-24T11:44:49.791Z
+**Last Updated**: 2026-09-24T12:00:39.379Z
 **Run ID**: 7acb4fd7-13bc-4f05-aa63-f810395058df
 **Harness**: opencode
 **Execution Mode**: auto
@@ -23,6 +23,8 @@
   - Files: crates/repo-com-audit-query/Cargo.toml, crates/repo-com-audit-query/src/lib.rs, crates/repo-com-audit-query/src/filter.rs, crates/repo-com-audit-query/src/query.rs, crates/repo-com-audit-query/tests/audit_query_contract.rs, Cargo.lock
 - [x] Phase DRAFT-AND-APPROVAL-WORKFLOW-1, Task DRAFT-MODEL-1: Model immutable draft revisions and previews (@messaging-engineer)
   - Files: crates/repo-com-draft-model/Cargo.toml, crates/repo-com-draft-model/src/lib.rs, crates/repo-com-draft-model/src/model.rs, crates/repo-com-draft-model/src/canonical.rs, crates/repo-com-draft-model/src/preview.rs, crates/repo-com-draft-model/tests/draft_model_contract.rs, Cargo.lock
+- [x] Phase DRAFT-AND-APPROVAL-WORKFLOW-1, Task DRAFT-CONTENT-1: Render deterministic channel-ready text (@messaging-engineer)
+  - Files: crates/repo-com-draft-content/Cargo.toml, crates/repo-com-draft-content/src/lib.rs, crates/repo-com-draft-content/src/normalize.rs, crates/repo-com-draft-content/src/mentions.rs, crates/repo-com-draft-content/src/render.rs, crates/repo-com-draft-content/tests/draft_content_contract.rs, Cargo.lock
 
 ## Current Task
 - None currently running

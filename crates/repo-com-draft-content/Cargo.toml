@@ -1,0 +1,20 @@
+[package]
+# The package name is the stable nextest binary ID selected by DRAFT-CONTENT-1.
+name = "draft_content_contract"
+autotests = false
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "Deterministic allowlisted Discord text rendering for repo-com drafts"
+
+[lib]
+name = "repo_com_draft_content"
+path = "src/lib.rs"
+
+[dependencies]
+repo-com-config = { package = "config_contract", path = "../repo-com-config" }
+repo-com-draft-model = { package = "draft_model_contract", path = "../repo-com-draft-model" }
+serde.workspace = true
+unicode-normalization = "=0.1.25"
