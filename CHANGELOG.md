@@ -4,77 +4,94 @@ All notable changes to this repository are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) categories: Added,
 Changed, Deprecated, Removed, Fixed, and Security.
 
-> **Release status:** the workspace version is `0.1.0`, but there is no Git tag,
-> packaged artifact, or installable `repo-com` binary. The current release
-> communication is [Unreleased](docs/releases/unreleased.md).
+> **Release status:** `Cargo.toml`, all workspace package manifests, and
+> `dist-workspace.toml` agree on version `0.1.0`. The source snapshot inspected
+> for this entry is dated 2026-09-25. No Git tag, published archive, installer,
+> or release date is recorded; the current release communication is therefore
+> [Unreleased](docs/releases/unreleased.md), with a separately labeled
+> [`0.1.0` source snapshot](docs/releases/0.1.0.md). The Product Vision's `1.0`
+> is a planned target, not a released version.
 
 ## [Unreleased]
 
 ### Added
 
-- Rust 2024 Cargo workspace with 19 focused library packages covering protocol,
-  configuration, repository-scoped state, exact policy, audit, drafts, safety,
-  approval, eligibility, Discord, delivery, inbound, reply, and retention
-  contracts.
-- Protocol-version-1 success and error envelopes, stable error categories and
-  exit-code mapping, separated output values, typed global arguments, and
-  explicit TTY/non-TTY decisions.
-- Strict schema-version-1 `.repo-com.toml` parsing, bounded repository-root
-  discovery, alias resolution, secret-key rejection, raw-destination rejection,
-  and deterministic SHA-256 configuration hashes.
-- Repository-scoped SQLite state with forward-only migration version 1, WAL,
-  foreign keys, bounded busy timeout, user-only file handling on Unix, immutable
-  evidence triggers, and transactional repository APIs.
-- Exact event/destination/severity policy matching with TTY-confirmed activation,
-  stale-hash invalidation, ambiguity denial, and permission-reducing
-  deactivation.
-- Redacted append-only audit writes and bounded, repository-scoped local audit
-  queries.
-- Immutable draft revisions, deterministic channel-ready rendering with
-  allowlisted mentions and a revision-derived delivery nonce, credential-pattern
-  scanning, exact-revision TTY approval, and fail-closed send eligibility.
-- Dedicated-bot Discord REST v10 setup validation, one-attempt text-message
-  operations, typed rate-limit and uncertainty outcomes, and token-free
-  WireMock contract fixtures.
-- Atomic local delivery claims, delivery state transitions, bounded retry
-  classification, and read-only unknown-delivery reconciliation primitives.
-- Bounded untrusted inbound fetch, repository-scoped inbound lifecycle state,
-  local acknowledgement and archive operations, and validated threaded reply
-  draft creation.
-- Repository-scoped content and metadata retention sweeps with deterministic
-  cutoffs, `[content-expired]` replacement, count-only audit summaries, and
-  blocking failure behavior.
+- Composed the final `repo-com` executable target with strict routing, semantic
+  `--version`, explicit global options, human/protocol output selection, stable
+  exit categories, and separated stdout/stderr behavior.
+- Added the complete command surface for configuration, exact policy status and
+  activation, immutable draft lifecycle, send, read-only Discord setup,
+  bounded inbound fetch, local acknowledgement/archive, reply-draft creation,
+  audit queries, state/lifecycle inspection, and purge planning/execution.
+- Added accessible linear terminal renderers and keyboard prompt adapters with
+  80-column wrapping, `NO_COLOR`, explicit cancellation, exact confirmation,
+  expiry, and fail-closed non-TTY behavior.
+- Added token-free WireMock contracts and a full mocked end-to-end journey,
+  including durable local correlation, 100 concurrent send invocations, and
+  post-dispatch unknown reconciliation branches.
+- Added a repeatable token-free performance harness for no-network command
+  classes, a cross-platform CI policy, and a tag-driven release-packaging policy
+  for Linux, macOS, and Windows targets.
+- Added release-policy checks for static SQLite `3.53.4` or newer, strong
+  checksums, source archives, dependency license evidence, CycloneDX SBOMs,
+  secret scanning, least-privilege workflow permissions, and no updater or
+  setup mutation.
 
 ### Changed
 
-- Refreshed the README, library consumer guide, administrator guide, and
-  Unreleased release notes to describe the current library contracts separately
-  from the planned CLI and product workflow.
-- Recorded fresh local validation: formatting, clippy, and a full nextest run
-  covering 195 tests across 19 binaries, with 195 passed and 2 skipped.
-- Documented the current state path, schema, retention behavior, environment-only
-  Discord credential boundary, WireMock validation boundary, and explicit gaps in
-  final composition and release readiness.
+- Composed previously focused domain crates into an executable workflow while
+  keeping state and network boundaries owned by their respective services.
+- Implemented repository-scoped retention, read-only lifecycle inspection, and
+  deterministic local purge planning/execution with exact TTY confirmation.
+- Refreshed the README, user guide, administrator guide, operator guide, ADR
+  navigation, changelog, and release communication to distinguish the current
+  executable from the unverified human/live/release phases.
+- Recorded the current local validation boundary: the full nextest run reported
+  325 passed tests across 35 binaries with 2 skipped tests, and the
+  documentation contract reported 7 passed tests. These are automated results,
+  not human acceptance or release approval.
+- Recorded the local performance harness result: 100 samples for each of 8
+  no-network command classes stayed below the 500 ms p95 threshold on the
+  inspected Linux host. The host was not identified as the pinned CI reference
+  runner, so this is local evidence only.
+
+### Fixed
+
+- Kept protocol command values, selected shell routes, and strict input objects
+  aligned so malformed or mismatched automation fails with one typed result.
+- Kept local delivery claims, delivery attempts, and audit evidence atomic
+  before network I/O; repeated or concurrent sends receive the recorded local
+  outcome rather than a second authorization to POST.
+- Kept unknown delivery, point reconciliation, retention, and purge state
+  transitions conservative, transactional where owned, and explicit about
+  rollback, replanning, and untrusted input.
 
 ### Security
 
-- Configuration errors and audit diagnostics remain redacted; secret-like values
-  are not echoed and Discord bot tokens are accepted only from
-  `REPO_COM_DISCORD_TOKEN`.
-- The Discord adapters use zeroizing owned token storage, `Bot` authorization,
-  fixed REST v10 routes, and dedicated-bot identity checks; the current tests do
-  not use a live token or workspace.
-- State is repository-scoped, transactional, and append-only for audit evidence,
-  but it is not encrypted at rest. User-only filesystem permissions do not
-  protect against local-account compromise, backups, or filesystem snapshots.
-- The current product surface has no telemetry, remote state synchronization, or
-  remote audit synchronization. Inbound data remains untrusted and local
-  acknowledgement/archive operations do not mutate Discord.
+- Restricts production Discord authentication to a raw dedicated bot token in
+  `REPO_COM_DISCORD_TOKEN`, with bot-only authorization, REST v10 pinning,
+  redacted diagnostics, and no user-token or self-bot path.
+- Treats inbound messages, mentions, edits, deletions, and attachment indicators
+  as untrusted data that cannot approve, activate policy, override safety, or
+  authorize a send.
+- Keeps state repository-scoped and append-only for audit evidence, but
+  explicitly discloses that v1 has no encryption at rest, relies on user-only
+  filesystem permissions, and cannot protect against local-account compromise,
+  backups, or filesystem snapshots.
+- Sends no telemetry and performs no remote state or audit synchronization.
+  Local acknowledgement, archive, retention, and purge never mutate Discord.
+- Rejects positive claims of read receipts, response analytics, arbitrary
+  destinations, user tokens, live-service compatibility, human approval,
+  release sign-off, compliance certification, or automatic unknown-delivery
+  resend.
 
-## Future release
+## Future release work
 
-When a tagged release is created, replace the `[Unreleased]` heading with the
-authoritative version and date, then add a versioned file under
-[`docs/releases/`](docs/releases/). Do not describe the current library contracts
-as a complete installed Discord product, and do not claim live-service or human
-sign-off evidence that has not been recorded.
+A future tagged release still requires the pending human UX/security reviews,
+live Discord acceptance in a disposable workspace, final release sign-off, and
+verification of the actual cross-platform artifacts. The release workflow is
+configured for explicit tag-driven artifact generation; this repository does
+not publish automatically and has no updater. See the
+[release index](docs/releases/README.md) and the
+[`0.1.0` source snapshot notes](docs/releases/0.1.0.md) for the current evidence
+boundary.

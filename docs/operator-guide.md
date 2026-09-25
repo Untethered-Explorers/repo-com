@@ -1,91 +1,93 @@
 # Operator guide
 
-This guide owns installation status, the exact protocol-version-1 command and
-JSON surfaces implemented by `repo-com-cli-operations` and
-`repo-com-cli-messaging`, operator procedures, recovery, accessibility, and
-unsupported behavior. The canonical contracts are `REL-FR-02`, `REL-FR-03`,
-and `REL-FR-08` in `docs/features/release-readiness.md`, with domain details in
-the linked feature documents.
+This guide owns the exact `repo-com` installation boundary, command tree,
+protocol-version-1 input/output contract, operator confirmations, delivery
+outcomes, recovery rules, accessibility behavior, and unsupported behavior. The
+implemented sources are `crates/repo-com-cli`, the two command-handler crates,
+the terminal renderer/prompt crates, and the state and domain services they
+compose.
 
 ## Installation status
 
-The current checkout is a pre-release Rust workspace of focused library
-contracts. It has **no installed `repo-com` binary**, no composed final command
-router, and no packaged installer. Do not present a library API or a WireMock
-contract as an installed product or as live Discord evidence.
+There is **no installed `repo-com` binary** in the published release boundary of
+this source snapshot. The repository does contain the final executable target,
+so an operator can build it explicitly:
 
-For source-level development, install Rust through the official
-[rustup installation guidance](https://doc.rust-lang.org/stable/cargo/getting-started/installation.html),
-then use the repository's pinned Rust 1.98.1 toolchain and workspace:
-
-```text
+```bash
 rustup toolchain install 1.98.1
-cargo build --workspace
-cargo fmt --all -- --check
-cargo clippy --workspace --all-targets --all-features -- -D warnings
-cargo nextest run --no-tests fail -E 'binary_id(documentation_contract)'
+cargo build --release --locked --package command_routing_contract --bin repo-com
+./target/release/repo-com --version
 ```
 
-`cargo build --workspace` builds the current library crates; it does not
-install an executable. Installation of a final `repo-com` binary, semantic
-version command, and release artifact belongs to the later executable and
-packaging tasks. This guide does not invent an installer name, archive layout,
-or packaging command.
+The command prints the workspace/package version `0.1.0`. The source snapshot
+was inspected on 2026-09-25; no Git tag, published archive, installer, or
+release date is recorded. The tag-driven release workflow is packaging policy,
+not evidence that an artifact has been published or that a release is approved.
+The required toolchain is Rust 1.98.1.
 
-The handler crates below are the implemented command contract that the final
-executable must compose. They do not open state, contact Discord, or perform
-transport themselves; the composition layer supplies domain services, clocks,
-configuration, and stream decisions.
+Use human output for commands that request a TTY confirmation. Use
+`--output json` for non-interactive commands whose structured result is being
+consumed by automation. The current process reads its JSON input from standard
+input before dispatch; a TTY confirmation therefore needs a real terminal or a
+PTY-capable wrapper, not a shell pipe that makes stdin non-interactive.
 
 ## Protocol version 1 and streams
 
-Both handler crates parse one strict outer object from structured input:
+Every command except `--help` and `--version` reads one strict protocol-version-1
+outer object from standard input. The only accepted value is
+`protocol_version: 1`:
 
 ```json
 {
   "protocol_version": 1,
-  "command": "<canonical command>",
-  "input": { "<command-specific fields>": "..." }
+  "command": "config.validate",
+  "input": {
+    "repository_id": "acme/widgets"
+  }
 }
 ```
 
-The only accepted protocol version is **protocol version 1**. The outer object
-rejects unknown fields. The `input` object is decoded into a strict
-command-specific type and rejects unknown fields as well. No command is
-selected by a default.
+The outer object and each command input reject unknown fields. The selected
+shell route and the JSON `command` must agree. There is no default repository,
+destination, revision, cursor, time boundary, inbound item, or purge scope.
 
-In machine mode, stdout contains **exactly one JSON object** in either shape:
+In machine mode, `stdout` contains **exactly one JSON object**. Diagnostics are
+optional values on `stderr`; prompts must not be placed in machine stdout.
+Every outcome contains the four protocol fields `protocol_version`, `status`,
+`data`, and `error`:
 
 ```json
 {"protocol_version":1,"status":"success","data":{},"error":null}
 ```
 
-or:
-
 ```json
 {"protocol_version":1,"status":"error","data":null,"error":{"code":"usage-schema","message":"safe detail"}}
 ```
 
-All four fields are serialized on every outcome. For a success, `data` contains
-the payload and `error` is `null`; for an error, `data` is `null` and `error`
-contains the typed error. Diagnostics are optional stderr values. Prompts and
-diagnostic text never contaminate machine stdout.
+Human mode emits linear labeled text. The output contract supports a minimum of
+80 columns, wraps long hashes and values, and never relies on color alone.
+`NO_COLOR` and `--color never` produce plain text.
 
-The implemented global option values are:
+## Global options and exits
 
-| Option | Values | Default | Boundary |
+| Option | Accepted values | Default | Boundary |
 |---|---|---|---|
-| `--config PATH` | one explicit path | none | The path is normalized and must be within the detected repository root. |
-| `--output` | `human`, `json` | `human` | JSON selects one protocol object; human mode is labeled text. |
-| `--color` | `auto`, `always`, `never` | `auto` | `never` is the plain-text choice; meaning is also carried by text labels. |
-| `--diagnostics` | `off`, `on` | `off` | Diagnostics are opt-in and belong on the diagnostic stream. |
+| `--config PATH` | one explicit path | discovered `.repo-com.toml` | Normalized path must stay inside the detected repository root |
+| `--output FORMAT` | `human`, `json` | `human` | `json` selects exactly one protocol object |
+| `--color COLOR` | `auto`, `always`, `never` | `auto` | `never` and `NO_COLOR` select plain text |
+| `--diagnostics MODE` | `off`, `on` | `off` | Opt-in diagnostics use the diagnostic stream |
+| `--state PATH` | one explicit SQLite path | OS user-data path | Used by stateful commands; `state.verify` still requires `database_path` in JSON |
+| `--tty` | flag | detected | Requests TTY mode but cannot manufacture a TTY |
+| `--non-tty` | flag | detected | Explicitly selects non-interactive mode |
+| `--version` | flag | — | Prints only the semantic package version |
 
-These are the implemented `GlobalArgs` values, not a claim that a final
-executable already exists in this checkout.
+TTY is the safer default for automation: if either relevant stream is
+non-interactive, an authority-creating prompt fails with
+`operator-action-required`. A prompt is never created in non-TTY mode.
 
-Stable error categories and deterministic process exits are:
+Stable error categories and process exits are:
 
-| Protocol code | Exit |
+| Error code | Exit |
 |---|---:|
 | `usage-schema` | 2 |
 | `operator-action-required` | 3 |
@@ -98,331 +100,329 @@ Stable error categories and deterministic process exits are:
 | `connectivity-rate-limit` | 10 |
 | `internal-failure` | 1 |
 
-A successful protocol outcome exits 0. A non-TTY invocation never receives an
-ambient prompt. TTY is an explicit stream decision: both relevant streams must
-be interactive for an operator prompt to be allowed.
+A successful command exits 0. These categories are process contracts, not
+claims that a remote action took effect.
 
 ## Canonical command surface
 
-The dotted names below are the canonical protocol names. The parsers also
-accept the documented kebab/snake shell-style spellings where implemented, but
-the canonical dotted name is what automation should record. No command accepts
-a raw destination or supplies a hidden default.
+The dotted names are canonical protocol values. The shell parser also accepts
+the nested, kebab, and snake spellings implemented by the command tree; the
+canonical JSON command should be used by automation.
 
-### Operations handler commands
+### Operations commands
 
-| Command | Required and explicit input fields |
+| Command | Explicit input |
 |---|---|
-| `config.validate` | `repository_id`; optional `config_path`. |
-| `policy.status` | `repository_id`, `event_type`, `destination_alias`, `severity`. |
-| `policy.activate` | `repository_id`, `event_type`, `destination_alias`, `severity`, `activated_at`; optional `activation_id`. |
-| `state.verify` | `repository_id`, `database_path`; optional `expected_migration` (the current schema is used when omitted). |
-| `lifecycle.inspect` | `repository_id`, `object_type`, and one explicit `page_size` or `limit` from 1 through 100. Use `object_id` for object families that require it, `revision` only for `draft_revision`, and optional `after`; `include_retained_content` is an explicit opt-in. |
-| `audit.query` | `repository_id` and one explicit `page_size` or `limit` from 1 through 100; optional time bounds, `object_type`, `object_id`, `transition`, and repository-scoped `cursor`. |
-| `purge.plan` | `repository_id`, `scope` (`content`, `metadata`, or `all`), and exactly one canonical cutoff representation; optional `expected_config_hash`. |
-| `purge.execute` | `repository_id`, `scope`, exactly one cutoff representation, `config_hash`, `plan_hash`, and `executed_at`. |
+| `config.validate` | `repository_id`; optional `config_path` |
+| `policy.status` | `repository_id`, `event_type`, `destination_alias`, `severity` |
+| `policy.activate` | `repository_id`, `event_type`, `destination_alias`, `severity`, `activated_at`; optional `activation_id` |
+| `state.verify` | `repository_id`, `database_path`; optional `expected_migration` |
+| `lifecycle.inspect` | `repository_id`, `object_type`, one `page_size` or `limit`; conditional `object_id`, `revision`; optional `after`, `include_retained_content` |
+| `audit.query` | `repository_id`, one `page_size` or `limit` from 1 through 100; optional time/object filters and repository-scoped `cursor` |
+| `purge.plan` | `repository_id`, `scope` (`content`, `metadata`, or `all`), exactly one cutoff representation; optional `expected_config_hash` |
+| `purge.execute` | `repository_id`, `scope`, exactly one cutoff representation, `config_hash`, `plan_hash`, `executed_at` |
 
-`lifecycle.inspect` accepts these object families: `repository`, `draft`,
-`draft_revision`, `delivery_attempt`, `inbound_item`, `acknowledgement`,
-`archive`, `reply_link`, and `audit_transition`. `repository` and
-`audit_transition` do not take an object identifier. A `draft_revision` takes
-an explicit `object_id` and positive `revision`.
+`lifecycle.inspect` object types are `repository`, `draft`, `draft_revision`,
+`delivery_attempt`, `inbound_item`, `acknowledgement`, `archive`, `reply_link`,
+and `audit_transition`. `repository` and `audit_transition` do not take an
+object ID. `draft_revision` requires a positive `revision`; other object
+families require the applicable `object_id`. `page_size` and `limit` are
+mutually exclusive. `include_retained_content` is explicit opt-in.
 
-For a purge cutoff, use either the single `cutoff` RFC 3339 value or the paired
-`cutoff_unix_seconds` and `cutoff_utc` values. The two representations must
-agree. Purge execution hashes must be SHA-256 hex values. The current
-operations handler does not expose a retention-sweep command; retention is a
-local service invoked by the composing application as described below.
+A purge cutoff is either the single canonical `cutoff` RFC 3339 value or the
+agreeing `cutoff_unix_seconds` and `cutoff_utc` pair. Purge hashes are SHA-256
+hex values. The current command tree has no retention-sweep command; retention
+is a domain service described below.
 
-### Messaging handler commands
+### Messaging commands
 
-| Command | Required and explicit input fields |
+| Command | Explicit input |
 |---|---|
-| `draft.create` | `repository_id`, `draft_id`, `destination_alias`, `text`, `event_type`, `severity`, `created_at`, `created_at_unix_seconds`; optional `metadata` and `expires_in_seconds`. |
-| `draft.show` | `repository_id`, `draft_id`, positive `revision`. |
-| `draft.update` | `repository_id`, `draft_id`, current `revision`, `destination_alias`, `text`, `event_type`, `severity`, `created_at`, `created_at_unix_seconds`; optional `metadata` and `expires_in_seconds`. |
-| `draft.preview` | `repository_id`, `draft_id`, positive `revision`. |
-| `draft.approve` | `repository_id`, `draft_id`, positive `revision`. |
-| `draft.secret-override` | `repository_id`, `draft_id`, positive `revision`; the domain still requires an interactive TTY and the exact reviewed preview. |
-| `send` | `repository_id`, `draft_id`, positive `revision`. |
-| `setup-check` | `repository_id`. |
-| `inbox.fetch` | `repository_id`, enabled inbound `alias`, a caller-supplied `bot_user_id` used as untrusted-filter context, and exactly one of `cursor` or `time`; optional `retrieved_at`. The handler does not independently authenticate that ID. |
-| `inbox.acknowledge` | `repository_id`, nonempty `item_ids`, canonical `at`. |
-| `inbox.archive` | `repository_id`, nonempty `item_ids`, canonical `at`. |
-| `reply.draft-create` | `repository_id`, `inbound_item_id`, new `draft_id`, `text`, `event_type`, `severity`, `created_at`, `created_at_unix_seconds`; optional `metadata` and `expires_in_seconds`. |
+| `draft.create` | `repository_id`, `draft_id`, `destination_alias`, `text`, `event_type`, `severity`, `created_at`, `created_at_unix_seconds`; optional `metadata`, `expires_in_seconds` |
+| `draft.show` | `repository_id`, `draft_id`, positive `revision` |
+| `draft.update` | `draft.show` identity plus new destination, text, event type, severity, timestamps, metadata, and optional expiry |
+| `draft.preview` | `repository_id`, `draft_id`, positive `revision` |
+| `draft.approve` | `repository_id`, `draft_id`, positive `revision` |
+| `draft.secret-override` | `repository_id`, `draft_id`, positive `revision` |
+| `send` | `repository_id`, `draft_id`, positive `revision` |
+| `setup-check` | `repository_id` |
+| `inbox.fetch` | `repository_id`, enabled `alias`, `bot_user_id`, exactly one `cursor` or `time`; optional `retrieved_at` |
+| `inbox.acknowledge` | `repository_id`, nonempty `item_ids`, `at` |
+| `inbox.archive` | `repository_id`, nonempty `item_ids`, `at` |
+| `reply.draft-create` | `repository_id`, `inbound_item_id`, `draft_id`, `text`, `event_type`, `severity`, `created_at`, `created_at_unix_seconds`; optional metadata and expiry |
 
 Draft metadata accepts only the bounded fields `repository_label`, `branch`,
-and `commit`. Unknown metadata fields fail. Normal draft and reply input uses
-an alias; a raw channel, role, user, or message target is not accepted as a
-workflow destination.
-
-The handler crate's command enum also accepts these shell-style aliases where
-implemented: `draft-create`, `draft-show`, `draft-update`, `draft-preview`,
-`draft-approve`, `draft-secret-override`, `setup.check`, `inbox-fetch`,
-`inbox-acknowledge`, `inbox-archive`, `reply-draft-create`, `config`,
-`policy-status`, `policy-activate`, `state`, `lifecycle-inspect`, `state.inspect`, `state-inspect`, `audit`,
-`purge-plan`, and `purge-execute`. These aliases do
-not add flags or defaults.
+and `commit`. `destination_alias` is a configured alias, never a raw Discord
+channel. `inbox.fetch` requires exactly one cursor or RFC 3339 time boundary;
+`bot_user_id` is untrusted filter context, not proof of the caller's identity.
+All timestamps must be valid and, when a Unix pair is supplied, must identify
+the same instant.
 
 ## Operator procedures
 
-### 1. Resolve and validate configuration
+### 1. Validate the resolved configuration
 
-1. Work from the repository root or provide an explicit in-repository path.
-2. Ensure `.repo-com.toml` is secret-free and uses schema version 1.
-3. Validate the exact repository scope with `config.validate`.
-4. Read the returned configuration hash and alias lists. If validation fails,
-   correct the path or field and retry; do not bypass the resolver by adding a
-   raw destination.
+1. Work from the repository root or pass an explicit in-repository `--config`.
+2. Run `config.validate` with the exact `repository_id`.
+3. Read the returned schema version, configuration hash, aliases, and exact
+   auto-send count.
+4. Correct the safe field path on failure. Do not bypass validation with a raw
+   destination.
 
-The validation result is local evidence only. It does not create a Discord
-application, grant a permission, or prove that a workspace is live.
+A valid configuration is local evidence only. It does not contact Discord,
+grant a permission, or prove a live workspace.
 
-### 2. Check Discord setup
+### 2. Run the read-only Discord setup check
 
-Use `setup-check` after setting the environment-only bot token. The result
-contains safe bot identity, workspace membership, channel, mention, issue, and
-remediation fields. Follow [`discord-setup.md`](discord-setup.md) for manual
-permission and rotation actions. A setup report never mutates Discord.
+Set the raw dedicated bot token only in `REPO_COM_DISCORD_TOKEN`, then run
+`setup-check`. The report includes bot identity, workspace membership,
+alias-based channel checks, mention checks, required/granted/missing
+permissions, issues, and safe remediation. The check uses REST v10 GETs and
+never changes Discord configuration.
+
+The channel checks cover `VIEW_CHANNEL`, `SEND_MESSAGES`, and, for enabled
+inbound aliases, `READ_MESSAGE_HISTORY`. Role mention checks also consider
+`MENTION_ROLES` and mentionability. Apply missing grants manually, then rerun
+the check. Follow [`discord-setup.md`](discord-setup.md) for bot creation,
+least privilege, and token rotation.
 
 ### 3. Create and preview a draft
 
-1. Create one draft with a named destination and bounded text/metadata.
-2. Treat the returned draft ID and revision as explicit local identifiers.
-3. Run `draft.preview` for the exact repository, draft, and revision.
-4. Read the complete labeled preview: resolved destination, exact final text,
-   metadata, expiry, approval basis, policy basis, safety finding, and next
-   action.
-5. Do not send until the preview is current and the safety decision is known.
+1. Create one revision with `draft.create` and a named destination.
+2. Use `draft.show` to inspect the returned exact revision.
+3. Use `draft.preview` for the same repository, draft, and revision.
+4. Read the complete exact text, metadata, destination, expiry, event type,
+   severity, and next action.
+5. Do not send until the preview and safety decision are current.
 
-A revision is immutable. Use `draft.update` to create a new revision; it does
-not rewrite an accepted remote message. The default draft expiry is 24 hours,
-and a caller may choose at most seven days. Expired revisions cannot be
-approved, made eligible, or sent.
+Revisions are immutable. `draft.update` must replace the current revision and
+creates a new one. Draft expiry defaults to 24 hours and is capped at seven
+days. The pre-send secret scanner checks rendered text and bounded metadata. A
+finding blocks eligibility unless an exact TTY `draft.secret-override` is
+recorded after reviewing the complete preview. Its prompt expects
+`override <preview-hash>`. The override is redacted and audited; it is not a
+general bypass or complete data-loss prevention.
 
-The secret scanner checks the final rendered text and metadata for
-high-confidence credential patterns. A finding blocks send by default. Only an
-interactive TTY operator may review the exact preview and record a redacted
-`draft.secret-override`; non-TTY override is forbidden. The scanner is a
-lightweight safety check, not complete data-loss prevention.
+### 4. Establish exact authority
 
-### 4. Approve exactly what was previewed
+For normal per-draft approval, run `draft.approve` in a real TTY. The prompt
+renders the complete preview and expects:
 
-`draft.approve` is an interactive TTY action. The operator must see the full
-preview first. Approval is bound to the exact repository and revision hash,
-which covers text, metadata, destination alias, resolved destination, and
-expiry. It expires at the earlier of draft expiry or 15 minutes after approval.
-Changing the revision, configuration hash, destination resolution, or policy
-basis invalidates it.
+```text
+approve <preview-hash>
+```
 
-Approval is permission to evaluate and claim one exact revision, not a
-reusable send bypass. A non-TTY process cannot create approval, activate a
-policy, or override a safety finding.
+A short `yes` does not satisfy the exact-hash grammar. The approval is bound to
+the exact repository, revision, text, metadata, destination, configuration,
+expiry, and safety facts. It expires at the earlier of draft expiry and 15
+minutes after approval. A changed fact requires a new preview and decision.
 
-### 5. Inspect and activate a narrow policy
+For a deliberately automated path, run `policy.status` first. An `auto_send`
+entry in TOML is only a declaration; it is not an activation. `policy.activate`
+requires an interactive TTY and the exact response shown by its preview:
 
-1. Use `policy.status` with the exact `event_type`, `destination_alias`, and
-   `severity`.
-2. Review the policy state, configuration hash, tuple hash, activation
-   snapshot, and next action.
-3. If an exact activation is intended, use `policy.activate` in an interactive
-   TTY and review the exact activation preview.
-4. Record the returned activation ID and hashes. Re-check status before relying
-   on the activation.
+```text
+activate <repository> <activation-id> <config-hash> <tuple-hash> <event-type>/<destination-alias>/<severity>
+```
 
-The policy is equality-only: no wildcard, prefix, broader severity, raw
-channel, or implicit default is eligible. Activation is stale after a relevant
-configuration or tuple change. Deactivation/inspection may be performed
-without a prompt; permission-widening activation may not.
+Activation is equality-only. No wildcard, prefix, broader severity, raw
+channel, or implicit default is eligible. A changed configuration/tuple makes
+the activation stale; ambiguous active rows deny the decision. Non-TTY mode
+cannot create approval, activate policy, or record a secret override.
 
-### 6. Send one exact revision and read the outcome
+### 5. Send and interpret the outcome
 
 `send` accepts only `repository_id`, `draft_id`, and positive `revision`. The
-coordinator must revalidate the current repository/configuration, revision
-hash, expiry, destination alias and mention allowlist, approval or exact policy
-activation, and safety scan immediately before the local claim. The claim,
-attempt record, and audit transition commit before network I/O.
+binary revalidates current configuration, destination resolution, mention
+allowlist, revision hash, expiry, approval or exact policy basis, and secret
+scan. The local claim, attempt, and audit transition commit before one HTTP
+message attempt.
 
-Interpret the typed delivery outcome as one of the implemented states:
+The local persisted delivery states are:
 
-- `accepted` — a validated remote message identifier was returned;
-- `failed` — a definitive rejection or non-retryable failure was recorded;
-- `retry-wait` — a bounded safe retry is pending;
-- `unknown` — dispatch may have reached Discord but the result is not known;
-- `reconciled-accepted` — read-only reconciliation found one exact message;
-- `reconciled-absent` — conservative read evidence satisfied the absence gate;
-- `unresolved` — evidence conflicts or is insufficient;
-- `eligibility-rejected`, `expired`, `stale-authority`, or `error` — no
-  authorized send may proceed.
+- `unclaimed`;
+- `claimed`;
+- `accepted`;
+- `failed`;
+- `retry_wait`;
+- `unknown`;
+- `reconciled_accepted`;
+- `reconciled_absent`; and
+- `unresolved`.
 
-The local persisted/audit state names are `unclaimed`, `claimed`, `accepted`,
-`failed`, `retry_wait`, `unknown`, `reconciled_accepted`, `reconciled_absent`,
-and `unresolved`. The terminal renderer may display the corresponding
-hyphenated labels for an operator-facing outcome.
+Human delivery labels include `accepted`, `failed`, `retry-wait`, `unknown`,
+`reconciled-accepted`, `reconciled-absent`, and `unresolved`, plus explicit
+eligibility, expiry, stale-authority, and error views. The current executable
+records a bounded retry wait but does not automatically perform the next
+attempt. The retry service contract limits transport attempts to three and caps
+Discord-directed waits at 30 seconds, but no retry command is exposed here.
 
-The transport policy permits at most three total attempts. A retry is eligible
-only for a proven pre-dispatch failure or an HTTP 429 response; an ambiguous
-post-dispatch result becomes `unknown` rather than a retry. A Discord-directed
-wait is bounded to 30 seconds per attempt.
+`accepted` means the transport returned a validated message identifier. It does
+not mean a teammate read the message. The product has no read receipt and no
+response analytics. It does not edit or delete an accepted remote message.
 
-`accepted` means the local delivery contract observed an accepted response; it
-does not mean a teammate read the message. Repo-com has no read receipt and
-no response analytics. It also does not edit or delete an accepted remote message.
+### 6. Recover an unknown delivery without duplication
 
-### 7. Recover an unknown delivery without duplication
+If the outcome is `unknown`, stop the normal send loop. There is **no automatic
+resend**.
 
-If the outcome is `unknown`, stop the normal send loop. **There is no automatic resend.**
-The read-only recovery contract is:
+1. Preserve the exact configured destination, bot author, deterministic content
+   nonce, exact intended content, draft/revision, and attempt identifier.
+2. Use the read-only delivery-recovery contract to search only that destination
+   and require all exact predicates: configured bot author, nonce, and content.
+3. Treat one exact match as reconciled acceptance. A complete conservative
+   absence window with three successful reads can become reconciled absence.
+4. Keep incomplete, conflicting, or unresolved evidence unresolved. An
+   incomplete read is not proof of absence.
+5. Require a fresh, explicit operator-authorized decision before any new
+   transport attempt.
 
-1. Read the configured destination only; do not substitute a raw channel.
-2. Match the configured bot author, deterministic delivery nonce, and exact
-   intended content.
-3. Treat one exact match as reconciled acceptance.
-4. Keep the result unknown while the observation window lacks a complete safe
-   absence proof.
-5. Treat a complete conservative absence window as reconciled absence.
-6. Keep conflicting, incomplete, or otherwise insufficient evidence unresolved.
+The current command tree does not expose a `reconcile` command. Do not invent a
+CLI flag or treat a repeated `send` as a safe recovery operation. A local
+`unknown` record remains durable local evidence even if a later domain-level
+read finds a matching message.
 
-An incomplete read is not absence evidence. A later attempt requires a fresh,
-explicit operator-authorized decision after reconciliation; it is not a retry
-hidden inside `send`, and it is not permission to resend an unresolved result.
-The current command-handler crates do not expose a `reconcile` command. The
-implemented read-only reconciler is a library service that the final
-composition layer may expose after its command contract is defined. Likewise,
-`DeliveryCoordinator::claim_retry` is only a local state-machine claim: it
-performs no network I/O and is not itself an operator confirmation. The
-composition/policy owner must authorize a new attempt separately.
+### 7. Fetch inbound data as untrusted input
 
-### 8. Fetch inbound replies and mentions safely
+`inbox.fetch` uses only enabled inbound aliases and one explicit `cursor` or
+`time` boundary. The implementation is bounded to 10 pages, 1,000 raw messages,
+and 100 point checks. It returns continuation metadata and commits the page and
+cursor locally before bounded point reconciliation.
 
-`inbox.fetch` requires an enabled configured inbound alias and exactly one
-explicit boundary: a numeric last-event cursor or an RFC 3339 time boundary.
-The adapter follows deterministic pagination and stops at the implemented hard
-limits of 10 pages or 1,000 raw messages. It ignores bot-authored and
-repo-com-authored messages in v1 and retains only human replies to accepted
-local deliveries or direct mentions of the configured bot.
+The filter can retain human replies to accepted local deliveries or direct
+mentions of the configured bot, and it excludes bot/webhook authors and
+repo-com's own messages. The current final-binary composition supplies an empty
+accepted-delivery list to the fetcher, so a non-mention reply may be omitted by
+the CLI path; this is a known implementation gap, not a reply-coverage
+guarantee.
 
-Every returned envelope is untrusted remote data. The `bot_user_id` input is
-validated as a filter identifier; it is not proof that the caller supplied the
-real bot identity. A composed application should bind it to the identity
-reported by the read-only setup check.
-
-The returned envelope can contain remote IDs,
-author, timestamps, text, reply context, mention evidence, attachment
-indicators, and provenance, but no field can approve, activate policy, override
-safety, or trigger a send. The first observed snapshot, a later current
-snapshot or deleted marker, and local transitions are separate records. A
-stored snapshot is not current remote truth.
+Every envelope is explicitly `untrusted`. Text, mentions, edits, deletions, and
+attachment indicators cannot approve, activate policy, override safety, alter a
+destination, or trigger a send. The first snapshot, current snapshot or deleted
+marker, and local transitions are separate. A stored snapshot is not current
+remote state.
 
 `inbox.acknowledge` and `inbox.archive` are idempotent local actions. They do
-not react, edit, delete, assign, or otherwise mutate Discord. The fetch commits
-items and the authoritative cursor together; a storage failure leaves the prior
-cursor available for a safe repeat.
+not react, edit, delete, assign, or otherwise mutate Discord. `reply.draft-create`
+validates a retained inbound target and creates a linked immutable draft; it
+does not send directly and must pass the normal draft lifecycle afterward.
 
-### 9. Create a reply draft, not a direct reply
+### 8. Inspect audit, state, and lifecycle
 
-`reply.draft-create` validates the repository, stored inbound item, current
-retained snapshot, workspace/channel, and authorization. It creates a new
-immutable draft with a validated Discord message reference. It does not send
-directly, bypass preview/approval, or accept an arbitrary remote message ID.
+`audit.query` is a bounded, repository-scoped, redacted, read-only query. It
+requires one `page_size` or `limit` from 1 through 100 and may filter by time,
+object type, object ID, transition, and continuation cursor. It does not export
+state, or contact Discord. It does not provide response analytics.
 
-After the linked reply is accepted through the normal draft lifecycle, local
-state can mark the inbound item replied and retain the link/audit event. The
-product does not claim that the human-authored response was delivered or read.
+`state.verify` opens an existing `database_path` read-only and checks quick
+check, foreign keys, migration, repository scope, and permissions without
+repair, migration, or deletion. `state inspect`/`lifecycle inspect` returns
+bounded local projections for the supported object families. Use
+`include_retained_content` only when the operator explicitly needs retained
+content; the result remains local data, not current remote state.
 
-### 10. Inspect local audit and lifecycle state
+### 9. Apply retention and plan a local purge
 
-`audit.query` is a bounded local query with filters for repository, time range,
-object type, object ID, and transition. `page_size`/`limit` is required and is
-1 through 100; a returned continuation is repository-scoped. Audit evidence is
-append-only, redacted, and local. A query is not remote history, a read receipt,
-or a response analytics endpoint; it provides no response analytics.
+The retention policy defaults to 30 days for content and 365 days for metadata.
+Content overrides are 1 through 365 days; metadata overrides are 30 through
+3,650 days, and metadata retention cannot be shorter than content retention.
+The domain sweeper is transactional, replaces expired content with
+`[content-expired]`, preserves non-content evidence, and blocks a new mutation
+when its sweep fails.
 
-`state.verify` checks an existing database's quick check, foreign keys,
-migration, repository scope, and filesystem permissions without creating,
-repairing, or migrating it. `lifecycle.inspect` returns bounded repository,
-draft, revision, delivery-attempt, inbound, acknowledgement, archive, reply
-link, and audit views. It performs no implicit migration, repair, backup upload,
-or remote fetch.
+The current final binary has no `retention.sweep` command. An embedding
+application must invoke the retention service before mutations if it relies on
+opportunistic retention. The explicit `purge.plan` command is a separate,
+non-mutating local preview; it does not run a retention sweep.
 
-A remote snapshot shown by lifecycle inspection is an observation from the
-last recorded fetch, not proof of current Discord state. Preserve the boundary
-between local evidence and remote truth in every report.
+For a purge:
 
-### 11. Apply retention and plan a local purge
+1. Choose `scope` equal to `content`, `metadata`, or `all` and one canonical
+   cutoff representation.
+2. Review counts, table counts, state fingerprint, `config_hash`, `plan_hash`,
+   and `execution_performed: false`.
+3. If the plan is current, run `purge.execute` in a real TTY with the same
+   fields and `executed_at`.
+4. Enter the exact prompt response:
 
-Retention uses the configured defaults and bounds in
-[`configuration.md`](configuration.md): content defaults to 30 days, metadata
-defaults to 365 days, content overrides range from 1 through 365 days, and
-metadata overrides range from 30 through 3,650 days, with metadata at least as
-long as content. The retention service is transactional and runs before a
-state-mutating operation when composed, as well as on an explicit service
-invocation. It removes or replaces expired local content with
-`[content-expired]` and later removes expired local metadata. A failed sweep
-blocks the new mutation with a storage-integrity result. The current handler
-surface has no invented `retention.sweep` command; a future composition must
-use the implemented service rather than a guessed flag.
+   ```text
+   purge <repository> <scope> <cutoff-unix> <config-hash> <plan-hash>
+   ```
 
-For destructive local work:
+5. If any fact changed, generate a new plan. Read the count-only result and
+   local audit event ID.
 
-1. Use `purge.plan` with an explicit repository, `content`/`metadata`/`all`
-   scope, and cutoff.
-2. Review the exact counts, table counts, state fingerprint, configuration
-   hash, plan hash, and `execution_performed: false` value.
-3. If the plan is still current, use `purge.execute` with the same scope,
-   cutoff, `config_hash`, and `plan_hash` in an interactive TTY.
-4. If the plan or configuration changes, discard it and create a new plan.
-5. Read the count-only execution result and local audit event ID.
+A purge is local-only. It never edits, deletes, or otherwise mutates a Discord
+message, and it cannot revoke a copy in a backup or filesystem snapshot.
 
-A purge never edits, deletes, reacts to, or otherwise mutates a Discord
-message. The plan is local, not a remote deletion request. Purge and retention
-are repository-scoped and do not silently cross repository boundaries.
+## Accessibility and terminal behavior
 
-## Accessibility and safe terminal use
+The terminal contract is designed for keyboard operation and linear
+screen-reader reading:
 
-The terminal contract is designed for keyboard operation, linear screen-reader
-reading, visible focus or selection, and no color-only meaning:
+- output is labeled by field and states destination, revision, authority,
+  safety, outcome, provenance, and next action in text;
+- the effective presentation supports 80 columns and wraps rather than
+  truncating hashes, security values, or approval information;
+- `NO_COLOR` and `--color never` are plain-text modes; color is never the only
+  meaning;
+- prompts expose keyboard actions, cancellation, invalid-input recovery, and
+  exact confirmation; and
+- non-TTY mode does not prompt, and machine stdout remains separate from
+  diagnostics on stderr.
 
-- human output is labeled by field and announces state, destination, revision,
-  approval or policy basis, safety state, outcome, and next action in text;
-- the renderer supports a minimum of 80 columns and wraps rather than truncating
-  security or approval information;
-- keyboard prompts support confirmation, cancellation, exact-hash input, and
-  invalid-input recovery; no pointer is required;
-- non-TTY mode fails closed for approval, policy activation, secret override,
-  and purge execution;
-- `--color never` and `NO_COLOR` provide plain text, and labels remain
-  meaningful when ANSI styling is absent; and
-- stdout protocol data and stderr diagnostics remain separate in machine mode.
+The contract tests and snapshots verify these mechanical properties. They do
+not constitute a human accessibility or usability review.
 
-The documentation contract checks these topics and prohibited claims, but it
-does not substitute for a human accessibility or usability review.
+## Troubleshooting
+
+| Symptom | Likely cause | Corrective action |
+|---|---|---|
+| `config-not-found` | No configuration in the bounded search | Add `.repo-com.toml` or pass an in-root `--config` |
+| `multiple-config-candidates` | Multiple ancestor candidates | Remove the extra file or select one explicit path |
+| `unsupported-schema-version` | Schema is not version 1 | Update the document from the example |
+| `secret-field` / `raw-destination-field` | Forbidden configuration shape | Remove the field and use named aliases |
+| `operator-action-required` / `TtyRequired` | Authority action without a TTY | Use a real interactive terminal; never self-approve in automation |
+| `policy-blocked` | Missing, stale, ambiguous, or changed exact authority | Inspect status, correct the tuple, and make a fresh decision |
+| `authentication` | Dedicated bot credential rejected | Rotate/revoke the bot token and retry setup |
+| `permission` | Discord access is insufficient | Apply the reported manual grant only |
+| `connectivity-rate-limit` | Dynamic limit or bounded request failure | Honor the returned delay; do not guess a reset time |
+| `unknown-delivery` | Dispatch may have reached Discord | Keep blocked and perform read-only reconciliation; no automatic resend |
+| `storage-integrity` | SQLite, lock, migration, permission, or transaction failure | Preserve the database and sidecars; do not recreate state |
+| `expired` / `stale-authority` | Draft or authority is no longer current | Create a new revision or obtain fresh exact authority |
+| Purge plan changed | Configuration or local state changed | Generate a fresh plan and confirmation |
 
 ## Unsupported behavior and evidence boundary
 
-Repo-com v1 does not provide:
+This version does not provide:
 
-- no read receipts, no proof of a teammate's attention, and no response analytics;
-- arbitrary destinations, broadcasts, fan-out, direct messages, or user-token
-  authentication;
-- Gateway monitoring, a daemon, arbitrary history, or a background scheduler;
-- automatic permission changes, automatic unknown-delivery resend, or remote
-  edit/delete operations;
+- no read receipts, no proof of teammate attention, and no response analytics;
+- arbitrary destinations, broadcasts, fan-out, direct-message authorization, or
+  user-token/self-bot authentication;
+- a daemon, Gateway monitor, background scheduler, arbitrary history search, or
+  remote message edit/delete;
+- automatic Discord permission changes or automatic resend of an unknown
+  delivery;
+- a `reconcile` command, policy-deactivation command, or retention-sweep command
+  in the current command tree;
 - encryption at rest, an OS keychain, encrypted backups, or a guarantee against
-  local-account compromise; or
-- no claim of live Discord compatibility, human approval, release sign-off, or
-  compliance certification from automated tests or this guide.
+  local-account compromise, backups, or filesystem snapshots; or
+- a claim of live Discord compatibility, human approval, compliance
+  certification, or release sign-off from automated tests.
 
-The current implementation evidence is local, automated, and in part
-WireMock-based. A human live round trip and any human rubric or release decision
-belong to separate human-review tasks. This guide is evidence for review, not
-human approval.
+A local accepted result is not a read receipt. A stored inbound snapshot is not
+current remote truth. A valid setup report is point-in-time local evidence. The
+security and threat model documents contain the detailed residual-risk register.
 
 ## Sources
 
 Primary sources are `docs/features/release-readiness.md` (`REL-FR-02`,
-`REL-FR-03`, `REL-FR-08`), `docs/features/cli-foundation.md` (`FOUND-FR-02`
-through `FOUND-FR-06`), the command-handler input/dispatcher modules, the
-terminal renderer and prompt contracts, and the linked domain feature documents.
-No statement here authorizes a command, remote mutation, human judgment, or
-release decision that the implemented interfaces do not own.
+`REL-FR-03`, and `REL-FR-08`), `docs/features/cli-foundation.md`, the implemented
+CLI handler/input modules, the final process router, the terminal renderer and
+prompt contracts, the state/lifecycle/retention/purge services, and the Discord
+adapter modules. The [configuration contract](configuration.md),
+[Discord setup](discord-setup.md), [security model](security-model.md), and
+[threat model](threat-model.md) own their specialist topics.
+
+This document is implementation guidance for review. It does not authorize a
+human decision, a live acceptance result, or a release decision.
