@@ -1,0 +1,495 @@
+name: Release
+
+# This tag-triggered workflow builds and scans release evidence only.
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  CARGO_TERM_COLOR: "never"
+  CI: "true"
+  RUST_TOOLCHAIN_VERSION: "1.98.1"
+  NEXTEST_VERSION: "0.9.146"
+  CARGO_DIST_VERSION: "0.32.0"
+  CARGO_CYCLONEDX_VERSION: "0.5.9"
+  CARGO_DENY_VERSION: "0.20.2"
+  CARGO_AUDIT_VERSION: "0.22.2"
+  ACTIONLINT_VERSION: "1.7.12"
+  GITLEAKS_VERSION: "8.30.1"
+  SQLITE_RELEASE_FLOOR: "3.53.4"
+  SQLITE3_STATIC: "1"
+  SQLITE3_LIB_DIR: ${{ vars.REPO_COM_SQLITE_LIB_DIR }}
+  SQLITE3_INCLUDE_DIR: ${{ vars.REPO_COM_SQLITE_INCLUDE_DIR }}
+  SQLITE_RUNTIME_VERSION: ${{ vars.REPO_COM_SQLITE_VERSION }}
+  REPO_COM_PERF_NO_NETWORK: "1"
+  INSTALLATION_MODE: "explicit-archive"
+
+jobs:
+  evidence:
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    name: Validate CI and release policy evidence
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    defaults:
+      run:
+        shell: bash
+    timeout-minutes: 60
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+
+      - name: Install the pinned Rust toolchain
+        run: |
+          rustup toolchain install "${RUST_TOOLCHAIN_VERSION}" --profile minimal --component rustfmt --component clippy
+          rustup default "${RUST_TOOLCHAIN_VERSION}"
+
+      - name: Install pinned validation tools
+        run: |
+          cargo install --locked cargo-nextest --version "${NEXTEST_VERSION}"
+          cargo install --locked cargo-deny --version "${CARGO_DENY_VERSION}"
+          cargo install --locked cargo-audit --version "${CARGO_AUDIT_VERSION}"
+          go install github.com/rhysd/actionlint/cmd/actionlint@"${ACTIONLINT_VERSION}"
+          go install github.com/zricethezav/gitleaks/v8@"${GITLEAKS_VERSION}"
+          echo "$(go env GOPATH)/bin" >> "${GITHUB_PATH}"
+
+      - name: Run formatting and lint gates
+        run: |
+          cargo fmt --all -- --check
+          cargo clippy --workspace --all-targets --all-features -- -D warnings
+
+      - name: Run selected contracts with fail-on-zero-tests
+        run: |
+          cargo nextest run --no-tests fail -E 'binary_id(ci_policy_contract)'
+          cargo nextest run --no-tests fail -E 'binary_id(release_policy_contract)'
+
+      - name: Validate advisories and licenses
+        run: |
+          cargo deny check advisories bans licenses sources
+          cargo audit --file Cargo.lock --deny warnings
+
+      - name: Validate the release workflow syntax
+        run: actionlint .github/workflows/release.yml
+
+      - name: Scan release policy surfaces
+        run: |
+          scan_root="${RUNNER_TEMP}/repo-com-release-source"
+          mkdir -p "${scan_root}/.github/workflows" "${scan_root}/crates"
+          cp dist-workspace.toml "${scan_root}/dist-workspace.toml"
+          cp .github/workflows/release.yml "${scan_root}/.github/workflows/release.yml"
+          cp -R crates/repo-com-release-policy "${scan_root}/crates/repo-com-release-policy"
+          gitleaks dir "${scan_root}" --redact --no-banner --exit-code 1
+
+  performance:
+    needs: evidence
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    name: Validate the performance budget
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    defaults:
+      run:
+        shell: bash
+    timeout-minutes: 60
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+
+      - name: Install the pinned Rust toolchain
+        run: |
+          rustup toolchain install "${RUST_TOOLCHAIN_VERSION}" --profile minimal
+          rustup default "${RUST_TOOLCHAIN_VERSION}"
+          go install github.com/zricethezav/gitleaks/v8@"${GITLEAKS_VERSION}"
+          echo "$(go env GOPATH)/bin" >> "${GITHUB_PATH}"
+
+      - name: Run the token-free performance contract
+        run: |
+          cargo nextest run --no-tests fail -E 'binary_id(performance_contract)'
+          evidence_dir="${RUNNER_TEMP}/repo-com-evidence"
+          mkdir -p "${evidence_dir}"
+          cargo run --locked --package performance_contract --bin repo-com-performance > "${evidence_dir}/performance.json"
+          python - "${evidence_dir}/performance.json" <<'PY'
+          import json
+          import sys
+          report = json.load(open(sys.argv[1], encoding="utf-8"))
+          assert report["passed"] is True
+          assert report["threshold_ms"] <= 500
+          assert report["sample_count_per_class"] >= 100
+          PY
+          gitleaks dir "${evidence_dir}" --redact --no-banner --exit-code 1
+
+  plan:
+    needs:
+      - evidence
+      - performance
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    name: Validate the release plan
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    defaults:
+      run:
+        shell: bash
+    timeout-minutes: 60
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+
+      - name: Install pinned release tools
+        run: |
+          rustup toolchain install "${RUST_TOOLCHAIN_VERSION}" --profile minimal
+          rustup default "${RUST_TOOLCHAIN_VERSION}"
+          cargo install --locked cargo-dist --version "${CARGO_DIST_VERSION}"
+          cargo install --locked cargo-cyclonedx --version "${CARGO_CYCLONEDX_VERSION}"
+          cargo install --locked cargo-deny --version "${CARGO_DENY_VERSION}"
+          go install github.com/zricethezav/gitleaks/v8@"${GITLEAKS_VERSION}"
+          echo "$(go env GOPATH)/bin" >> "${GITHUB_PATH}"
+
+      - name: Generate the machine-readable release plan
+        run: |
+          cargo metadata --locked --format-version 1 --no-deps > /dev/null
+          dist plan --tag="${GITHUB_REF_NAME}" --output-format=json --no-local-paths > release-plan.json
+          python - release-plan.json <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+          plan = json.load(open(sys.argv[1], encoding="utf-8"))
+          text = json.dumps(plan).lower()
+          config = Path("dist-workspace.toml").read_text(encoding="utf-8")
+          for target in ("x86_64-unknown-linux-gnu", "x86_64-apple-darwin", "x86_64-pc-windows-msvc"):
+              assert target in text, target
+          assert "source" in text
+          assert "source.tar" in text
+          assert "checksum" in text
+          assert "sbom" in text or "cyclonedx" in text
+          assert "3.53.4" in config
+          PY
+          git diff --exit-code -- dist-workspace.toml
+
+      - name: Generate dependency license evidence
+        run: |
+          cargo deny check licenses
+          set -o pipefail
+          cargo metadata --locked --format-version 1 --all-features | python -c 'import json,sys; d=json.load(sys.stdin); [print("{}\t{}\t{}\t{}".format(p["name"], p["version"], p.get("license") or "UNKNOWN", p.get("source") or "path")) for p in sorted(d["packages"], key=lambda p: (p["name"], p["version"]))]' > dependency-licenses.txt
+          test -s dependency-licenses.txt
+          scan_root="${RUNNER_TEMP}/repo-com-license-scan"
+          mkdir -p "${scan_root}"
+          cp dependency-licenses.txt "${scan_root}/"
+          gitleaks dir "${scan_root}" --redact --no-banner --exit-code 1
+
+      - name: Generate the CycloneDX SBOM
+        run: |
+          cargo cyclonedx --format json --all-features --target all --target-in-filename
+          scan_root="${RUNNER_TEMP}/repo-com-release-generated"
+          mkdir -p "${scan_root}"
+          cp release-plan.json dependency-licenses.txt "${scan_root}/"
+          cp bom*.json "${scan_root}/"
+          gitleaks dir "${scan_root}" --redact --no-banner --exit-code 1
+
+      - name: Upload release-plan evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: release-plan-evidence
+          path: |
+            release-plan.json
+            dependency-licenses.txt
+            bom*.json
+            bom*.cdx.json
+
+  build-local-artifacts:
+    needs: plan
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    name: Build ${{ matrix.target }}
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-gnu
+            runner: ubuntu-24.04
+          - target: x86_64-apple-darwin
+            runner: macos-15-intel
+          - target: aarch64-apple-darwin
+            runner: macos-14
+          - target: x86_64-pc-windows-msvc
+            runner: windows-2022
+    defaults:
+      run:
+        shell: bash
+    timeout-minutes: 90
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+
+      - name: Install the pinned Rust toolchain
+        run: |
+          rustup toolchain install "${RUST_TOOLCHAIN_VERSION}" --profile minimal
+          rustup default "${RUST_TOOLCHAIN_VERSION}"
+          cargo install --locked cargo-dist --version "${CARGO_DIST_VERSION}"
+          go install github.com/zricethezav/gitleaks/v8@"${GITLEAKS_VERSION}"
+          echo "$(go env GOPATH)/bin" >> "${GITHUB_PATH}"
+
+      - name: Require the pre-provisioned patched static SQLite library
+        run: |
+          test "${SQLITE3_STATIC}" = "1"
+          test -n "${SQLITE3_LIB_DIR}"
+          test -n "${SQLITE3_INCLUDE_DIR}"
+          test -f "${SQLITE3_LIB_DIR}/sqlite3.h"
+          grep -F 'assert_sqlite_runtime' crates/repo-com-state/src/store.rs >/dev/null
+          grep -F 'REQUIRED_SQLITE_VERSION' crates/repo-com-state/src/store.rs >/dev/null
+          if [ "${RUNNER_OS}" = "Windows" ]; then
+            test -f "${SQLITE3_LIB_DIR}/sqlite3.lib"
+          else
+            test -f "${SQLITE3_LIB_DIR}/libsqlite3.a"
+          fi
+          python - "${SQLITE_RUNTIME_VERSION}" "${SQLITE_RELEASE_FLOOR}" <<'PY'
+          import sys
+          observed = tuple(int(part) for part in sys.argv[1].split(".")[:3])
+          required = tuple(int(part) for part in sys.argv[2].split(".")[:3])
+          assert observed >= required, (observed, required)
+          PY
+
+      - name: Build target artifacts and linkage evidence
+        run: |
+          dist build --tag="${GITHUB_REF_NAME}" --artifacts=local --target="${{ matrix.target }}" --output-format=json --print=linkage > dist-manifest.json
+          cargo test --locked --release --target="${{ matrix.target }}" --package state_contract runtime_boundary_reports_the_linked_version_and_release_floor
+          cargo test --locked --release --target="${{ matrix.target }}" --package state_contract release_open_asserts_before_creating_or_mutating_state
+          cargo build --locked --release --target="${{ matrix.target }}" --package command_routing_contract --bin repo-com
+          binary="$(python - <<'PY'
+          from pathlib import Path
+          candidates = sorted(path for path in Path("target").rglob("repo-com*") if path.is_file())
+          assert candidates, "release binary was not produced"
+          print(candidates[0])
+          PY
+          )"
+          test -f "${binary}"
+          state_path="${RUNNER_TEMP}/repo-com-release.sqlite3"
+          rm -f "${state_path}"
+          env -u REPO_COM_DISCORD_TOKEN REPO_COM_PERF_NO_NETWORK=1 \
+            "${binary}" --config examples/repo-com.example.toml --state "${state_path}" \
+            --output json --non-tty draft create <<'JSON'
+          {"protocol_version":1,"command":"draft.create","input":{"repository_id":"acme/widgets","draft_id":"release-sqlite-gate","destination_alias":"release","text":"synthetic release SQLite gate","event_type":"build_failed","severity":"high","created_at":"2099-01-01T00:00:00Z","created_at_unix_seconds":4070908800,"expires_in_seconds":3600,"metadata":{}}}
+          JSON
+          case "${RUNNER_OS}" in
+            Linux)
+              linkage_output="$(ldd "${binary}" 2>&1 || true)"
+              printf '%s\n' "${linkage_output}" > "${RUNNER_TEMP}/sqlite-linkage.txt"
+              if printf '%s\n' "${linkage_output}" | grep -Eiq 'sqlite3|libsqlite'; then
+                exit 1
+              fi
+              ;;
+            macOS)
+              otool -L "${binary}" | tee "${RUNNER_TEMP}/sqlite-linkage.txt"
+              if grep -Eiq 'sqlite3|libsqlite' "${RUNNER_TEMP}/sqlite-linkage.txt"; then
+                exit 1
+              fi
+              ;;
+            Windows)
+              if command -v objdump >/dev/null 2>&1; then
+                objdump -p "${binary}" | tee "${RUNNER_TEMP}/sqlite-linkage.txt"
+              else
+                dumpbin /dependents "${binary}" | tee "${RUNNER_TEMP}/sqlite-linkage.txt"
+              fi
+              if grep -Eiq 'sqlite3\.dll' "${RUNNER_TEMP}/sqlite-linkage.txt"; then
+                exit 1
+              fi
+              ;;
+            *)
+              exit 1
+              ;;
+          esac
+          gitleaks dir target/distrib --redact --no-banner --exit-code 1
+
+      - name: Upload local artifacts and evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: release-local-${{ matrix.target }}
+          path: |
+            target/distrib/**
+            dist-manifest.json
+            ${RUNNER_TEMP}/sqlite-linkage.txt
+
+  build-global-artifacts:
+    needs:
+      - plan
+      - build-local-artifacts
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    name: Build global release evidence
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    defaults:
+      run:
+        shell: bash
+    timeout-minutes: 90
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+
+      - name: Install pinned release evidence tools
+        run: |
+          rustup toolchain install "${RUST_TOOLCHAIN_VERSION}" --profile minimal
+          rustup default "${RUST_TOOLCHAIN_VERSION}"
+          cargo install --locked cargo-dist --version "${CARGO_DIST_VERSION}"
+          cargo install --locked cargo-cyclonedx --version "${CARGO_CYCLONEDX_VERSION}"
+          cargo install --locked cargo-deny --version "${CARGO_DENY_VERSION}"
+          go install github.com/zricethezav/gitleaks/v8@"${GITLEAKS_VERSION}"
+          echo "$(go env GOPATH)/bin" >> "${GITHUB_PATH}"
+
+      - name: Fetch local artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: release-local-*
+          path: target/distrib
+          merge-multiple: true
+
+      - name: Generate global release and SBOM evidence
+        run: |
+          dist build --tag="${GITHUB_REF_NAME}" --artifacts=global --output-format=json > dist-manifest.json
+          cargo deny check licenses
+          set -o pipefail
+          cargo metadata --locked --format-version 1 --all-features | python -c 'import json,sys; d=json.load(sys.stdin); [print("{}\t{}\t{}\t{}".format(p["name"], p["version"], p.get("license") or "UNKNOWN", p.get("source") or "path")) for p in sorted(d["packages"], key=lambda p: (p["name"], p["version"]))]' > dependency-licenses.txt
+          test -s dependency-licenses.txt
+          cargo cyclonedx --format json --all-features --target all --target-in-filename
+          python - <<'PY'
+          from pathlib import Path
+          import shutil
+          destination = Path("target/distrib")
+          destination.mkdir(parents=True, exist_ok=True)
+          for path in Path(".").rglob("bom*.json"):
+              if path.parent != destination:
+                  shutil.copy2(path, destination / path.name)
+          for path in Path(".").rglob("*.cdx.json"):
+              if path.parent != destination:
+                  shutil.copy2(path, destination / path.name)
+          PY
+
+      - name: Verify source archive checksums and SBOM
+        run: |
+          while IFS= read -r checksum; do
+            directory="$(dirname "${checksum}")"
+            filename="$(basename "${checksum}")"
+            if command -v sha256sum >/dev/null 2>&1; then
+              (cd "${directory}" && sha256sum --check "${filename}")
+            elif command -v shasum >/dev/null 2>&1; then
+              (cd "${directory}" && shasum -a 256 --check "${filename}")
+            else
+              exit 1
+            fi
+          done < <(python - <<'PY'
+          from pathlib import Path
+          for path in sorted(Path("target/distrib").rglob("*")):
+              if path.is_file() and (path.name.endswith((".sha256", "sha256.sum"))):
+                  print(path)
+          PY
+          )
+          python - <<'PY'
+          from hashlib import new
+          from pathlib import Path
+          import json
+          root = Path("target/distrib")
+          files = [path for path in root.rglob("*") if path.is_file()]
+          source_archives = [path for path in files if "source" in path.name.lower() and path.suffix.lower() in {".gz", ".xz", ".zip", ".zst"}]
+          checksum_files = [path for path in files if path.name.endswith((".sha256", ".sha512", ".sha3-256", ".sha3-512")) or path.name.lower() == "sha256.sum"]
+          sboms = [path for path in files if path.name.endswith((".json", ".xml")) and ("bom" in path.name.lower() or "cdx" in path.name.lower())]
+          assert source_archives, "missing source archive"
+          assert checksum_files, "missing strong checksum files"
+          assert sboms, "missing CycloneDX SBOM"
+          for checksum in checksum_files:
+              name = checksum.name.lower()
+              if name.endswith(".sha512") or name == "sha512.sum":
+                  algorithm = "sha512"
+              elif name.endswith(".sha3-256"):
+                  algorithm = "sha3_256"
+              elif name.endswith(".sha3-512"):
+                  algorithm = "sha3_512"
+              elif name.endswith(".blake2s"):
+                  algorithm = "blake2s"
+              elif name.endswith(".blake2b"):
+                  algorithm = "blake2b"
+              else:
+                  algorithm = "sha256"
+              for line in checksum.read_text(encoding="utf-8").splitlines():
+                  if not line.strip():
+                      continue
+                  digest, name_in_file = line.split(None, 1)
+                  name_in_file = name_in_file.lstrip("*")
+                  candidates = [Path(name_in_file), checksum.parent / name_in_file]
+                  candidate = next((path for path in candidates if path.is_file()), None)
+                  assert candidate is not None, candidate
+                  assert new(algorithm, candidate.read_bytes()).hexdigest() == digest.lower(), candidate
+          for sbom in sboms:
+              if sbom.suffix.lower() == ".json":
+                  value = json.loads(sbom.read_text(encoding="utf-8"))
+                  assert value.get("bomFormat") == "CycloneDX", sbom
+          PY
+          gitleaks dir target/distrib --redact --no-banner --exit-code 1
+
+      - name: Upload global artifacts and evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: release-global-evidence
+          path: |
+            target/distrib/**
+            dependency-licenses.txt
+            dist-manifest.json
+
+  artifact-safety:
+    needs: build-global-artifacts
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    name: Recheck release artifact safety
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    defaults:
+      run:
+        shell: bash
+    timeout-minutes: 60
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+
+      - name: Install the pinned workflow and secret tools
+        run: |
+          rustup toolchain install "${RUST_TOOLCHAIN_VERSION}" --profile minimal
+          rustup default "${RUST_TOOLCHAIN_VERSION}"
+          cargo install --locked cargo-nextest --version "${NEXTEST_VERSION}"
+          go install github.com/rhysd/actionlint/cmd/actionlint@"${ACTIONLINT_VERSION}"
+          go install github.com/zricethezav/gitleaks/v8@"${GITLEAKS_VERSION}"
+          echo "$(go env GOPATH)/bin" >> "${GITHUB_PATH}"
+
+      - name: Fetch release evidence
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: release-*-*
+          path: release-evidence
+          merge-multiple: true
+
+      - name: Re-run policy and generated-surface scans
+        run: |
+          cargo nextest run --no-tests fail -E 'binary_id(release_policy_contract)'
+          actionlint .github/workflows/release.yml
+          gitleaks dir release-evidence --redact --no-banner --exit-code 1

@@ -1,0 +1,14 @@
+[package]
+# The package name is the stable nextest binary ID selected by REL-PACK-1.
+name = "release_policy_contract"
+autotests = false
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "Machine-checkable versioned release packaging policy for repo-com"
+
+[lib]
+name = "repo_com_release_policy"
+path = "src/lib.rs"

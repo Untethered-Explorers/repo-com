@@ -1,0 +1,43 @@
+[workspace]
+members = ["cargo:."]
+
+[dist]
+# Keep the release plan explicit and reproducible. cargo-dist 0.32.0 is the
+# only planner allowed to interpret this file.
+# SQLite release floor: 3.53.4; the workflow and runtime contract enforce it.
+dist = true
+cargo-dist-version = "0.32.0"
+version = "0.1.0"
+packages = ["command_routing_contract"]
+targets = ["x86_64-unknown-linux-gnu", "x86_64-apple-darwin", "aarch64-apple-darwin", "x86_64-pc-windows-msvc"]
+installers = []
+install-updater = false
+always-use-latest-updater = false
+checksum = "sha256"
+source-tarball = true
+recursive-tarball = false
+cargo-cyclonedx = true
+msvc-crt-static = true
+precise-builds = true
+all-features = true
+# The checked-in tag workflow is the sole release gate; cargo-dist hosting
+# and generated publication remain disabled for this implementation task.
+ci = []
+hosting = []
+build-local-artifacts = true
+cache-builds = false
+fail-fast = true
+merge-tasks = true
+publish-prereleases = false
+
+# The release workflow creates this text report before invoking cargo-dist. The
+# extra-artifact entry makes dependency-license evidence part of every plan.
+[[dist.extra-artifacts]]
+artifacts = ["dependency-licenses.txt"]
+build = ["cargo", "deny", "check", "licenses"]
+
+[profile.dist]
+inherits = "release"
+lto = "thin"
+codegen-units = 1
+strip = "symbols"

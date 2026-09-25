@@ -3,7 +3,7 @@
 ## Current State
 **Phase**: RELEASE-READINESS-3
 **Status**: In Progress
-**Last Updated**: 2026-09-25T01:05:33.875Z
+**Last Updated**: 2026-09-25T01:39:14.327Z
 **Run ID**: 7acb4fd7-13bc-4f05-aa63-f810395058df
 **Harness**: opencode
 **Execution Mode**: auto
@@ -67,6 +67,8 @@
   - Files: crates/repo-com-performance/Cargo.toml, crates/repo-com-performance/src/lib.rs, crates/repo-com-performance/src/main.rs, crates/repo-com-performance/tests/performance_contract.rs, Cargo.lock
 - [x] Phase RELEASE-READINESS-3, Task REL-CI-1: Create cross-platform CI policy (@release-engineer)
   - Files: crates/repo-com-ci-policy/Cargo.toml, crates/repo-com-ci-policy/src/lib.rs, crates/repo-com-ci-policy/tests/ci_policy_contract.rs, deny.toml, .github/dependabot.yml, .github/workflows/ci.yml, Cargo.lock
+- [x] Phase RELEASE-READINESS-3, Task REL-PACK-1: Create versioned release packaging (@release-engineer)
+  - Files: crates/repo-com-release-policy/Cargo.toml, crates/repo-com-release-policy/src/lib.rs, crates/repo-com-release-policy/tests/release_policy_contract.rs, dist-workspace.toml, .github/workflows/release.yml, Cargo.lock
 - [x] Phase RELEASE-READINESS-3, Task REL-E2E-1: Prove the complete mocked communication workflow (@quality-engineer)
   - Files: crates/repo-com-cli/tests/e2e_workflow.rs, crates/repo-com-cli/tests/support/mod.rs, crates/repo-com-cli/tests/fixtures/valid-config.toml, crates/repo-com-cli/tests/fixtures/accepted-message.json, crates/repo-com-cli/tests/fixtures/human-reply.json, Cargo.lock, crates/repo-com-cli/Cargo.toml, crates/repo-com-e2e/Cargo.toml
 
@@ -74,7 +76,6 @@
 - None currently running
 
 ## Remaining
-- [ ] Phase RELEASE-READINESS-3: Phase 3: Performance, Infrastructure, and End-to-End Evidence
 - [ ] Phase RELEASE-READINESS-4: Phase 4: Human UX and Security Rubrics
 - [ ] Phase RELEASE-READINESS-5: Phase 5: Human Live Discord Acceptance
 - [ ] Phase RELEASE-READINESS-6: Phase 6: Human Release Sign-Off
