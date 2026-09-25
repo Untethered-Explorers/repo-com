@@ -202,7 +202,7 @@ jobs:
           gitleaks dir "${scan_root}" --redact --no-banner --exit-code 1
 
       - name: Upload release-plan evidence
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: release-plan-evidence
           path: |
@@ -320,7 +320,7 @@ jobs:
           gitleaks dir target/distrib --redact --no-banner --exit-code 1
 
       - name: Upload local artifacts and evidence
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: release-local-${{ matrix.target }}
           path: |
@@ -447,7 +447,7 @@ jobs:
           gitleaks dir target/distrib --redact --no-banner --exit-code 1
 
       - name: Upload global artifacts and evidence
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: release-global-evidence
           path: |
