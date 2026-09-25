@@ -56,5 +56,5 @@ repo-com-terminal-operations = { package = "terminal_operations_contract", path 
 repo-com-terminal-outbound = { package = "terminal_outbound_contract", path = "../repo-com-terminal-outbound" }
 
 [dev-dependencies]
-sha2 = "=0.10.9"
+sha2 = "=0.11.0"
 wiremock = "=0.6.5"
