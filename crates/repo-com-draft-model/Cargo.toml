@@ -17,4 +17,4 @@ path = "src/lib.rs"
 repo-com-config = { package = "config_contract", path = "../repo-com-config" }
 serde.workspace = true
 serde_json.workspace = true
-sha2 = "=0.10.9"
+sha2 = "=0.11.0"

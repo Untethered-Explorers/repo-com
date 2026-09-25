@@ -24,7 +24,7 @@ repo-com-reply = { package = "reply_contract", path = "../repo-com-reply" }
 repo-com-terminal-outbound = { package = "terminal_outbound_contract", path = "../repo-com-terminal-outbound" }
 serde.workspace = true
 serde_json.workspace = true
-sha2 = "=0.10.9"
+sha2 = "=0.11.0"
 
 [dev-dependencies]
 tokio = { version = "=1.53.1", features = ["macros", "rt-multi-thread"] }
