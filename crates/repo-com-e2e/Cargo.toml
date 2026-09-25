@@ -1,0 +1,22 @@
+# The task-selected nextest ID is the bare package ID. The library test target
+# keeps that stable selector while exercising the final repo-com binary.
+[package]
+name = "e2e_workflow"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "Validation bridge for the final-binary mocked end-to-end contract"
+
+[lib]
+name = "e2e_workflow"
+path = "../repo-com-cli/tests/e2e_workflow.rs"
+
+[dev-dependencies]
+repo-com-delivery-retry = { package = "delivery_retry_contract", path = "../repo-com-delivery-retry" }
+repo-com-state = { package = "state_contract", path = "../repo-com-state" }
+serde_json.workspace = true
+sha2 = "=0.10.9"
+tokio = { version = "=1.53.1", features = ["macros", "rt-multi-thread"] }
+wiremock = "=0.6.5"

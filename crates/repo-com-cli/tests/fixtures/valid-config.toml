@@ -1,0 +1,23 @@
+schema_version = 1
+repository_id = "acme/e2e"
+
+[discord]
+workspace_id = "100000000000000001"
+
+[destinations.release]
+channel_id = "200000000000000001"
+allowed_mentions = []
+
+[mentions]
+
+[inbound.release]
+enabled = true
+
+[retention]
+content_days = 30
+metadata_days = 365
+
+[[auto_send]]
+event_type = "build_failed"
+destination = "release"
+severity = "high"

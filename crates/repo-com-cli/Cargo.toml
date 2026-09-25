@@ -20,6 +20,10 @@ path = "src/main.rs"
 name = "command_routing_contract"
 path = "tests/command_routing_contract.rs"
 
+[[test]]
+name = "e2e_workflow"
+path = "tests/e2e_workflow.rs"
+
 [dependencies]
 clap.workspace = true
 serde.workspace = true
@@ -50,3 +54,7 @@ repo-com-send-eligibility = { package = "send_eligibility_contract", path = "../
 repo-com-state = { package = "state_contract", path = "../repo-com-state" }
 repo-com-terminal-operations = { package = "terminal_operations_contract", path = "../repo-com-terminal-operations" }
 repo-com-terminal-outbound = { package = "terminal_outbound_contract", path = "../repo-com-terminal-outbound" }
+
+[dev-dependencies]
+sha2 = "=0.10.9"
+wiremock = "=0.6.5"

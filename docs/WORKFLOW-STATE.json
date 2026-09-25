@@ -1,7 +1,7 @@
 {
   "runId": "7acb4fd7-13bc-4f05-aa63-f810395058df",
   "startedAt": "2026-09-24T08:46:22.421Z",
-  "lastUpdatedAt": "2026-09-24T23:17:21.037Z",
+  "lastUpdatedAt": "2026-09-25T01:05:33.871Z",
   "manifestPath": "/home/mcfuzzysquirrel/Projects/repo-com/docs/EXECUTION-MANIFEST.json",
   "manifestVersion": "1.0",
   "harness": "opencode",
@@ -3154,10 +3154,45 @@
     },
     "REL-E2E-1": {
       "taskId": "REL-E2E-1",
-      "status": "pending",
+      "status": "complete",
       "ownerAgent": "quality-engineer",
-      "attempt": 0,
-      "outputFiles": []
+      "attempt": 3,
+      "outputFiles": [
+        "crates/repo-com-cli/tests/e2e_workflow.rs",
+        "crates/repo-com-cli/tests/support/mod.rs",
+        "crates/repo-com-cli/tests/fixtures/valid-config.toml",
+        "crates/repo-com-cli/tests/fixtures/accepted-message.json",
+        "crates/repo-com-cli/tests/fixtures/human-reply.json",
+        "Cargo.lock",
+        "crates/repo-com-cli/Cargo.toml",
+        "crates/repo-com-e2e/Cargo.toml"
+      ],
+      "startedAt": "2026-09-25T00:33:10.823Z",
+      "attemptHistory": [
+        {
+          "attempt": 1,
+          "outcome": "failed",
+          "reason": "expected outputs missing: crates/repo-com-cli/tests/e2e_workflow.rs, crates/repo-com-cli/tests/support/mod.rs, crates/repo-com-cli/tests/fixtures/valid-config.toml, crates/repo-com-cli/tests/fixtures/accepted-message.json, crates/repo-com-cli/tests/fixtures/human-reply.json",
+          "resultPath": "docs/artifacts/REL-E2E-1.2026-09-24T23-37-51-146Z.attempt-1.result.json"
+        },
+        {
+          "attempt": 2,
+          "outcome": "failed",
+          "reason": "Unresolved task requirements: The required validation command cargo nextest run --no-tests fail -E 'binary_id(e2e_workflow)' fails because the package is command_routing_contract and the actual integration binary ID is command_routing_contract::e2e_workflow.; The concurrency test executes 100 total invocations with a bounded 10-process fanout; literal 100 simultaneous OS-process invocations are not proven because higher fanout was not stable on this runner.",
+          "resultPath": "docs/artifacts/REL-E2E-1.2026-09-25T00-33-05-814Z.attempt-2.result.json"
+        },
+        {
+          "attempt": 3,
+          "outcome": "passed",
+          "resultPath": "docs/artifacts/REL-E2E-1.2026-09-25T01-05-33-866Z.attempt-3.result.json"
+        }
+      ],
+      "completedAt": "2026-09-25T01:05:33.871Z",
+      "agentOutput": "Implemented REL-E2E-1 with isolated, token-free mocked coverage for:\n\n- Configuration validation and exact policy activation\n- Draft creation, preview, send, and durable correlation\n- Inbound human reply/mention fetch\n- Validated reply-draft creation and local acknowledgement\n- Audit inspection and purge planning/execution\n- 100 overlapping final-binary process invocations with one durable accepted attempt and one Discord create request\n- Post-dispatch timeout, unknown-state blocking, and read-only exact-message reconciliation\n- Fixture, capture, authorization, token, and team-content hygiene checks\n- Loopback-only WireMock/TLS proxy isolation\n\nObserved evidence:\n\n- Happy path: 1 create, 1 list, 1 point request; 0 external requests\n- Concurrency: 100 processes alive before release; 1 create request; 1 durable accepted attempt; 0 second posts\n- Unknown reconciliation: 1 create request, 1 read request, 0 unsafe second POSTs\n\nValidation passed:\n\n- `cargo fmt --all -- --check`\n- `cargo clippy --workspace --all-targets --all-features -- -D warnings`\n- `cargo nextest run --no-tests fail -E 'binary_id(e2e_workflow)'` — 4 passed\n- Full workspace nextest — 318 passed, 2 skipped\n\nFiles created or changed:\n\n- `crates/repo-com-cli/tests/e2e_workflow.rs`\n- `crates/repo-com-cli/tests/support/mod.rs`\n- `crates/repo-com-cli/tests/fixtures/valid-config.toml`\n- `crates/repo-com-cli/tests/fixtures/accepted-message.json`\n- `crates/repo-com-cli/tests/fixtures/human-reply.json`\n- `crates/repo-com-e2e/Cargo.toml` — test-target bridge for the mandated bare `binary_id(e2e_workflow)` selector\n- `crates/repo-com-cli/Cargo.toml`\n- `Cargo.lock`\n\n`docs/artifacts/REL-E2E-1.md` was not modified. The pre-existing modifications to `docs/EXECUTION-AUDIT.jsonl` and `docs/WORKFLOW-STATE.json` were left untouched.\n\n```forge-result\n{\"summary\":\"Implemented and verified the complete token-free mocked REL-E2E-1 workflow, including 100-process concurrency and unknown-delivery reconciliation.\",\"unresolved\":[]}\n```\n",
+      "artifactId": "work-rel-e2e-1-001",
+      "inputArtifactIds": [
+        "work-rel-app-1-001"
+      ]
     },
     "REL-UX-HR-1": {
       "taskId": "REL-UX-HR-1",

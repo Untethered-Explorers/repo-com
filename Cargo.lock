@@ -343,10 +343,12 @@ dependencies = [
  "send_eligibility_contract",
  "serde",
  "serde_json",
+ "sha2",
  "state_contract",
  "terminal_operations_contract",
  "terminal_outbound_contract",
  "tokio",
+ "wiremock",
 ]
 
 [[package]]
@@ -573,6 +575,18 @@ name = "dunce"
 version = "1.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "92773504d58c093f6de2459af4af33faa518c13451eb8f2b5698ed3d36e7c813"
+
+[[package]]
+name = "e2e_workflow"
+version = "0.1.0"
+dependencies = [
+ "delivery_retry_contract",
+ "serde_json",
+ "sha2",
+ "state_contract",
+ "tokio",
+ "wiremock",
+]
 
 [[package]]
 name = "equivalent"

@@ -3,7 +3,7 @@
 ## Current State
 **Phase**: RELEASE-READINESS-3
 **Status**: In Progress
-**Last Updated**: 2026-09-24T23:17:21.041Z
+**Last Updated**: 2026-09-25T01:05:33.875Z
 **Run ID**: 7acb4fd7-13bc-4f05-aa63-f810395058df
 **Harness**: opencode
 **Execution Mode**: auto
@@ -67,6 +67,8 @@
   - Files: crates/repo-com-performance/Cargo.toml, crates/repo-com-performance/src/lib.rs, crates/repo-com-performance/src/main.rs, crates/repo-com-performance/tests/performance_contract.rs, Cargo.lock
 - [x] Phase RELEASE-READINESS-3, Task REL-CI-1: Create cross-platform CI policy (@release-engineer)
   - Files: crates/repo-com-ci-policy/Cargo.toml, crates/repo-com-ci-policy/src/lib.rs, crates/repo-com-ci-policy/tests/ci_policy_contract.rs, deny.toml, .github/dependabot.yml, .github/workflows/ci.yml, Cargo.lock
+- [x] Phase RELEASE-READINESS-3, Task REL-E2E-1: Prove the complete mocked communication workflow (@quality-engineer)
+  - Files: crates/repo-com-cli/tests/e2e_workflow.rs, crates/repo-com-cli/tests/support/mod.rs, crates/repo-com-cli/tests/fixtures/valid-config.toml, crates/repo-com-cli/tests/fixtures/accepted-message.json, crates/repo-com-cli/tests/fixtures/human-reply.json, Cargo.lock, crates/repo-com-cli/Cargo.toml, crates/repo-com-e2e/Cargo.toml
 
 ## Current Task
 - None currently running
