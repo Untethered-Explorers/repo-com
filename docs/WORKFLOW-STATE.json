@@ -1,12 +1,12 @@
 {
   "runId": "7acb4fd7-13bc-4f05-aa63-f810395058df",
   "startedAt": "2026-09-24T08:46:22.421Z",
-  "lastUpdatedAt": "2026-09-25T01:39:14.321Z",
+  "lastUpdatedAt": "2026-09-25T01:39:14.385Z",
   "manifestPath": "/home/mcfuzzysquirrel/Projects/repo-com/docs/EXECUTION-MANIFEST.json",
   "manifestVersion": "1.0",
   "harness": "opencode",
-  "status": "running",
-  "currentPhase": "RELEASE-READINESS-3",
+  "status": "paused",
+  "currentPhase": "RELEASE-READINESS-4",
   "tasks": {
     "PLAT-1": {
       "taskId": "PLAT-1",
@@ -3221,7 +3221,8 @@
       "taskId": "REL-UX-HR-1",
       "status": "pending",
       "attempt": 0,
-      "outputFiles": []
+      "outputFiles": [],
+      "errorMessage": "Human review required for 'REL-UX-HR-1'. Record operator evidence with workflow-engine approve-task, then resume. --yes does not approve human work."
     },
     "REL-SEC-HR-1": {
       "taskId": "REL-SEC-HR-1",
