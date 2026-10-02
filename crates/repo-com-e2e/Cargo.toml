@@ -17,6 +17,6 @@ path = "../repo-com-cli/tests/e2e_workflow.rs"
 repo-com-delivery-retry = { package = "delivery_retry_contract", path = "../repo-com-delivery-retry" }
 repo-com-state = { package = "state_contract", path = "../repo-com-state" }
 serde_json.workspace = true
-sha2 = "=0.10.9"
+sha2 = "=0.11.0"
 tokio = { version = "=1.53.1", features = ["macros", "rt-multi-thread"] }
 wiremock = "=0.6.5"
