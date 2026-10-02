@@ -22,4 +22,4 @@ repo-com-send-eligibility = { package = "send_eligibility_contract", path = "../
 repo-com-state = { package = "state_contract", path = "../repo-com-state" }
 serde.workspace = true
 serde_json.workspace = true
-sha2 = "=0.10.9"
+sha2 = "=0.11.0"
