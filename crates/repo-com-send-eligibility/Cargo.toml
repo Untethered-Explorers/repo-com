@@ -23,7 +23,7 @@ repo-com-foundation = { package = "foundation_contract", path = "../repo-com-fou
 repo-com-policy = { package = "policy_contract", path = "../repo-com-policy" }
 serde.workspace = true
 serde_json.workspace = true
-sha2 = "=0.10.9"
+sha2 = "=0.11.0"
 
 [dev-dependencies]
 repo-com-state = { package = "state_contract", path = "../repo-com-state" }
