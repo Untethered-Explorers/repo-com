@@ -21,9 +21,9 @@ repo-com-foundation = { package = "foundation_contract", path = "../repo-com-fou
 reqwest = { version = "=0.13.5", default-features = false, features = ["json", "rustls"] }
 serde = { workspace = true }
 serde_json.workspace = true
-zeroize = "=1.9.0"
+zeroize = "=1.9.1"
 
 [dev-dependencies]
 repo-com-draft-model = { package = "draft_model_contract", path = "../repo-com-draft-model" }
-tokio = { version = "=1.53.1", features = ["macros", "rt-multi-thread"] }
+tokio = { version = "=1.53.2", features = ["macros", "rt-multi-thread"] }
 wiremock = "=0.6.5"
